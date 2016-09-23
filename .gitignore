@@ -1,0 +1,4 @@
+## TeX
+*.aux
+*.log
+*.pdf
