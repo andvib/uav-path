@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, bm}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+\subsection*{UAV Kinematics}
+Position of the UAV will be given in reference frame \{n\} using NED. This gives the states:
+
+\begin{equation}
+	\bm{p}^n_{b/n} =
+	\begin{bmatrix}
+		N \\ E \\ D
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		x_n \\ y_n \\ z_n
+	\end{bmatrix}
+\end{equation}
+
+Attitude will be given as Euler-angles:
+
+\begin{equation}
+	\bm{\Theta}_{nb} = 
+	\begin{bmatrix}
+		\phi \\ \theta \\ \psi
+	\end{bmatrix}
+\end{equation}
+
+Together these make up the position and orientation vector $\bm{\eta}$:
+
+\begin{equation}
+	\bm{\eta} = 
+	\begin{bmatrix}
+		\bm{p}^n_{b/n} \\ \bm{\Theta}_{nb}
+	\end{bmatrix}
+\end{equation}
+
+*ADD 'THE WIND TRIANGLE'*
+
+\subsection*{Camera position}
+
+When assuming flat earth, the centre point of the camera on the ground can be expressed in the body frame \{b\} using the attitude $\bm{\Theta}_{nb}$ of the UAV and the height $z_n$:
+
+\begin{equation}
+	\bm{c}_b^b = 
+	\begin{bmatrix}
+		c_{x/b}^b \\ c_{y/b}^b
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		z_n sin(\phi) \\ z_n sin(\theta)
+	\end{bmatrix}
+\end{equation}
+
+The distance from the UAV to the camera centre point can be expressed in \{n\} by using the rotational matrix $\bm{R}_{z,\psi}$:
+
+\begin{equation}
+	\bm{c}^n_b = 
+	\begin{bmatrix}
+		c^n_{x/b} \\ c^n_{y/b}
+	\end{bmatrix}
+	= \bm{R}_{z, \psi}\bm{c}^b_b
+\end{equation}
+
+In order to translate this to position in NED, it needs to be added to the UAV's NED position:
+
+\begin{equation}
+	\bm{c}^n =
+	\begin{bmatrix}
+		x_n + c^n_{x/b} \\
+		y_n + c^n_{y/b}
+	\end{bmatrix}
+\end{equation}
+
+
+\end{document}
