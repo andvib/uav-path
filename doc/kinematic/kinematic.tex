@@ -5,6 +5,7 @@
 \setlength\parindent{0pt}
 
 \begin{document}
+
 \subsection*{UAV Kinematics}
 Position of the UAV will be given in reference frame \{n\} using NED. This gives the states:
 
@@ -39,6 +40,7 @@ Together these make up the position and orientation vector $\bm{\eta}$:
 
 *ADD 'THE WIND TRIANGLE'*
 
+
 \subsection*{Camera position}
 
 When assuming flat earth, the centre point of the camera on the ground can be expressed in the body frame \{b\} using the attitude $\bm{\Theta}_{nb}$ of the UAV and the height $z_n$:
@@ -50,7 +52,7 @@ When assuming flat earth, the centre point of the camera on the ground can be ex
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
-		z_n sin(\phi) \\ z_n sin(\theta)
+		z_n sin(\theta) \\ z_n sin(\phi)
 	\end{bmatrix}
 \end{equation}
 
@@ -74,6 +76,7 @@ In order to translate this to position in NED, it needs to be added to the UAV's
 	\end{bmatrix}
 \end{equation}
 
+*ADD TRANSLATIONAL MATRIX FOR POSITION OF CAMERA*
 *DECIDE ON HAVING ONE CENTER POINT, OR TWO EXTREMITIES*
 
 
