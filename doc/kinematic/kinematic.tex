@@ -39,7 +39,6 @@ Together these make up the position and orientation vector $\bm{\eta}$:
 \end{equation}
 
 \subsubsection*{Wind}
-
 Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane and the angle of attack $\gamma_a$ in the vertical plane. This will change the UAVs actual heading $\psi$ and pitch $\theta$ to:
 
 \begin{subequations}
@@ -54,7 +53,6 @@ Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane a
 where $\chi$ is called the course and $\gamma$ is maybe called something???? These angles will only affect the navigational part, and not what the camera is pointed at.
 
 \subsection*{Camera position}
-
 When assuming flat earth, the centre point of the camera on the ground can be expressed in the body frame \{b\} using the attitude $\bm{\Theta}_{nb}$ of the UAV and the height $z_n$:
 
 \begin{equation}
@@ -66,11 +64,12 @@ When assuming flat earth, the centre point of the camera on the ground can be ex
 	\begin{bmatrix}
 		z_n sin(\theta) \\ z_n sin(\phi)
 	\end{bmatrix}
+	\label{eq:camera_body_body}
 \end{equation}
 
 The distance from the UAV to the camera centre point can be expressed in \{n\} by using the rotational matrix $\bm{R}_{z,\psi}$:
 
-\begin{equation}
+\begin{equation} \label{eq:body_ned_rotate}
 	\bm{c}^n_b = 
 	\begin{bmatrix}
 		c^n_{x/b} \\ c^n_{y/b}
@@ -83,10 +82,36 @@ In order to translate this to position in NED, it needs to be added to the UAV's
 \begin{equation}
 	\bm{c}^n =
 	\begin{bmatrix}
+		c_x^n \\ c_y^n
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
 		x_n + c^n_{x/b} \\
 		y_n + c^n_{y/b}
 	\end{bmatrix}
+	\label{eq:body_ned_trans}
 \end{equation}
+
+\subsubsection*{Camera Angle of View}
+Since the camera isn't only focusing on one specific point, it can be useful describing the camera point of focus as two extremities instead of one center point. Equation \eqref{eq:camera_body_body} can easily be changed to do this. Assuming the camera as an angle of view $\sigma$, the equation now becomes
+
+\begin{equation}
+	e_b^b = 
+	\begin{bmatrix}
+		e^b_{x_1/b} \\ e^b_{y_1/b} \\ e^b_{x_2/b} \\ e^b_{y_2/b}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		z_n sin(\theta + \sigma) \\
+		z_n sin(\theta - \sigma) \\
+		z_n sin(\phi + \sigma) \\
+		z_n sin(\phi - \sigma)
+	\end{bmatrix}
+\end{equation}
+
+The steps for translating the points to the NED frame are the same as in \eqref{eq:body_ned_rotate} and \eqref{eq:body_ned_trans}:
+
+	
 
 *ADD TRANSLATIONAL MATRIX FOR POSITION OF CAMERA* \\
 *DECIDE ON HAVING ONE CENTER POINT, OR TWO EXTREMITIES*
