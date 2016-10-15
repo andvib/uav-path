@@ -1,9 +1,19 @@
 \subsection{Heading controller}
-Heading is normally controlled by using the ailerons to roll the aircraft, with the resulting difference between the lift vectors of each wing causing the aircraft to turn. This strategy is used because it gives because it's most common in larger, manned aircrafts as it is causes little drag and is most comfortable for the passengers \cite{skidToTurnMills}. The main reason for why the same strategy is used with UAVs as it will be familiar for other pilots and it is a well-tested way of heading control.
+Heading is normally controlled by using the ailerons to roll the aircraft, with the resulting difference between the lift vectors of each wing causing the aircraft to turn. This strategy is used because it gives because it's most common in larger, manned aircrafts as it is causes little drag and is most comfortable for the passengers \cite{skidToTurnMills}. The main reason for why the same strategy is used with UAVs is that it is a familiar scheme for pilots and it is a well-tested way of heading control.
 
 When using UAVs for ground operations the roll used to turn the aircraft is a big problem which is mostly avoided by attaching the camera to a gimbal that is counteracting the effects of the roll. When the UAV is not equipped with a gimbal different control strategies can be used to reduce the roll needed to turn or to ensure that the camera stays focused on the object. There is a benefit to creating new controllers for this as controllers allows for using existing trajectory planners.
 
 
 \subsubsection{Rudder as a heading control surface}
+A common method to avoid roll in UAV operation is to use the rudder to turn. The rudder is mostly used to reduce the sideslip angle of the aircraft. However, the rudder can be used to introduce sideslip which will cause the aircraft to turn. Common for these controllers is that they still use the ailerons to keep the wings level during flight.
 
-\subsubsection{PID-controller}
+%% RATC, FISHER %%
+Controllers using rudder to turn the aircraft is sometimes referred to as Rudder Augmented Trajectory Correction (RATC) \cite{ratcFISHER}. In this paper a RATC controller is compared to a Aileron Only Trajectory Correction (AOTC) controller with focus on how they affect the resulting image error when using a camera fixed to the aircraft. The controller is implemented as a PD-controller simulated on a model of the Aerosonde UAV.
+
+When simulating the image error is modeled with two terms. The first term is the lateral image error which comes from the aircraft having a lateral error in its flightline so that it is not positioned directly over the intended path, which leads to image error. The second term is the error that comes from banking the aircraft. It is modeled using simple trigonometry, and it is worth noting that this error increases as the altitude above ground is increased.
+
+The simulation was done with two test cases, one without wind and one with wind, and the results for both of the cases was similar. The course error of the two controllers was very similiar, and unsurprisingly the AOTC controller had much more changes in roll and the RATC controller had much more changes in sideslip. The biggest difference was that the RATC controller used much more input to its control surfaces, up to $400 \%$ more than the AOTC controller.
+
+When comparing the image error for the two controllers there was a big difference in performance. The RATC had very small errors while the AOTC controller had RMS errors over $300 m$ while the RATC stayed at about $20 m$, which shows that the RATC controller is a good choice for reducing image error. The control algorithms was also field tested, with results that matches the simulation results.
+
+It is worth noting from this paper that successive loop closure is not needed to implement the RATC. This is because the control design only has a singel transfer function between desired heading to control surface deflection. Since AOTC requires successive loop closure the AOTC controller will have a slower response compared to RATC.
