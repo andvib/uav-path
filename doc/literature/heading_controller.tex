@@ -17,3 +17,11 @@ The simulation was done with two test cases, one without wind and one with wind,
 When comparing the image error for the two controllers there was a big difference in performance. The RATC had very small errors while the AOTC controller had RMS errors over $300 m$ while the RATC stayed at about $20 m$, which shows that the RATC controller is a good choice for reducing image error. The control algorithms was also field tested, with results that matches the simulation results.
 
 It is worth noting from this paper that successive loop closure is not needed to implement the RATC. This is because the control design only has a singel transfer function between desired heading to control surface deflection. Since AOTC requires successive loop closure the AOTC controller will have a slower response compared to RATC.
+
+%% Heading Control of a Fixed Wing UAV Using Alternate Control Surfaces %%
+A similar approach was taken in \cite{alternateSurfaceAhsan}, but a PID controller was used instead of a PD. The controller was created from a nonlinear model which have been linearized about a stable trim point, and the resulting rudder controller was compared with a controller using the aileron for heading control. The aileron controller was used in both cases to keep the wings level during the flight.
+
+The simulations in this paper also shows that when using rudder as a control surface the aircraft has better response compared to aileron, with less overshoot and a lower steady state error. Bode plots of the two controllers show that the rudder based heading controller has a gain margin of $-24.5 dB$ and a phase margin of $87.1 \degree$, while the aileron based controller has a gain margin of $-25.7 dB$ and a phase margin of $94 \degree$. This means that the two controllers have pretty similar stability features.
+
+%% Skid-to-Turn, MILLS %%
+In \cite{skidToTurnMills} a rudder based controller is used to control an UAV that uses a camera to survey a locally linear infrastructure.
