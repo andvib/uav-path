@@ -1,2 +1,133 @@
 \section{Kinematics}
-Since 
+In order to control the UAV with regards to where the camera is pointing, a kinematic model that maps the camera focus to the UAV position and attitude is needed. The position of the UAV will be given in reference frame \{n\} using the North East Down (NED) coordinate frame:
+
+\begin{equation}
+	\bm{p}_{b/n}^n =
+	\begin{bmatrix}
+		N \\ E \\ D
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		x_n \\ y_n \\ z_n
+	\end{bmatrix}
+\end{equation}
+
+The attitude of the UAV will be given as Euler-angles:
+
+\begin{equation}
+	\bm{\Theta}_{nb} = 
+	\begin{bmatrix}
+		\phi \\ \theta \\ \psi
+	\end{bmatrix}
+\end{equation}
+	
+These two expressions is often put together to make one position and orientation vector $\bm{\eta}$:
+
+\begin{equation}
+	\bm{\eta} =
+	\begin{bmatrix}
+		\bm{p}_{b/n}^n \\
+		\bm{\Theta}_{nb}
+	\end{bmatrix}
+\end{equation}
+	
+\subsection{Wind}
+Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane and the angle of attack $\gamma_a$ in the vertical plane. This will change the UAVs actual heading $phi$ and pitch $\theta$ to:
+
+\begin{subequations}
+\begin{equation}
+	\chi = \phi + \chi_c
+\end{equation}
+\begin{equation}
+	\gamma = \theta + \theta_a
+\end{equation}
+\end{subequations}
+
+where $\chi$ is called the course and $\gamma$ is maybe called something??? These angles will only affect the navigational part, and not where the camera is pointed *NOT TRUE WHEN DESCRIBING CAMERA POSITION WITH TO EXTREMITIES*
+
+
+\subsection{Camera Position}
+When assuming flat earth the centre point of the camera on the ground can be expressed in the body frame \{b\} using the attitude $\bm{\Theta}_{nb}$ of the UAV and the height $z_n$:
+
+\begin{equation} \label{eq:camera_pos}
+	\bm{c}_b^b =
+	\begin{bmatrix}
+		c_{x/b}^n \\
+		c_{y/b}^n
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		z_n sin(\theta) \\
+		z_n sin(\phi)
+	\end{bmatrix}
+\end{equation}
+
+The distance from the UAV to the camera centre point can be expressed in {n} by using the rotational matrix $\bm{R}_{z,\psi}$:
+
+\begin{equation} \label{eq:body_ned_rotate}
+	\bm{c}_b^n =
+	\begin{bmatrix}
+		c_{x/b}^n \\
+		c_{y/b}^n
+	\end{bmatrix}
+	= \bm{R}_{z,\psi} \bm{c}_b^b
+\end{equation}
+	
+In order to translate this to position in NED; it needs to be added to the UAVs NED position:
+
+\begin{equation} \label{eq:body_ned_trans}
+	\bm{c}^n =
+	\begin{bmatrix}
+		c_x^n \\ c_y^n
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		x_n + c_{x/b}^n \\
+		y_n + c_{y/b}^n
+	\end{bmatrix}
+\end{equation}
+
+\subsection{Camera Angle of View}
+Since the camera isn't only focusing on one specific point, it can be useful describing the camera point of focus as two extremities instead of one center point. Equation \eqref{eq:camera_pos} can easily be changed to do this. Assuming the camera has an angle of view $\sigma$, the equation now becomes:
+
+\begin{equation}
+	\bm{e}_b^b = 
+	\begin{bmatrix}
+		e^b_{x_1/b} \\ e^b_{y_1/b} \\ e^b_{x_2/b} \\ e^b_{y_2/b}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		z_n sin(\theta + \sigma) \\
+		z_n sin(\theta - \sigma) \\
+		z_n sin(\phi + \sigma) \\
+		z_n sin(\phi - \sigma)
+	\end{bmatrix}
+\end{equation}
+
+The steps for translating the points to the NED frame are the same as in \eqref{eq:body_ned_rotate} and \eqref{eq:body_ned_trans}:
+
+\begin{equation}
+	\bm{e}_b^n =
+	\begin{bmatrix}
+		e^n_{x_1/b} \\ e^n_{y_1/b} \\ e^n_{x_2/b} \\ e^n_{y_2/b}
+	\end{bmatrix}
+	= \bm{R}_{z,\psi} \bm{e}_b^b
+\end{equation}
+
+\begin{equation}
+	\bm{e}^n =
+	\begin{bmatrix}
+		e^n_{x_1} \\ e^n_{y_1} \\ e^n_{x_2} \\ e^n_{y_2}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		x_n + e^n_{x_1/b} \\
+		y_n + e^n_{y_1/b} \\
+		x_n + e^n_{x_2/b} \\
+		y_n + e^n_{y_2/b}
+	\end{bmatrix}
+\end{equation}
+	
+	
+
+*ADD TRANSLATIONAL MATRIX FOR POSITION OF CAMERA*
