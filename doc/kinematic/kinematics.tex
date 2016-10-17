@@ -43,7 +43,7 @@ Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane a
 \end{equation}
 \end{subequations}
 
-where $\chi$ is called the course and $\gamma$ is maybe called something??? These angles will only affect the navigational part, and not where the camera is pointed *NOT TRUE WHEN DESCRIBING CAMERA POSITION WITH TO EXTREMITIES*
+where $\chi$ is called the course and $\gamma$ is maybe called something??? These angles will only affect the navigational part, and not where the camera is pointed.
 
 
 \subsection{Camera Position}
@@ -91,15 +91,23 @@ In order to translate this to position in NED; it needs to be added to the UAVs 
 Since the camera isn't only focusing on one specific point, it can be useful describing the camera point of focus as two extremities instead of one center point. Equation \eqref{eq:camera_pos} can easily be changed to do this. Assuming the camera has an angle of view $\sigma$, the equation now becomes:
 
 \begin{equation}
-	\bm{e}_b^b = 
+	\bm{e}_{1,b}^b = 
 	\begin{bmatrix}
-		e^b_{x_1/b} \\ e^b_{y_1/b} \\ e^b_{x_2/b} \\ e^b_{y_2/b}
+		e^b_{x/b} \\ e^b_{y_1/b}
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
-		z_n sin(\theta + \sigma) \\
-		z_n sin(\theta - \sigma) \\
-		z_n sin(\phi + \sigma) \\
+		z_n sin(\theta)\\
+		z_n sin(\phi + \sigma)
+	\end{bmatrix}
+	, \hspace{5pt}
+	\bm{e}_{2,b}^b = 
+	\begin{bmatrix}
+		e^b_{x/b} \\ e^b_{y_2/b}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		z_n sin(\theta)\\
 		z_n sin(\phi - \sigma)
 	\end{bmatrix}
 \end{equation}
@@ -109,7 +117,7 @@ The steps for translating the points to the NED frame are the same as in \eqref{
 \begin{equation}
 	\bm{e}_b^n =
 	\begin{bmatrix}
-		e^n_{x_1/b} \\ e^n_{y_1/b} \\ e^n_{x_2/b} \\ e^n_{y_2/b}
+		e^n_{x/b} \\ e^n_{y/b}
 	\end{bmatrix}
 	= \bm{R}_{z,\psi} \bm{e}_b^b
 \end{equation}
@@ -117,17 +125,13 @@ The steps for translating the points to the NED frame are the same as in \eqref{
 \begin{equation}
 	\bm{e}^n =
 	\begin{bmatrix}
-		e^n_{x_1} \\ e^n_{y_1} \\ e^n_{x_2} \\ e^n_{y_2}
+		e^n_{x} \\ e^n_{y}
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
-		x_n + e^n_{x_1/b} \\
-		y_n + e^n_{y_1/b} \\
-		x_n + e^n_{x_2/b} \\
-		y_n + e^n_{y_2/b}
+		x_n + e^n_{x/b} \\
+		y_n + e^n_{y/b} \\
 	\end{bmatrix}
 \end{equation}
 	
-	
-
 *ADD TRANSLATIONAL MATRIX FOR POSITION OF CAMERA*
