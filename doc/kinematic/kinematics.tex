@@ -72,7 +72,19 @@ The distance from the UAV to the camera centre point can be expressed in {n} by 
 	\end{bmatrix}
 	= \bm{R}_{z,\psi} \bm{c}_b^b
 \end{equation}
+
+where:
+
+\begin{equation}
+	\bm{R}_{z,\psi} = 
+	\begin{bmatrix}
+		cos(\theta) & -sin(\theta) & 0 \\
+		sin(\theta) & cos(\theta) & 0 \\
+		0 & 0 & 1
+	\end{bmatrix}
+\end{equation}
 	
+
 In order to translate this to position in NED; it needs to be added to the UAVs NED position:
 
 \begin{equation} \label{eq:body_ned_trans}
