@@ -1,6 +1,6 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%
-% AEROSONDE UAV - MODEL %
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AEROSONDE UAV - PARAMETERS %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Physical parameters
 P.m = 13.5;       % [kg]
@@ -12,7 +12,7 @@ P.S = 0.55;       % [m^2]
 P.b = 2.8956;     % [m]
 P.c = 0.18994;    % [m]
 P.S_prop = 0.2027;% [m^2]
-P.rho = 1.2682;    % [kg/m^3]
+P.rho = 1.2682;   % [kg/m^3]
 P.k_motor = 80;
 P.k_tp = 0;
 P.k_omega = 0;
@@ -49,6 +49,8 @@ P.C_Yp = 0;
 P.C_lp = -0.26;
 P.C_np = 0.022;
 P.C_Yr = 0;
+P.C_lr = 0.14;
+P.C_nr = -0.35;
 P.C_Y_delta_a = 0;
 P.C_l_delta_a = 0.08;
 P.C_n_delta_a = 0.06;
