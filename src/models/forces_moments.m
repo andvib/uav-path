@@ -46,7 +46,7 @@ function output = forces_moments(x, delta, wind, P)
     w_r = w - Vb_w(3);
     
     % Calculate wind in NED
-    W_NED = Rb_v'*Vb_w
+    W_NED = Rb_v'*Vb_w;
     
     %% Calculate airspeed, wind speed and ground speed
     V_a = sqrt(u_r^2 + v_r^2 + w_r^2);
