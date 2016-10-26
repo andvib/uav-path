@@ -1,5 +1,5 @@
 function output = mav_dynamics(forces_moments, x, P)
-    
+
     % Forces
     f_x = forces_moments(1);
     f_y = forces_moments(2);
@@ -34,7 +34,7 @@ function output = mav_dynamics(forces_moments, x, P)
     
     %% Calculate gammas
     gamma = P.J_x * P.J_z - P.J_xz^2;
-    gamma_1 = (P.J_xz * (P.J_x - P.j_y + P.J_z) / gamma);
+    gamma_1 = (P.J_xz * (P.J_x - P.J_y + P.J_z) / gamma);
     gamma_2 = (P.J_z * (P.J_z - P.J_y) +P.J_xz^2) / gamma;
     gamma_3 = P.J_z / gamma;
     gamma_4 = P.J_xz / gamma;
@@ -75,6 +75,6 @@ function output = mav_dynamics(forces_moments, x, P)
     att_rates_dot = rates_eq1 + rates_eq2;
 
     %% Return values
-    output = [pos_dot vel_dot att_dot att_rates_dot];
+    output = [pos_dot ; vel_dot ; att_dot ; att_rates_dot];
 
 end

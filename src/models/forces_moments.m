@@ -1,5 +1,4 @@
 function output = forces_moments(x, delta, wind, P)
-
     % Ground speed
     u = x(4);
     v = x(5);
@@ -46,7 +45,7 @@ function output = forces_moments(x, delta, wind, P)
     w_r = w - Vb_w(3);
     
     % Calculate wind in NED
-    W_NED = Rb_v'*Vb_w;
+    W_NED = Rb_v' * Vb_w;
     
     %% Calculate airspeed, wind speed and ground speed
     V_a = sqrt(u_r^2 + v_r^2 + w_r^2);
@@ -54,8 +53,9 @@ function output = forces_moments(x, delta, wind, P)
     beta = asin(v_r/V_a);
 
     %% Gravitational forces
+    g = 9.81;
     f_g = [-P.m * g * sind(theta); ...
-            P.m * g * cosd(tehta) * sind(phi); ...
+            P.m * g * cosd(theta) * sind(phi); ...
             P.m * g * cosd(theta) * cosd(phi)];
 
     %% Aerodynamic forces - longitudinal
@@ -69,21 +69,21 @@ function output = forces_moments(x, delta, wind, P)
           + sigma * (2* sign(alpha) * (sin(alpha))^2 * cos(alpha));
       
     % Drag
-    C_D = P.C_Dp + ((C_L0 + C_L_alpha*alpha)^2 / ...
+    C_D = P.C_Dp + ((P.C_L0 + P.C_L_alpha*alpha)^2 / ...
                     (pi * 1.0 * (P.b^2 / P.S)));
                 
     % Lift and drag in body frame
     f_x = 0.5*P.rho*V_a^2*P.S * ((-C_D * cos(alpha) + C_L * sin(alpha)) ...
          + (-P.C_Dq * cos(alpha) + P.C_Lq * sin(alpha))*(P.c/(2*V_a))*q ...
-         + (-P.C_D_delta_e * cos(alpha) + C_L_delta_e * sin(alpha))*d_elevator);
+         + (-P.C_D_delta_e * cos(alpha) + P.C_L_delta_e * sin(alpha))*d_elevator);
      
     f_z = 0.5*P.rho*V_a^2*P.S * ((-C_D * sin(alpha) - C_L * cos(alpha)) ...
-         + (-P.C_Dq * sin(alpha) - P.C_Lq * cos(alpha))*(P.c/(2*V_A))*q ...
+         + (-P.C_Dq * sin(alpha) - P.C_Lq * cos(alpha))*(P.c/(2*V_a))*q ...
          + (-P.C_D_delta_e * sin(alpha) - P.C_L_delta_e * cos(alpha))*d_elevator);
 
     % Pitching moment
     m = 0.5*P.rho*V_a^2*P.S*P.c * (P.C_m0 + P.C_m_alpha *alpha ...
-            + p.C_mq * (P.c/(2*V_a)) * q + P.C_m_delta_e * d_elevator);
+            + P.C_mq * (P.c/(2*V_a)) * q + P.C_m_delta_e * d_elevator);
     
     %% Aerodynamic forces and moments - lateral
     % Lateral force
@@ -120,5 +120,5 @@ function output = forces_moments(x, delta, wind, P)
     M = m_a + m_p;
 
     %% Return values
-    output = [F M V_a alpha beta W_NED];
+    output = [F ; M ; V_a ; alpha ; beta ; W_NED];
 end

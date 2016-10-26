@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % AEROSONDE UAV - PARAMETERS %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+P = struct;
 %% Physical parameters
 P.m = 13.5;       % [kg]
 P.J_x = 0.8244;   % [kg-m^2]
