@@ -54,9 +54,9 @@ function output = forces_moments(x, delta, wind, P)
 
     %% Gravitational forces
     g = 9.81;
-    f_g = [-P.m * g * sind(theta); ...
-            P.m * g * cosd(theta) * sind(phi); ...
-            P.m * g * cosd(theta) * cosd(phi)];
+    f_g = [-P.m * g * sin(theta); ...
+            P.m * g * cos(theta) * sin(phi); ...
+            P.m * g * cos(theta) * cos(phi)];
 
     %% Aerodynamic forces - longitudinal
     % Lift
@@ -69,9 +69,12 @@ function output = forces_moments(x, delta, wind, P)
           + sigma * (2* sign(alpha) * (sin(alpha))^2 * cos(alpha));
       
     % Drag
-    C_D = P.C_Dp + ((P.C_L0 + P.C_L_alpha*alpha)^2 / ...
-                    (pi * 1.0 * (P.b^2 / P.S)));
-                
+    %C_D = P.C_Dp + ((P.C_L0 + P.C_L_alpha*alpha)^2 / ...
+    %                (pi * P.e * (P.b^2 / P.S)));
+    
+    C_D = P.C_Dp + (1-sigma)*(P.C_L0 + P.C_L_alpha*alpha)^2 / ...
+          (pi*P.e*(P.b^2/P.S)) + sigma*2*sign(alpha)*sin(alpha)^3;
+    
     % Lift and drag in body frame
     f_x = 0.5*P.rho*V_a^2*P.S * ((-C_D * cos(alpha) + C_L * sin(alpha)) ...
          + (-P.C_Dq * cos(alpha) + P.C_Lq * sin(alpha))*(P.c/(2*V_a))*q ...
@@ -85,6 +88,11 @@ function output = forces_moments(x, delta, wind, P)
     m = 0.5*P.rho*V_a^2*P.S*P.c * (P.C_m0 + P.C_m_alpha *alpha ...
             + P.C_mq * (P.c/(2*V_a)) * q + P.C_m_delta_e * d_elevator);
     
+    %m_a = ((1-sigma)*(P.C_m0 + P.C_m_alpha*alpha));% + sigma*(P.C_m_flatplate*sign(alpha)*sin(alpha)^2));
+    %m_q = (P.C_mq)*P.c/(2*V_a)*q;
+    %m_elev = P.C_m_delta_e*d_elevator;
+    %m = 0.5*P.rho*V_a^2*P.b*P.S*P.c*(m_a+m_q+m_elev);
+    
     %% Aerodynamic forces and moments - lateral
     % Lateral force
     f_y = 0.5 * P.rho * V_a^2 * P.S * (P.C_Y0 + P.C_Y_beta * beta ...
@@ -92,12 +100,12 @@ function output = forces_moments(x, delta, wind, P)
             + P.C_Y_delta_a * d_aileron + P.C_Y_delta_r * d_rudder);
         
     % Roll moment
-    l = 0.5 * P.rho * V_a^2 * P.S * (P.C_l0 + P.C_l_beta * beta ...
+    l = 0.5 * P.rho * V_a^2 * P.S * P.b * (P.C_l0 + P.C_l_beta * beta ...
             + P.C_lp * (P.b/(2*V_a)) * p + P.C_lr * (P.b/(2*V_a)) * r ...
             + P.C_l_delta_a * d_aileron + P.C_l_delta_r * d_rudder);
         
     % Yaw moment
-    n = 0.5 * P.rho * V_a^2 * P.S * (P.C_n0 + P.C_n_beta * beta ...
+    n = 0.5 * P.rho * V_a^2 * P.S * P.b * (P.C_n0 + P.C_n_beta * beta ...
             + P.C_np * (P.b/(2*V_a)) * p + P.C_nr * (P.b/(2*V_a)) * r ...
             + P.C_n_delta_a * d_aileron + P.C_n_delta_r * d_rudder);
      
@@ -112,6 +120,9 @@ function output = forces_moments(x, delta, wind, P)
     f_p = [0.5*P.rho*P.S_prop*P.C_prop * ((P.k_motor*d_throttle)^2 - V_a^2);...
            0; 0];
 
+    %Vd = V_a + d_throttle * (P.k_motor-V_a);
+    %f_p = [0.5*P.rho*P.S_prop*P.C_prop*Vd*(Vd-V_a);0;0];
+    
     % Propeller Torque
     m_p = [-P.k_tp * (P.k_omega * d_throttle)^2 ; 0 ; 0];
 

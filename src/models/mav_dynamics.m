@@ -69,7 +69,7 @@ function output = mav_dynamics(forces_moments, x, P)
                  gamma_7*p*q - gamma_1*q*r];
              
     rates_eq2 = [gamma_3*l + gamma_4*n;
-                 (1/P.J_y)*P.m;
+                 (1/P.J_y)*m;
                  gamma_4*l + gamma_8*n];
              
     att_rates_dot = rates_eq1 + rates_eq2;
