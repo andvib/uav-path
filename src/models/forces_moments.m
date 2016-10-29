@@ -11,7 +11,7 @@ function output = forces_moments(x, delta, wind, P)
     p = x(10);
     q = x(11);
     r = x(12);
-
+    
     % Wind
     W_Ns = wind(1);
     W_Es = wind(2);
@@ -21,11 +21,16 @@ function output = forces_moments(x, delta, wind, P)
     w_Wg = wind(6);
     
     % Actuators
-    d_elevator = delta(1);
-    d_throttle = delta(2);
-    d_aileron = delta(3);
-    d_rudder = delta(4);
+    %d_elevator = delta(1);
+    %d_throttle = delta(2);
+    %d_aileron = delta(3);
+    %d_rudder = delta(4);
     
+    d_elevator = delta(1);
+    d_aileron = delta(2);
+    d_rudder = delta(3);
+    d_throttle = delta(4);
+
     %% Calculate wind
     % Rotation matrix vehicle to body frame
     Rb_v = [cos(theta)*cos(psi), cos(theta)*sin(psi), -sin(theta);
@@ -69,11 +74,11 @@ function output = forces_moments(x, delta, wind, P)
           + sigma * (2* sign(alpha) * (sin(alpha))^2 * cos(alpha));
       
     % Drag
-    %C_D = P.C_Dp + ((P.C_L0 + P.C_L_alpha*alpha)^2 / ...
-    %                (pi * P.e * (P.b^2 / P.S)));
+    C_D = P.C_Dp + ((P.C_L0 + P.C_L_alpha*alpha)^2 / ...
+                    (pi * P.e * (P.b^2 / P.S)));
     
-    C_D = P.C_Dp + (1-sigma)*(P.C_L0 + P.C_L_alpha*alpha)^2 / ...
-          (pi*P.e*(P.b^2/P.S)) + sigma*2*sign(alpha)*sin(alpha)^3;
+    %C_D = P.C_Dp + (1-sigma)*(P.C_L0 + P.C_L_alpha*alpha)^2 / ...
+    %      (pi*P.e*(P.b^2/P.S)) + sigma*2*sign(alpha)*sin(alpha)^3;
     
     % Lift and drag in body frame
     f_x = 0.5*P.rho*V_a^2*P.S * ((-C_D * cos(alpha) + C_L * sin(alpha)) ...
@@ -131,5 +136,5 @@ function output = forces_moments(x, delta, wind, P)
     M = m_a + m_p;
 
     %% Return values
-    output = [F ; M ; V_a ; alpha ; beta ; W_NED];
+    output = [F ; M ; V_a ; alpha ; beta ; W_NED]
 end

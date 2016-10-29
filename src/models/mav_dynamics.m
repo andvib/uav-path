@@ -10,7 +10,7 @@ function output = mav_dynamics(forces_moments, x, P)
     l = forces_moments(4);
     m = forces_moments(5);
     n = forces_moments(6);
-
+    [l ; m ; n];
     % States
     p_n = x(1);
     p_e = x(2);
