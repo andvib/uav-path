@@ -1,0 +1,7 @@
+slprj/
+TAJ/
+*.asv
+test/
+*.autosave
+*.original
+*.mexw64
