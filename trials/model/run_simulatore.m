@@ -2,7 +2,7 @@ close all;
 clear all;
 
 %% Initialize
-param = 'aerosonde';
+param = 'x8_param';
 init;
 bus_defintions;
 
@@ -55,10 +55,13 @@ options(14) = 10000;
 X_trim(4:7) = quatnormalize(X_trim(4:7)')';
 norm(DX(7:13)-dx0(7:13)) % Should be very low
 
-%% RUN SIMULATORE
-set_param('fly', 'StopTime', int2str(100));
+[T_phi_delta_a,T_chi_phi,T_theta_delta_e,T_h_theta,T_h_Va,T_Va_delta_t,T_Va_theta,T_v_delta_r]= compute_tf_model(X_trim,U_trim,P);
+P=computeGains(T_phi_delta_a,T_v_delta_r,T_theta_delta_e,T_Va_theta,T_Va_delta_t,P);
 
-sim fly
+%% RUN SIMULATORE
+set_param('autopilot_fly', 'StopTime', int2str(100));
+x0 = X_trim;
+sim autopilot_fly
 
 figure(1);
 hold on;
@@ -85,7 +88,7 @@ title('Velocity');
 plot(states.Velocity.u);
 plot(states.Velocity.v);
 plot(states.Velocity.w);
-legend('\phi','\theta','\psi');
+legend('u','v','w');
 
 
 
