@@ -4,9 +4,35 @@
 \usepackage{import}
 \usepackage{gensymb}
 \usepackage{amsmath, amssymb, bm}
+\usepackage{datetime}
+
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newdateformat{monthyear}{\monthname[\THEMONTH], \THEYEAR}
+
+\pagenumbering{gobble}
 
 
 \begin{document}
+
+\begin{center}
+\HRule \\[0.4cm]
+{ \huge \bfseries UAV Path Planning for Maximum-Information Sensing in Spatiotemporal Data Acquisition}
+\HRule \\[1.5cm]
+
+\begin{center} \large
+\emph{By:}\\
+\textbf{Andreas Nordby Vibeto}\\
+andreanv@stud.ntnu.no
+\end{center}
+
+\vfill
+
+{\large \monthyear\today}
+
+\end{center}
+\newpage
+\pagenumbering{arabic}
 
 \import{literature/}{introduction.tex}
 \import{literature/}{heading_controller.tex}

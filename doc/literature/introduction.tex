@@ -1,7 +1,7 @@
 \section{Introduction}
 
-\begin{itemize}
-	\item Project definition
-	\item Why gimbal isn't perfect
-\end{itemize}
+Unmanned Aerial Vehicles (UAV) is widely used to get an overview over an area. When equipped with a camera, an UAV is an easy and cost effective method for ground observing. However, ground observation with UAV also introduces some difficulties due to the attitude of the aircraft. A camera that is fixed to the UAV will be coupled with the UAVs states, so that any change in attitude will cause the camera view to shift away from the points of interest. As the height increases the error increases, so that even small changes that come from distrubances such as wind can cause major errors in what is actually seen by the camera.
 
+Today, it is common to attach a gimbal with a camera to the UAV to decouple the attitude of the UAV from the camera. This way the attitude of the UAV will not cause any errors in the image so that the operator can focus solely on the operation of the aircraft. However the size and weight of the aircraft will potentially increase fuel costs because of added weight and less effective aerodynamics.
+
+This paper will investigate methods to reduce image errors caused by the UAVs attitude, while also avoiding the extra costs associated with gimbal. It will be assumed that a hyperspectral camera will be fixed to the UAV airframe. To overcome the problem caused by the coupling between the camera and the UAV attitude alternative flight control algorithms will be simulated, and their effect on the image error will be tested.
