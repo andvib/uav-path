@@ -2,7 +2,7 @@ close all;
 clear all;
 
 %% Initialize
-param = 'x8_param';
+param = 'aerosonde';
 init;
 bus_defintions;
 
@@ -29,7 +29,9 @@ h_ini = 100;
 % [X_trim, U_trim, Y_trim, DX_trim] = trim('simulatore', X0, U0, Y0, ...
 %                                          IX0, IU0, IY0, DX0, IDX, options)
 
-u0              = [-0.064 0.1 0 0.1]'; %Avoid negative throttle by guessing thr=1
+%u0              = [-0.064 0.1 0 0.1]'; %Avoid negative throttle by guessing thr=1
+
+u0 = [0; 0; 0; 1];
 fixed_inputs    = [];
 
 theta0=0;
@@ -55,13 +57,11 @@ options(14) = 10000;
 X_trim(4:7) = quatnormalize(X_trim(4:7)')';
 norm(DX(7:13)-dx0(7:13)) % Should be very low
 
-[T_phi_delta_a,T_chi_phi,T_theta_delta_e,T_h_theta,T_h_Va,T_Va_delta_t,T_Va_theta,T_v_delta_r]= compute_tf_model(X_trim,U_trim,P);
-P=computeGains(T_phi_delta_a,T_v_delta_r,T_theta_delta_e,T_Va_theta,T_Va_delta_t,P);
-
 %% RUN SIMULATORE
-set_param('autopilot_fly', 'StopTime', int2str(100));
+control = 1;
+set_param('straight_level', 'StopTime', int2str(100));
 x0 = X_trim;
-sim autopilot_fly
+sim straight_level
 
 figure(1);
 hold on;
@@ -88,7 +88,8 @@ title('Velocity');
 plot(states.Velocity.u);
 plot(states.Velocity.v);
 plot(states.Velocity.w);
-legend('u','v','w');
+plot(airdata.Va);
+legend('u','v','w','Va');
 
 
 
