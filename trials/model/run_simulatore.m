@@ -58,7 +58,6 @@ X_trim(4:7) = quatnormalize(X_trim(4:7)')';
 norm(DX(7:13)-dx0(7:13)) % Should be very low
 
 %% RUN SIMULATORE
-control = 1;
 set_param('straight_level', 'StopTime', int2str(100));
 x0 = X_trim;
 sim straight_level
@@ -90,8 +89,3 @@ plot(states.Velocity.v);
 plot(states.Velocity.w);
 plot(airdata.Va);
 legend('u','v','w','Va');
-
-
-
-
-
