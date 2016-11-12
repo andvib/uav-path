@@ -1,0 +1,48 @@
+% Plot display orientation
+\tdplotsetmaincoords{60}{110}
+
+% Polar coordinates for some vector
+\pgfmathsetmacro{\rvec}{.8}
+\pgfmathsetmacro{\thetavec}{-30}
+\pgfmathsetmacro{\phivec}{10}
+
+\tdplotsetmaincoords{60}{120}
+
+\begin{center}
+\begin{tikzpicture}
+	[scale=7,
+		tdplot_main_coords,
+		axis/.style={->,black,thick},
+		vector/.style={-stealth,red,very thick},
+		vector guide/.style={dashed,black}]
+
+	%standard tikz coordinate definition using x, y, z coords
+	\coordinate (O) at (0,0,0);
+	
+	%tikz-3dplot coordinate definition using r, theta, phi coords
+	\tdplotsetcoord{P}{1}{40}{40}
+	
+	%draw axes
+	\draw[axis] (0,0,0) -- (1,0,0) node[anchor=north east]{$N$};
+	\draw[axis] (0,0,0) -- (0,1,0) node[anchor=north west]{$E$};
+	\draw[axis] (0,0,0) -- (0,0,1) node[anchor=south]{$D$};
+
+	
+	%draw guide lines to components
+	\draw[vector guide] (O) -- (P);
+	\draw[vector guide] (P) -- (Pxy);
+	\draw[vector guide] (O) -- (Pxy);
+	
+	\tdplotdrawarc{(O)}{0.2}{0}{40}{anchor=north}{$\psi$}
+
+	
+	\tdplotsetrotatedcoords{\phivec}{\thetavec}{0}
+	\tdplotsetrotatedcoordsorigin{(P)}
+	\coordinate (Q) at (.1,0,0);
+	\draw[thick,tdplot_rotated_coords,->] (0,0,0) -- (Q) node[anchor=north west]{$u$};
+	\draw[thick,tdplot_rotated_coords,->] (0,0,0) -- (0,.2,0) node[anchor=north west]{$w$};
+	
+	\draw[vector guide] (0,0,0) -- (Q);
+	
+\end{tikzpicture}
+\end{center}
