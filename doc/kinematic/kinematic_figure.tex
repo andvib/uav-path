@@ -1,12 +1,5 @@
 % Plot display orientation
-\tdplotsetmaincoords{60}{110}
-
-% Polar coordinates for some vector
-\pgfmathsetmacro{\rvec}{.8}
-\pgfmathsetmacro{\thetavec}{-30}
-\pgfmathsetmacro{\phivec}{10}
-
-\tdplotsetmaincoords{60}{120}
+\tdplotsetmaincoords{60}{30}
 
 \begin{center}
 \begin{tikzpicture}
@@ -20,29 +13,28 @@
 	\coordinate (O) at (0,0,0);
 	
 	%tikz-3dplot coordinate definition using r, theta, phi coords
-	\tdplotsetcoord{P}{1}{40}{40}
+	\tdplotsetcoord{P}{1}{40}{10}
 	
 	%draw axes
-	\draw[axis] (0,0,0) -- (1,0,0) node[anchor=north east]{$N$};
-	\draw[axis] (0,0,0) -- (0,1,0) node[anchor=north west]{$E$};
+	\draw[axis] (0,0,0) -- (1,0,0) node[anchor=north east]{$E$};
+	\draw[axis] (0,0,0) -- (0,1,0) node[anchor=north west]{$N$};
 	\draw[axis] (0,0,0) -- (0,0,1) node[anchor=south]{$D$};
 
+	\coordinate (X) at (0.2, 0.2, 0.8);
 	
-	%draw guide lines to components
-	\draw[vector guide] (O) -- (P);
-	\draw[vector guide] (P) -- (Pxy);
-	\draw[vector guide] (O) -- (Pxy);
 	
-	\tdplotdrawarc{(O)}{0.2}{0}{40}{anchor=north}{$\psi$}
-
+	\draw[dashed] (X) -- (0.2, 0.2, 0);
+	\draw[dashed,blue] (X) -- (0.2, 0.7, 0);
+	\draw[dashed,red] (X) -- (0.7, 0.7, 0);
+	\draw[dashed] (0.2, 0.2, 0) -- (0.2, 0.7, 0) node[midway, above, sloped] {$z_n sin(\theta)$};
+	\draw[dashed] (0.2, 0.7, 0) -- (0.7, 0.7, 0) node[midway, above, sloped] {$z_n sin(\phi)$}  node[anchor=west]{$c_n$};
 	
-	\tdplotsetrotatedcoords{\phivec}{\thetavec}{0}
-	\tdplotsetrotatedcoordsorigin{(P)}
-	\coordinate (Q) at (.1,0,0);
-	\draw[thick,tdplot_rotated_coords,->] (0,0,0) -- (Q) node[anchor=north west]{$u$};
-	\draw[thick,tdplot_rotated_coords,->] (0,0,0) -- (0,.2,0) node[anchor=north west]{$w$};
+	\draw[dashed] (0.2, 0.7, 0) -- (0.7, 0.7, 0);
 	
-	\draw[vector guide] (0,0,0) -- (Q);
+	\tdplotdefinepoints(0.2, 0.2, 0.8)(0.2, 0.2, 0)(0.2,0.7,0);
+	\tdplotdrawpolytopearc[<->,blue]{0.3}{anchor=north west}{$\theta$};
 	
+	\tdplotdefinepoints(0.2, 0.2, 0.8)(0.2, 0.7, 0)(0.7, 0.7, 0);
+	\tdplotdrawpolytopearc[<->,red]{0.3}{anchor=north west}{$\phi$};
 \end{tikzpicture}
 \end{center}
