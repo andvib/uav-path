@@ -18,7 +18,7 @@ The attitude of the UAV will be given as Euler-angles:
 	\bm{\Theta}_{nb} = 
 	\begin{bmatrix}
 		\phi \\ \theta \\ \psi
-	\end{bmatrix}
+	\end{bmatrix}.
 \end{equation}
 	
 These two expressions is often put together to make one position and orientation vector $\bm{\eta}$:
@@ -28,7 +28,7 @@ These two expressions is often put together to make one position and orientation
 	\begin{bmatrix}
 		\bm{p}_{b/n}^n \\
 		\bm{\Theta}_{nb}
-	\end{bmatrix}
+	\end{bmatrix}.
 \end{equation}
 	
 \subsection{Wind}
@@ -51,9 +51,10 @@ where $\chi$ is called the course and $\gamma$ is maybe called something??? Thes
 \begin{figure}
 	\import{/}{kinematic_figure.tex}
 	\caption{Illustration of how the angles influence the camera position.}
+	\label{fig:camera_kinematics}
 \end{figure}
 	
-When assuming flat earth the centre point of the camera on the ground can be expressed in the body frame \{b\} using the attitude $\bm{\Theta}_{nb}$ of the UAV and the height $z_n$:
+The point where the camera is pointing is coupled with the attitude of the aircraft. Figure \ref{fig:camera_kinematics} shows how the position of the camera is affected by the attitude $\bm{\Theta}_{nb}$ in the body frame \{b\}, and the height $z_n$ in the NED frame \{n\}. This model assumes flat earth. The camera position in the body frame is expressed as
 
 \begin{equation} \label{eq:camera_pos}
 	\bm{c}_b^b =
@@ -65,10 +66,10 @@ When assuming flat earth the centre point of the camera on the ground can be exp
 	\begin{bmatrix}
 		z_n sin(\theta) \\
 		z_n sin(\phi)
-	\end{bmatrix}
+	\end{bmatrix}.
 \end{equation}
 
-The distance from the UAV to the camera centre point can be expressed in {n} by using the rotational matrix $\bm{R}_{z,\psi}$:
+In order to express the camera position $\bm{c}_b^b$ in \{n\}, the heading $\psi$ of the aircraft must be taken into consideration. This is done by rotating the point $\bm{c}_b^b$ with the rotational matrix $\bm{R}_{z,\psi}$:
 
 \begin{equation} \label{eq:body_ned_rotate}
 	\bm{c}_b^n =
@@ -76,7 +77,7 @@ The distance from the UAV to the camera centre point can be expressed in {n} by 
 		c_{x/b}^n \\
 		c_{y/b}^n
 	\end{bmatrix}
-	= \bm{R}_{z,\psi} \bm{c}_b^b
+	= \bm{R}_{z,\psi} \bm{c}_b^b,
 \end{equation}
 
 where:
@@ -87,11 +88,10 @@ where:
 		cos(\theta) & -sin(\theta) & 0 \\
 		sin(\theta) & cos(\theta) & 0 \\
 		0 & 0 & 1
-	\end{bmatrix}
+	\end{bmatrix}.
 \end{equation}
-	
 
-In order to translate this to position in NED; it needs to be added to the UAVs NED position:
+The point $\bm{c}_b^n$ is not the actual position in \{n\} since it does not take the UAVs position into consideration. This is done by simply adding the UAVs position to $\bm{c}_b^n$:
 
 \begin{equation} \label{eq:body_ned_trans}
 	\bm{c}^n =
@@ -102,7 +102,7 @@ In order to translate this to position in NED; it needs to be added to the UAVs 
 	\begin{bmatrix}
 		x_n + c_{x/b}^n \\
 		y_n + c_{y/b}^n
-	\end{bmatrix}
+	\end{bmatrix}.
 \end{equation}
 
 \subsection{Camera Angle of View}
@@ -127,7 +127,7 @@ Since the camera isn't only focusing on one specific point, it can be useful des
 	\begin{bmatrix}
 		z_n sin(\theta)\\
 		z_n sin(\phi - \sigma)
-	\end{bmatrix}
+	\end{bmatrix}.
 \end{equation}
 
 The steps for translating the points to the NED frame are the same as in \eqref{eq:body_ned_rotate} and \eqref{eq:body_ned_trans}:
@@ -149,7 +149,7 @@ The steps for translating the points to the NED frame are the same as in \eqref{
 	\begin{bmatrix}
 		x_n + e^n_{x/b} \\
 		y_n + e^n_{y/b} \\
-	\end{bmatrix}
+	\end{bmatrix}.
 \end{equation}
 	
 *ADD TRANSLATIONAL MATRIX FOR POSITION OF CAMERA*

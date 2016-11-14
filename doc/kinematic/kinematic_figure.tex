@@ -18,23 +18,28 @@
 	%draw axes
 	\draw[axis] (0,0,0) -- (1,0,0) node[anchor=north east]{$E$};
 	\draw[axis] (0,0,0) -- (0,1,0) node[anchor=north west]{$N$};
-	\draw[axis] (0,0,0) -- (0,0,1) node[anchor=south]{$D$};
+	\draw[axis] (0,0,0) -- (0,0,1) node[anchor=south]{$-D$};
 
 	\coordinate (X) at (0.2, 0.2, 0.8);
 	
-	
-	\draw[dashed] (X) -- (0.2, 0.2, 0);
+	\draw[dashed] (0.2, 0.2, 0) -- (0.7, 0.7, 0);
+	\draw[dashed] (X) -- (0.2, 0.2, 0) node[midway, left] {$z_n$};
 	\draw[dashed,blue] (X) -- (0.2, 0.7, 0);
 	\draw[dashed,red] (X) -- (0.7, 0.7, 0);
 	\draw[dashed] (0.2, 0.2, 0) -- (0.2, 0.7, 0) node[midway, above, sloped] {$z_n sin(\theta)$};
-	\draw[dashed] (0.2, 0.7, 0) -- (0.7, 0.7, 0) node[midway, above, sloped] {$z_n sin(\phi)$}  node[anchor=west]{$c_n$};
+	\draw[dashed] (0.2, 0.7, 0) -- (0.7, 0.7, 0) node[midway, above, sloped] {$z_n sin(\phi)$};
 	
 	\draw[dashed] (0.2, 0.7, 0) -- (0.7, 0.7, 0);
+	
 	
 	\tdplotdefinepoints(0.2, 0.2, 0.8)(0.2, 0.2, 0)(0.2,0.7,0);
 	\tdplotdrawpolytopearc[<->,blue]{0.3}{anchor=north west}{$\theta$};
 	
 	\tdplotdefinepoints(0.2, 0.2, 0.8)(0.2, 0.7, 0)(0.7, 0.7, 0);
 	\tdplotdrawpolytopearc[<->,red]{0.3}{anchor=north west}{$\phi$};
+	
+	\fill (X) circle[radius=0.3pt] node[anchor=south]{\{b\}};
+	\fill (0.7, 0.7, 0) circle[radius=0.3pt] node[anchor=north]{$c_n$};
+	
 \end{tikzpicture}
 \end{center}
