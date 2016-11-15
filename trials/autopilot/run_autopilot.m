@@ -19,22 +19,29 @@ U_trim = [-0.0594; 0.0005; -0.0010; 0.0978];
 
 P.tau = 1;
 [T_phi_delta_a,T_chi_phi,T_theta_delta_e,T_h_theta,T_h_Va,T_Va_delta_t,T_Va_theta,T_v_delta_r]= compute_tf_model(X_trim,U_trim,P);
-P=computeGainsAerosonde(T_phi_delta_a,T_v_delta_r,T_theta_delta_e,T_Va_theta,T_Va_delta_t,P);
+P = computeGainsAerosonde(T_phi_delta_a,T_v_delta_r,T_theta_delta_e,T_Va_theta,T_Va_delta_t,P);
+
 
 %% RUN SIMULATORE
 % Create track
-heading_time = [0 35 50 75 100];
-heading_d = [1 1 2 1 1];
+heading_time = [0 100];
+heading_d = [0 0];
 Va = 25;
-X_trim(8) = Va;
 
 % Set inital conditions
 X_trim(4:7) = euler2q(0,0,0);
-
-set_param('autopilot_fly', 'StopTime', int2str(100));
+X_trim(8) = Va;
+set_param('demo', 'StopTime', int2str(100));
 x0 = X_trim;
-sim autopilot_fly
 
+[phi0,theta0,psi0] = q2euler(X_trim(4:7)/norm(X_trim(4:7)));
+P.Va = Va;
+P.u_trim = U_trim;
+P;
+
+(~exist('P') || ~isfield(P,'course_ki'))
+
+sim demo
 figure(1);
 hold on;
 grid on;
@@ -78,17 +85,11 @@ grid on;
 plot(states.Position.p_E.Data, states.Position.p_N.Data);
 title('Position - NE');
 
-% figure(5);
-% plot(delta);
-% legend('e','a','r','t');
-% figure(6);
-% plot(delta1.signals.values);
-% legend('e','a','r','t');
-
-figure(7);
+figure(6);
 plot(control);
 title('CONTROL INPUTS');
 legend('e','a','r','t');
+grid on;
 
 % attitude = [states.Attitude.phi.data, states.Attitude.theta.data, states.Attitude.psi.data]';
 % pos = [states.Position.p_N, states.Position.p_E, states.Position.p_D]';
