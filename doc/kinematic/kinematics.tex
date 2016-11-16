@@ -32,11 +32,11 @@ These two expressions is often put together to make one position and orientation
 \end{equation}
 	
 \subsection{Wind}
-Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane and the angle of attack $\gamma_a$ in the vertical plane. This will change the UAVs actual heading $\phi$ and pitch $\theta$ to \cite{suaBEARD}:
+Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane and the angle of attack $\gamma_a$ in the vertical plane. This will change the UAVs actual heading $\psi$ and pitch $\theta$ to \cite{suaBEARD}:
 
 \begin{subequations}
 \begin{equation}
-	\chi = \phi + \chi_c
+	\chi = \psi + \chi_c
 \end{equation}
 \begin{equation}
 	\gamma = \theta + \theta_a
@@ -151,5 +151,9 @@ The steps for translating the points to the NED frame are the same as in \eqref{
 		y_n + e^n_{y/b} \\
 	\end{bmatrix}.
 \end{equation}
-	
-*ADD TRANSLATIONAL MATRIX FOR POSITION OF CAMERA*
+
+\begin{figure}[!ht]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.25\textwidth, keepaspectratio=true]{../../trials/kinematic_output.eps}}
+    \caption{Graph showing the line the camera captures when the plane is positioned in the origin with an altitude of $10m$, and $\phi=-10$, $\theta=-5$ and $\psi=20$. The field of view is $20\degree$.}
+\end{figure}

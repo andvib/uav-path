@@ -1,7 +1,7 @@
 close all;
 clear all;
 
-attitude = [-10, 0, 45];
+attitude = [-10, -5, 20];
 pos = [0, 0, -10];
 aov = 19;
 
@@ -13,3 +13,5 @@ plot([a(2), b(2)],[a(1), b(1)]);
 grid on;
 ylabel('N');
 xlabel('E');
+
+saveas(gcf, 'kinematic_output', 'epsc');
