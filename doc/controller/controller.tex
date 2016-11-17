@@ -1,0 +1,121 @@
+\section{Controller}
+
+\subsection{Dynamics}
+In his paper, Fisher \cite{ratcFISHER} uses the dynamic model given in Beard and McLain \cite{suaBEARD} to develop a controller that uses rudder to change the heading. A similar controller will be used in this paper, and it will be derived by using the same method as Fisher used.
+
+To simplify the controller, it will be assumed that there is no wind and that the sidslip $\beta$ is an input disturbance. These assumption will simplify the control problem since it can be assumed that $\chi = \psi$. It will also be assumed that the UAV is in trimmed, straight level flight. This will simplify the system since the roll angle $\phi$ and pithc angle $\theta$ both can be assumed to be small.
+
+The yaw dynamics for a UAV are (eq. 3.17, Beard and McLain \cite{suaBEARD})
+
+\begin{equation}
+	\dot{r} = \Gamma_7pq - \Gamma_1qr + \Gamma_4l + \Gamma_8n
+	\label{eq:yaw_dynamics}
+\end{equation}
+
+where $l$ and $n$ are the moments about the $\bm{i}^b$ and $\bm{j}^b$ axes respectively. The $\Gamma$ equations describe the inertia of the aircraft and are expresed using elements of the inertia matrix $\bm{J}$:
+
+%\begin{equation}
+%\begin{gathered}
+%	\Gamma_1 = \frac{J_{xz}(J_x - J_y + J_z)}{J_xJ_z-J_{xz}^2}
+%	\\
+%	\Gamma_4 = \frac{J_{xz}}{J_xJ_z-J_{xz}^2}
+%	\\
+%	\Gamma_7 = \frac{(J_x-J_y)J_x+J_{xz}^2}{J_xJ_z-J_{xz}^2}
+%	\\
+%	\Gamma_8 = \frac{J_x}{J_xJ_z-J_{xz}^2}
+%\end{gathered}
+%.
+%\end{equation}
+
+The heading dynamic is expressed by the pitch rate $q$, the yaw rate $r$, and the attitude states (eq. 3.3, Beard and McLain \cite{suaBEARD}):
+
+\begin{equation}
+	\dot{\psi} = sin(\phi)sec(\theta)q + cos(\phi)sec(\theta)r.
+\end{equation}
+
+As mentioned it is assumed that the aircraft is in trimmed straight level flight. By assuming small $\phi$ and $\theta$, and also no pitch rate $q$, the heading dynamics can be simplified to:
+
+\begin{equation}
+	\dot{\psi} = r,
+\end{equation}
+
+which leads to:
+
+\begin{equation}
+	\ddot{\psi} = \dot{r}.
+\end{equation}
+
+The equation for the yaw dynamics [\ref{eq:yaw_dynamics}] can now be written as
+
+\begin{equation}
+	\label{eq:yaw_dynamics2}
+	\ddot{\psi} = \dot{r} = \Gamma_4l + \Gamma_8n.
+\end{equation}
+
+The moments $l$ and $n$ are the moments on the aircraft caused by the attitude states and rates, the sideslip $\beta$, and also the aileron deflection $\delta_a$ and the rudder deflection $\delta_r$. These are given by equation 4.15 and 4.16 in Beard and McLain \cite{suaBEARD}:
+
+\begin{equation}
+\begin{gathered}
+	\label{eq:controller_moments}
+	l = \frac{1}{2} \rho V_a^2Sb[C_{l_0} + C_{l_\beta}\beta + C_{l_p}\frac{b}{2V_a}p + C_{l_r}\frac{b}{2V_a}r + C_{l_{\delta_a}}\delta_a + C_{l_{\delta_r}}\delta_r]
+	\\
+	n = \frac{1}{2} \rho V_a^2Sb[C_{n_0} + C_{n_\beta}\beta + C_{n_p}\frac{b}{2V_a}p + C_{n_r}\frac{b}{2V_a}r + C_{n_{\delta_a}}\delta_a + C_{n_{\delta_r}}\delta_r]
+\end{gathered}
+.
+\end{equation}
+
+By continuing to follow Fishers \cite{ratcFISHER} method, equations (\ref{eq:yaw_dynamics2}) and (\ref{eq:controller_moments}) can be combined to get
+
+\begin{equation}
+	\label{eq:yaw_dynamics_final}
+	\ddot{\psi} = \frac{1}{2}V_a^2Sb[C_{r_0} + C_{r_\beta}\beta + C_{r_p}\frac{b}{2V_a}p + C_{r_r}\frac{b}{2V_a}r + C_{r_{\delta_a}}\delta_a + C_{r_{\delta_r}}\delta_r]
+\end{equation}
+
+where
+
+\begin{equation}
+\begin{gathered}
+	C_{r_0} = \Gamma_4C_{l_0} + \Gamma_8C_{n_0}
+	\\
+	C_{r_\beta} = \Gamma_4C_{l_\beta} + \Gamma_8C_{n_\beta}
+	\\
+	C_{r_p} = \Gamma_4C_{l_p} + \Gamma_8C_{n_p}
+	\\
+	C_{r_r} = \Gamma_4C_{l_r} + \Gamma_8C_{n_r}
+	\\
+	C_{r_{\delta_a}} = \Gamma_4C_{l_{\delta_a}} + \Gamma_8C_{n_{\delta_a}}
+	\\
+	C_{r_{\delta_r}} = \Gamma_4C_{l_{\delta_r}} + \Gamma_8C_{n_{\delta_r}}
+\end{gathered}
+\end{equation}
+
+where the constants are craft-specific parameters, and
+
+\begin{equation}
+\begin{gathered}
+	\Gamma_4 = \frac{J_{xz}}{J_xJ_z-J_{xz}^2}
+	\\
+	\Gamma_8 = \frac{J_x}{J_xJ_z-J_{xz}^2}
+\end{gathered}
+.
+\end{equation}
+
+
+\subsection{Controller Transfer Function}
+Since the controller is to use rudder input $\delta_r$ to change the heading $\psi$, equation (\ref{eq:yaw_dynamics_final}) can be rearranged to express these variables:
+
+\begin{equation}
+	\ddot{\psi} = -a_{\psi_1}\dot{\psi} + a_{\psi_2}\delta_r + d_\psi
+\end{equation}
+
+where
+
+\begin{equation}
+\begin{gathered}
+	a_{\psi_1} = \frac{1}{4}\rho V_aSb^2C_{r_r}
+	\\
+	a_{\psi_2} = \frac{1}{2}\rho V_a^2Sb^2C_{r_{\delta_r}}
+	\\
+	d_\psi = \frac{1}{2}\rho V_a^2Sb[C_{r_0} + C_{r_\beta}\beta + C_{r_p}\frac{b}{2V_a}p + C_{r_{\delta_a}}\delta_a]
+\end{gathered}
+\end{equation}
