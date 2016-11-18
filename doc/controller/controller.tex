@@ -64,7 +64,7 @@ The moments $l$ and $n$ are the moments on the aircraft caused by the attitude s
 .
 \end{equation}
 
-By continuing to follow Fishers \cite{ratcFISHER} method, equations (\ref{eq:yaw_dynamics2}) and (\ref{eq:controller_moments}) can be combined to get
+By continuing to follow Fishers \cite{ratcFISHER} notation, equations (\ref{eq:yaw_dynamics2}) and (\ref{eq:controller_moments}) can be combined to get
 
 \begin{equation}
 	\label{eq:yaw_dynamics_final}
@@ -105,6 +105,7 @@ where the constants are craft-specific parameters, and
 Since the controller is to use rudder input $\delta_r$ to change the heading $\psi$, equation (\ref{eq:yaw_dynamics_final}) can be rearranged to express these variables:
 
 \begin{equation}
+	\label{eq:yaw_control}
 	\ddot{\psi} = -a_{\psi_1}\dot{\psi} + a_{\psi_2}\delta_r + d_\psi
 \end{equation}
 
@@ -112,10 +113,56 @@ where
 
 \begin{equation}
 \begin{gathered}
-	a_{\psi_1} = \frac{1}{4}\rho V_aSb^2C_{r_r}
+	\label{eq:constants_controller}
+	a_{\psi_1} = -\frac{1}{4}\rho V_aSb^2C_{r_r}
 	\\
 	a_{\psi_2} = \frac{1}{2}\rho V_a^2Sb^2C_{r_{\delta_r}}
 	\\
 	d_\psi = \frac{1}{2}\rho V_a^2Sb[C_{r_0} + C_{r_\beta}\beta + C_{r_p}\frac{b}{2V_a}p + C_{r_{\delta_a}}\delta_a]
 \end{gathered}
+.
 \end{equation}
+
+The Laplace transformation brings (\ref{eq:yaw_control}) to the form
+
+\begin{equation}
+	\label{eq:yaw_controller_s}
+	\psi(s) = \frac{a_{\psi_2}}{s(s+a_{\psi_1})}\delta_r(s) + \frac{1}{s(s+a_{\psi_1})}d_\psi(s).
+\end{equation}
+
+This equation show that the second term containing $d_\psi$ acts as a disturbance for the controller. As shown in (\ref{eq:constants_controller}), the inputs to this term are the sideslip $\beta$, roll rate $p$, and aileron deflection $\delta_a$. Since the UAV is assumed to be in trimmed straight level flight and the controller will use the rudder to turn instead of roll it is already assumed that $p$ will be zero, as will the aileron deflection $\delta_a$. During normal operation it cannot be assumed that no sideslip will occur. However, any $\beta$ is assumed to be small so that it can be removed from the controller equation. The final transfer function for the controller dynamics will then be
+
+\begin{equation}
+	\label{eq:tf_rudder}
+	\frac{\psi(s)}{\delta_r(s)} = \frac{a_{\psi_2}}{s(s+a_{\psi_1})}.
+\end{equation}
+
+In order to control the heading of the UAV with the help of the rudder, a controller must be added. The PD controller used here takes the form
+
+\begin{equation}
+	\delta_r = ek_p + \dot{e}k_d
+\end{equation}
+
+where $e$ is defined as the error between the desired heading $\psi_d$ and the measured heading $\psi$
+
+\begin{equation}
+	e = \psi_d - \psi.
+\end{equation}
+
+The transfer function between the desired heading and the measured heading is found by adding the controller to the transfer function between rudder and heading (\ref{eq:tf_rudder})
+
+\begin{equation}
+	\label{eq:rudder_PD}
+	\frac{\psi}{\psi_d} = \frac{a_2k_p}{s^2 + (a_1+a_2k_d)s + a_2k_p}.
+\end{equation}
+
+
+** PROBABLY NOT TO BE USED... OR IS IT?**
+A PID controller takes the form
+
+\begin{equation}
+	\label{eq:rudder_PID}
+	\frac{\psi}{\psi_d} = \frac{-a_2(k_p + \frac{1}{s}k_i)s}{s^3 + (a_2K_d-a_1)s^2 - a_2k_ps + a_2k_i}
+\end{equation}
+
+********************************************
