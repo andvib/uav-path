@@ -54,15 +54,15 @@ The equation for the yaw dynamics [\ref{eq:yaw_dynamics}] can now be written as
 
 The moments $l$ and $n$ are the moments on the aircraft caused by the attitude states and rates, the sideslip $\beta$, and also the aileron deflection $\delta_a$ and the rudder deflection $\delta_r$. These are given by equation 4.15 and 4.16 in Beard and McLain \cite{suaBEARD}:
 
+\begin{subequations}
 \begin{equation}
-\begin{gathered}
 	\label{eq:controller_moments}
 	l = \frac{1}{2} \rho V_a^2Sb[C_{l_0} + C_{l_\beta}\beta + C_{l_p}\frac{b}{2V_a}p + C_{l_r}\frac{b}{2V_a}r + C_{l_{\delta_a}}\delta_a + C_{l_{\delta_r}}\delta_r]
-	\\
-	n = \frac{1}{2} \rho V_a^2Sb[C_{n_0} + C_{n_\beta}\beta + C_{n_p}\frac{b}{2V_a}p + C_{n_r}\frac{b}{2V_a}r + C_{n_{\delta_a}}\delta_a + C_{n_{\delta_r}}\delta_r]
-\end{gathered}
-.
 \end{equation}
+\begin{equation}
+	n = \frac{1}{2} \rho V_a^2Sb[C_{n_0} + C_{n_\beta}\beta + C_{n_p}\frac{b}{2V_a}p + C_{n_r}\frac{b}{2V_a}r + C_{n_{\delta_a}}\delta_a + C_{n_{\delta_r}}\delta_r].
+\end{equation}
+\end{subequations}
 
 By continuing to follow Fishers \cite{ratcFISHER} notation, equations (\ref{eq:yaw_dynamics2}) and (\ref{eq:controller_moments}) can be combined to get
 
@@ -73,32 +73,37 @@ By continuing to follow Fishers \cite{ratcFISHER} notation, equations (\ref{eq:y
 
 where
 
+\begin{subequations}
 \begin{equation}
-\begin{gathered}
 	C_{r_0} = \Gamma_4C_{l_0} + \Gamma_8C_{n_0}
-	\\
-	C_{r_\beta} = \Gamma_4C_{l_\beta} + \Gamma_8C_{n_\beta}
-	\\
-	C_{r_p} = \Gamma_4C_{l_p} + \Gamma_8C_{n_p}
-	\\
-	C_{r_r} = \Gamma_4C_{l_r} + \Gamma_8C_{n_r}
-	\\
-	C_{r_{\delta_a}} = \Gamma_4C_{l_{\delta_a}} + \Gamma_8C_{n_{\delta_a}}
-	\\
-	C_{r_{\delta_r}} = \Gamma_4C_{l_{\delta_r}} + \Gamma_8C_{n_{\delta_r}}
-\end{gathered}
 \end{equation}
+\begin{equation}
+	C_{r_\beta} = \Gamma_4C_{l_\beta} + \Gamma_8C_{n_\beta}
+\end{equation}
+\begin{equation}
+	C_{r_p} = \Gamma_4C_{l_p} + \Gamma_8C_{n_p}
+\end{equation}
+\begin{equation}
+	C_{r_r} = \Gamma_4C_{l_r} + \Gamma_8C_{n_r}
+\end{equation}
+\begin{equation}
+	C_{r_{\delta_a}} = \Gamma_4C_{l_{\delta_a}} + \Gamma_8C_{n_{\delta_a}}
+\end{equation}
+\begin{equation}
+	C_{r_{\delta_r}} = \Gamma_4C_{l_{\delta_r}} + \Gamma_8C_{n_{\delta_r}}
+\end{equation}
+\end{subequations}
 
 where the constants are craft-specific parameters, and
 
+\begin{subequations}
 \begin{equation}
-\begin{gathered}
 	\Gamma_4 = \frac{J_{xz}}{J_xJ_z-J_{xz}^2}
-	\\
-	\Gamma_8 = \frac{J_x}{J_xJ_z-J_{xz}^2}
-\end{gathered}
-.
 \end{equation}
+\begin{equation}
+	\Gamma_8 = \frac{J_x}{J_xJ_z-J_{xz}^2}.
+\end{equation}
+\end{subequations}
 
 
 \subsection{Controller Transfer Function}
@@ -111,17 +116,18 @@ Since the controller is to use rudder input $\delta_r$ to change the heading $\p
 
 where
 
+\begin{subequations}
 \begin{equation}
-\begin{gathered}
 	\label{eq:constants_controller}
 	a_{\psi_1} = -\frac{1}{4}\rho V_aSb^2C_{r_r}
-	\\
-	a_{\psi_2} = \frac{1}{2}\rho V_a^2Sb^2C_{r_{\delta_r}}
-	\\
-	d_\psi = \frac{1}{2}\rho V_a^2Sb[C_{r_0} + C_{r_\beta}\beta + C_{r_p}\frac{b}{2V_a}p + C_{r_{\delta_a}}\delta_a]
-\end{gathered}
-.
 \end{equation}
+\begin{equation}
+	a_{\psi_2} = \frac{1}{2}\rho V_a^2Sb^2C_{r_{\delta_r}}
+\end{equation}
+\begin{equation}
+	d_\psi = \frac{1}{2}\rho V_a^2Sb[C_{r_0} + C_{r_\beta}\beta + C_{r_p}\frac{b}{2V_a}p + C_{r_{\delta_a}}\delta_a].
+\end{equation}
+\end{subequations}
 
 The Laplace transformation brings (\ref{eq:yaw_control}) to the form
 
@@ -153,16 +159,24 @@ The transfer function between the desired heading and the measured heading is fo
 
 \begin{equation}
 	\label{eq:rudder_PD}
-	\frac{\psi}{\psi_d} = \frac{a_2k_p}{s^2 + (a_1+a_2k_d)s + a_2k_p}.
+	\frac{\psi}{\psi_d} = \frac{a_{\psi_2}k_p}{s^2 + (a_{\psi_1}+a_{\psi_2}k_d)s + a_{\psi_2}k_p}.
 \end{equation}
 
+Since the transfer function is written in the form of a canonical second-order transfer function, the proportional gain $k_p$ and the derivative gain $k_d$ can be found by calculating the natural frequency $\omega_n$ and damping factor $\zeta$. The final expressions for the gains will be
 
-** PROBABLY NOT TO BE USED... OR IS IT?**
-A PID controller takes the form
-
+\begin{subequations}
 \begin{equation}
-	\label{eq:rudder_PID}
-	\frac{\psi}{\psi_d} = \frac{-a_2(k_p + \frac{1}{s}k_i)s}{s^3 + (a_2K_d-a_1)s^2 - a_2k_ps + a_2k_i}
+	k_p = \frac{\omega_n^2}{a_{\psi_2}}
 \end{equation}
+\begin{equation}
+	k_d = \frac{2\zeta\omega_n - a_{\psi_1}}{a_{\psi_2}}.
+\end{equation}
+\end{subequations}
 
-********************************************
+%** PROBABLY NOT TO BE USED... OR IS IT?**
+%A PID controller takes the form
+%\begin{equation}
+%	\label{eq:rudder_PID}
+%	\frac{\psi}{\psi_d} = \frac{-a_2(k_p + \frac{1}{s}k_i)s}{s^3 + (a_2K_d-a_1)s^2 - a_2k_ps + a_2k_i}
+%\end{equation}
+%********************************************
