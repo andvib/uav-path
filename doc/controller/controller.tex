@@ -3,7 +3,7 @@
 \subsection{Dynamics}
 In his paper, Fisher \cite{ratcFISHER} uses the dynamic model given in Beard and McLain \cite{suaBEARD} to develop a controller that uses rudder to change the heading. A similar controller will be used in this paper, and it will be derived by using the same method as Fisher used.
 
-To simplify the controller, it will be assumed that there is no wind and that the sidslip $\beta$ is an input disturbance. These assumption will simplify the control problem since it can be assumed that $\chi = \psi$. It will also be assumed that the UAV is in trimmed, straight level flight. This will simplify the system since the roll angle $\phi$ and pithc angle $\theta$ both can be assumed to be small.
+To simplify the controller, it will be assumed that there is no wind and no sidslip $\beta$. These assumption will simplify the control problem since it can be assumed that $\chi = \psi$. It will also be assumed that the UAV is in trimmed, straight level flight. This will simplify the system since the roll angle $\phi$ and pithc angle $\theta$ both can be assumed to be small.
 
 The yaw dynamics for a UAV are (eq. 3.17, Beard and McLain \cite{suaBEARD})
 
@@ -12,7 +12,7 @@ The yaw dynamics for a UAV are (eq. 3.17, Beard and McLain \cite{suaBEARD})
 	\label{eq:yaw_dynamics}
 \end{equation}
 
-where $l$ and $n$ are the moments about the $\bm{i}^b$ and $\bm{j}^b$ axes respectively. The $\Gamma$ equations describe the inertia of the aircraft and are expresed using elements of the inertia matrix $\bm{J}$:
+where $l$ and $n$ are the moments about the $\bm{i}^b$ and $\bm{j}^b$ axes respectively. The $\Gamma$ equations describe the inertia of the aircraft and are expresed using elements of the inertia matrix $\bm{J}$.
 
 %\begin{equation}
 %\begin{gathered}
@@ -118,18 +118,17 @@ where
 
 \begin{subequations}
 \begin{equation}
-	\label{eq:constants_controller}
 	a_{\psi_1} = -\frac{1}{4}\rho V_aSb^2C_{r_r}
 \end{equation}
 \begin{equation}
 	a_{\psi_2} = \frac{1}{2}\rho V_a^2Sb^2C_{r_{\delta_r}}
 \end{equation}
-\begin{equation}
+\begin{equation}\label{eq:constants_controller}
 	d_\psi = \frac{1}{2}\rho V_a^2Sb[C_{r_0} + C_{r_\beta}\beta + C_{r_p}\frac{b}{2V_a}p + C_{r_{\delta_a}}\delta_a].
 \end{equation}
 \end{subequations}
 
-The Laplace transformation brings (\ref{eq:yaw_control}) to the form
+$a_{\psi_1}$ is chosen to be negative, as this will ease later calculations (see (\ref{eq:controller_kp})). The Laplace transformation brings (\ref{eq:yaw_control}) to the form
 
 \begin{equation}
 	\label{eq:yaw_controller_s}
@@ -166,6 +165,7 @@ Since the transfer function is written in the form of a canonical second-order t
 
 \begin{subequations}
 \begin{equation}
+	\label{eq:controller_kp}
 	k_p = \frac{\omega_n^2}{a_{\psi_2}}
 \end{equation}
 \begin{equation}

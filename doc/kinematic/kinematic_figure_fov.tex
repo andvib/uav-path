@@ -1,0 +1,53 @@
+\begin{center}
+\begin{tikzpicture}
+	[scale=7,
+	axis/.style={->,black,thick}]
+
+	% Draw main axes
+	\draw[axis] (0,0) -- (1,0);
+	\draw[axis] (0,0) -- (0,1);
+	
+	% Draw aircraft
+	\coordinate (X) at (0.2, 0.7);
+	\fill (X) circle[radius=0.3pt] node[anchor=south]{\{b\}};
+	
+	\coordinate (C) at (0.7, 0);
+	\draw (X) -- (C);
+	\coordinate (B) at (0.2, 0);
+	\draw[dashed] (X) -- (B) node[midway, left]{$z_n$};
+	
+	\coordinate (D) at (0.6, 0);
+	\coordinate (E) at (0.8, 0);
+	
+	\draw[dashed, blue] (X) -- (D);
+	\draw[dashed, red] (X) -- (E);
+	
+	\fill (D) circle[radius=0.3pt] node[anchor=north]{$e_{2,b}^b$};
+	\fill (E) circle[radius=0.3pt] node[anchor=north]{$e_{1,b}^b$};
+	
+	% Draw angles
+	\begin{scope}
+		\path[clip] (X) -- (B) -- (D);
+		\draw[blue] (X) circle (3mm);
+		\node[blue] at ($(X)+(281:3.5mm)$) {$\phi-\sigma$};
+	\end{scope}
+	
+	\begin{scope}
+		\path[clip] (X) -- (B) -- (C);
+		\draw (X) circle (4mm);
+		\node at ($(X)+(280:4.5mm)$) {$\phi$};
+	\end{scope}
+	
+	\begin{scope}
+		\path[clip] (X) -- (B) -- (E);
+		\draw[red] (X) circle (5mm);
+		\node[red] at ($(X)+(280:5.5mm)$) {$\phi+\sigma$};
+	\end{scope}
+	
+	\begin{scope}
+		\path[clip] (X) -- (C) -- (E);
+		\draw (X) circle (6mm);
+		\node at ($(X)+(308:6.5mm)$) {$\sigma$};
+	\end{scope}	
+\end{tikzpicture}
+\end{center}

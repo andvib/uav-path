@@ -21,29 +21,29 @@ The attitude of the UAV will be given as Euler-angles:
 	\end{bmatrix}.
 \end{equation}
 	
-These two expressions are often put together to make one position and orientation vector $\bm{\eta}$:
-
-\begin{equation}
-	\bm{\eta} =
-	\begin{bmatrix}
-		\bm{p}_{b/n}^n \\
-		\bm{\Theta}_{nb}
-	\end{bmatrix}.
-\end{equation}
+%These two expressions are often put together to make one position and orientation vector $\bm{\eta}$:
+%
+%\begin{equation}
+%	\bm{\eta} =
+%	\begin{bmatrix}
+%		\bm{p}_{b/n}^n \\
+%		\bm{\Theta}_{nb}
+%	\end{bmatrix}.
+%\end{equation}
 	
 \subsection{Wind}
-Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane and the angle of attack $\gamma_a$ in the vertical plane. This will change the UAVs actual heading $\psi$ and pitch $\theta$ to \cite{suaBEARD}:
+Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane and the angle of attack $\alpha$ in the vertical plane. This will change the UAVs actual course $\chi$ and the air-mass-referenced flight-path angle $\gamma_a$ to \cite{suaBEARD}:
 
 \begin{subequations}
 \begin{equation}
 	\chi = \psi + \chi_c
 \end{equation}
 \begin{equation}
-	\gamma = \theta + \theta_a
+	\gamma = \theta + \theta_a.
 \end{equation}
 \end{subequations}
 
-where $\chi$ is called the course and $\gamma$ is maybe called something??? These angles will only affect the navigational part, and not where the camera is pointed.
+The air-mass-referenced flight-path angle $\gamma_a$ is defined as the vertical angle of the airspeed $V_a$ relative to the north-east plane. These angles will only affect the navigational part, and not where the camera is pointed.
 
 
 \subsection{Camera Position}
@@ -129,6 +129,12 @@ Since the camera isn't only focusing on one specific point, it can be useful des
 		z_n tan(\phi - \sigma)
 	\end{bmatrix}.
 \end{equation}
+
+\begin{figure}
+	\import{/}{kinematic_figure_fov.tex}
+	\caption{Illustration of how the field of view is calculated.}
+	\label{fig:camera_kinematics_fov}
+\end{figure}
 
 The steps for translating the points to the NED frame are the same as in \eqref{eq:body_ned_rotate} and \eqref{eq:body_ned_trans}:
 
