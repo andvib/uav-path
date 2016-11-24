@@ -62,7 +62,7 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    theta_max = 15*pi/180;
    
    % Natural frequency and damping ratio
-   zeta_pitch = 0.9; % DESIGN PARAMETER
+   zeta_pitch = 0.7; % DESIGN PARAMETER
    wn_pitch = sqrt(abs(a_theta3)*delta_e_max*sqrt(1-zeta_pitch^2)/theta_max);
    
    % Calculate control gains
@@ -102,7 +102,7 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    a_Vt2 = num(2);
    
    % Natural frequency and damping ratio
-   zeta_airspeed_throttle = 0.1; % DESIGN PARAMETER
+   zeta_airspeed_throttle = 0.8; % DESIGN PARAMETER
    wn_airspeed_throttle = 3; % DESIGN PARAMETER
    
    % Calculate control gains
