@@ -9,16 +9,16 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    
    % Max control surface deflection
    delta_a_max = 45*pi/180;
-   phi_max = 15*pi/180;
+   phi_max = 100*pi/180;
    
    % Natural frequency and damping ratio
-   zeta_roll = 0.99; % DESIGN PARAMETER
+   zeta_roll = 0.75; % DESIGN PARAMETER
    wn_roll = sqrt(a_phi2*delta_a_max*sqrt(1-zeta_roll^2)/phi_max);
    
    % Calculate control gains
    P.roll_kp = wn_roll^2/a_phi2;
-   P.roll_kd = (2*zeta_roll*wn_roll - a_phi1)/a_phi2;
-   P.roll_ki = 0.2; % DESIGN PARAMETER
+   P.roll_kd = 1.5*(2*zeta_roll*wn_roll - a_phi1)/a_phi2 + 1;
+   P.roll_ki = 0.05; % DESIGN PARAMETER
    
    %% Course hold
    % Natural frequency and damping ratio
@@ -37,11 +37,11 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    a_beta1 = den(2);
    
    % Max control surface deflection
-   delta_r_max = sign(a_beta2)*20*pi/180;
+   delta_r_max = 20*pi/180;
    vr_max = 3; % Roll command when delta_r_max is achieved
    
    % Natural frequency and damping ratio
-   zeta_beta = 0.75; % DESIGN PARAMETER
+   zeta_beta = 0.707; % DESIGN PARAMETER
    
    % Calculate control gains
    P.beta_kp = delta_r_max / vr_max;
@@ -59,10 +59,10 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    
    % Max control surface deflection
    delta_e_max = 45*pi/180;
-   theta_max = 10*pi/180;
+   theta_max = 15*pi/180;
    
    % Natural frequency and damping ratio
-   zeta_pitch = 0.95; % DESIGN PARAMETER
+   zeta_pitch = 0.9; % DESIGN PARAMETER
    wn_pitch = sqrt(abs(a_theta3)*delta_e_max*sqrt(1-zeta_pitch^2)/theta_max);
    
    % Calculate control gains
@@ -73,8 +73,8 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    
    %% Altitude hold using pitch 
    % Natural frequency and damping ratio
-   zeta_altitude = 0.7; % DESIGN PARAMETER
-   wn_altitude = wn_pitch / 30; % DESIGN PARAMETER
+   zeta_altitude = 5; % DESIGN PARAMETER
+   wn_altitude = wn_pitch / 60; % DESIGN PARAMETER
    
    % Calculate control gains
    P.altitude_kp = 2 * zeta_altitude * wn_altitude / (P.K_theta_DC * P.Va);
@@ -87,8 +87,8 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    a_V1 = den(2);
    
    % Natural frequency and damping ratio
-   zeta_airspeed_pitch = 0.707; % DESIGN PARAMETER
-   wn_airspeed_pitch = wn_pitch / 10; % DESIGN PARAMETER
+   zeta_airspeed_pitch = 15; % DESIGN PARAMETER
+   wn_airspeed_pitch = wn_pitch / 5; % DESIGN PARAMETER
    
    % Calculate control gains
    P.airspeed_pitch_kp = (a_V1-2*zeta_airspeed_pitch*wn_airspeed_pitch)/(P.K_theta_DC*P.gravity);
@@ -102,11 +102,11 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    a_Vt2 = num(2);
    
    % Natural frequency and damping ratio
-   zeta_airspeed_throttle = 3; % DESIGN PARAMETER
-   wn_airspeed_throttle = 0.7; % DESIGN PARAMETER
+   zeta_airspeed_throttle = 0.1; % DESIGN PARAMETER
+   wn_airspeed_throttle = 3; % DESIGN PARAMETER
    
    % Calculate control gains
-   P.airspeed_throttle_kp = (2 * zeta_airspeed_throttle * wn_airspeed_throttle - a_Vt1) / a_Vt2; % Feil i Gryte-kode?
+   P.airspeed_throttle_kp = (2 * zeta_airspeed_throttle * wn_airspeed_throttle - a_Vt1) / a_Vt1; % Feil i Gryte-kode?
    P.airspeed_throttle_ki = wn_airspeed_throttle^2 / a_Vt2;
    P.airspeed_throttle_kd = 0;
    P.airspeed_throttle_integrator_gain = a_Vt1 / (a_Vt2 * P.airspeed_throttle_ki);
