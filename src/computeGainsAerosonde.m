@@ -1,6 +1,5 @@
 function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
                               T_theta_delta_e, T_Va_theta, T_Va_delta_t, P)
-   a = 10
    %% Roll attitude hold loop
    % Get transfer function values
    [num, den] = tfdata(T_phi_delta_a, 'v');
@@ -12,18 +11,18 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    phi_max = 100*pi/180;
    
    % Natural frequency and damping ratio
-   zeta_roll = 0.75; % DESIGN PARAMETER
+   zeta_roll = 0.8; % DESIGN PARAMETER
    wn_roll = sqrt(a_phi2*delta_a_max*sqrt(1-zeta_roll^2)/phi_max);
    
    % Calculate control gains
    P.roll_kp = wn_roll^2/a_phi2;
-   P.roll_kd = 1.5*(2*zeta_roll*wn_roll - a_phi1)/a_phi2 + 1;
-   P.roll_ki = 0.05; % DESIGN PARAMETER
+   P.roll_kd = 1.1*(2*zeta_roll*wn_roll - a_phi1)/a_phi2 + 1;
+   P.roll_ki = 0.1; % DESIGN PARAMETER
    
    %% Course hold
    % Natural frequency and damping ratio
-   zeta_course = 0.8; % DESIGN PARAMETER
-   wn_course = wn_roll/30; % DESIGN PARAMETER
+   zeta_course = 0.7; % DESIGN PARAMETER
+   wn_course = wn_roll/35; % DESIGN PARAMETER
    
    % Calculate control gains
    P.course_kp = 2*zeta_course * wn_course * P.Va / P.gravity;
@@ -74,7 +73,7 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    %% Altitude hold using pitch 
    % Natural frequency and damping ratio
    zeta_altitude = 5; % DESIGN PARAMETER
-   wn_altitude = wn_pitch / 60; % DESIGN PARAMETER
+   wn_altitude = wn_pitch / 90; % DESIGN PARAMETER
    
    % Calculate control gains
    P.altitude_kp = 2 * zeta_altitude * wn_altitude / (P.K_theta_DC * P.Va);
@@ -102,7 +101,7 @@ function P = computeGainsAerosonde(T_phi_delta_a, T_v_delta_r, ...
    a_Vt2 = num(2);
    
    % Natural frequency and damping ratio
-   zeta_airspeed_throttle = 0.8; % DESIGN PARAMETER
+   zeta_airspeed_throttle = 0.2; % DESIGN PARAMETER
    wn_airspeed_throttle = 3; % DESIGN PARAMETER
    
    % Calculate control gains
