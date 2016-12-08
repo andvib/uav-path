@@ -3,6 +3,7 @@ Heading is normally controlled by using the ailerons to roll the aircraft, with 
 
 When using UAVs for ground operations the roll used to turn the aircraft is a big problem which is mostly avoided by attaching the camera to a gimbal that is counteracting the effects of the roll. When the UAV is not equipped with a gimbal different control strategies can be used to reduce the roll needed to turn or to ensure that the camera stays focused on the object. There is a benefit to creating new controllers for this as controllers allows for using existing trajectory planners.
 
+*CLEAN UP TERMINOLOGY REGARDING HEADING/COURSE*
 
 \subsubsection{Rudder as a heading control surface}
 A common method to avoid roll in UAV operation is to use the rudder to turn. The rudder is commonly used to reduce the sideslip angle of the aircraft. However, the rudder can be used to introduce sideslip which will cause the aircraft to turn. Common for these controllers is that they use the ailerons to keep the wings level during flight.
@@ -37,7 +38,7 @@ The architecture of this system includes a 'Constraints Governor' that receives 
 The system was simulated and only tested without wind. The simulated UAV successfully followed two $90 \degree$ turns with only losing the road from the camera's FOV two times. This was because the system did not estimate the road path well enough, and the paper argues that by pointing the camera forward the estimation can be improved.
 
 
-\subsubsection{Conclusion}
+\subsubsection{Summary of review}
 Turning using rudder is the most common way to reduce the roll during UAV operations, and it gives a significant reduction in the image error because of this. These papers also show that even though it does not perform as good as the traditional controllers using ailerons when it comes to position and path following, the rudder controllers perform better in the image plane despite the slower convergence rate.
 
 One interesting point made in \cite{ratcFISHER} is that the RATC controller will ease the flight plans for ground observing. When using AOTC controllers for ground observing extra measures often has to be taken to ensure that the entire area of interest is covered by the camera. For a typical $90 \degree$ turn this could be to fly past the turn, make complete circle in the opposite direction of the turn, and then continue on the path after then $90 \degree$ bend. When using the RATC controller developed, the flight path length and time was reduced by about $80 \%$, and the energy spent flying the corner was estimated to give an $75 \%$ redutcion in energy spent. This means that even though the paper concluded the RATC used $400 \%$ more input than the AOTC, the RATC will save time and maybe energy for complicated paths with many turns.
