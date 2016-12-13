@@ -1,0 +1,55 @@
+\begin{center}
+\begin{tikzpicture}
+	[scale=7,
+	axis/.style={->,black,thick}]
+	
+	% Draw main axes
+	\draw[axis] (0,0) -- (1,0);
+	\draw[axis] (0,0) -- (0,1);
+
+	% Draw grid
+	\foreach \x in {0,0.1,...,1}
+		\foreach \y in {0,0.1,...,1}
+		{
+			\draw[very thin, gray, opacity=0.05] (\x, 0) -- (\x, 1);
+			\draw[very thin, gray, opacity=0.05] (0, \y) -- (1, \y);
+		}
+
+	% Create circles
+	\coordinate (C1) at (0.3, 0.3);
+	\coordinate (C2) at (0.8, 0.8);
+		
+	\fill (C1) circle[radius=0.3pt] node[anchor=south]{$c_s$};
+	\fill (C2) circle[radius=0.3pt] node[anchor=south]{$c_e$};
+
+	\draw[dashed] (C1) circle(0.2);
+	\draw[dashed] (C2) circle(0.2);
+	
+	% Create waypoints
+	\coordinate (START) at (0.1, 0.3);
+	\coordinate (END) at (1, 0.8);
+	
+	\fill (START) circle[radius=0.3pt] node[anchor=east]{$p_s$};
+	\fill (END) circle[radius=0.3pt] node[anchor=west]{$p_e$};
+
+	% Draw path
+	\coordinate (Z1) at (0.15858, 0.44142);
+	\begin{scope}
+		\path[clip] (C1) -- (0.16, 0.45) -- (0.0, 0.3);
+		\draw[thick] (C1) circle (2mm);
+	\end{scope}
+	
+	\coordinate (Z2) at (0.65858, 0.94142);
+	\begin{scope}
+		\path[clip] (C2) -- (0.6, 1.0) -- (1.1, 1.0);
+		\draw[thick] (C2) circle (2mm);
+	\end{scope}
+	
+	\draw[thick] (Z1) -- (Z2);
+
+
+
+
+
+\end{tikzpicture}
+\end{center}
