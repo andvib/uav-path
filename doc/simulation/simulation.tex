@@ -1,6 +1,15 @@
 \section{Simulation}
 \label{ch:simulation}
 
+The simulations of the controller will be performed using Matlab, with a model of the Aerosonde UAV. 
+
 \subsection{Model}
 
+The model of the Aerosonde UAV is based on parameters and equations given by Beard \& McLain \cite{suaBEARD}. (Referere til Gryte?)
+
+The model is split into to parts, kinematics and forces. The kinematics module implements all the aircraft-specific equations and parameters, 
+
+
 \subsection{Autopilot}
+
+The autopilot used in the simulations have also been developed by Gryte (Skal det refereres?), and it is also based on equations in Beard \& McLain \cite{suaBEARD}. The autopilot have previously been used with a different UAV, and therefore needed to be tuned to work with the Aerosonde. The controller loops are defined by relative damping factor $\zeta$ and natural frequency $\omega$, and by implementing the control loops outside the model the parameters can be found seperately. This makes a good starting point for further tuning.
