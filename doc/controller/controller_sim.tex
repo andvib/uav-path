@@ -10,15 +10,18 @@ The controller was implemented using a simple block diagram in Simulink, with de
 \subsection{Test Cases}
 
 
-\begin{itemize}
-	\item Cases
-	\begin{itemize}
-		\item $45\degree$ turn
-		\item $90\degree$ turn
-		\item $45\degree$ followed by $45\degree$
-		\item Wind
-	\end{itemize}
-\end{itemize}
+The altitude used when using a pushbroom sensor from an UAV for ground observation varies with what is being observed and the equipment used. When observing the vegetation, low-altitudes around $100$ m is often used (\cite{hymsySUOMALAINEN}, \cite{wheatLELONG}, \cite{lowRAMIREZ}). However, altitudes as high as $1900$ m has been used to observe agricultural crops \cite{mosaicASMAT}. In this paper simulations will be performed mostly at $100$ m, with some simulations at higher altitudes for comparison. The FOV for the camera will be set to $19\degree$ (approximately the same as in \cite{hymsySUOMALAINEN}).
+
+The controller has been tested in three different cases. The first case is a simple $45\degree$ turn in order to test the step response of the controller. The second case will follow a path in order to compare the controller with a "regular" course controller. The third and last case is the same path as in the second case, but with wind.
+
+
+\subsection{Results Case 1}
+
+
+\subsection{Results Case 2}
+
+
+\subsection{Results Case 3}
 
 
 \subsection{Results}

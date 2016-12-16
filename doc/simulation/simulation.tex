@@ -7,7 +7,7 @@ The simulations of the controller will be performed using Matlab, with a model o
 
 The model of the Aerosonde UAV is based on parameters and equations given by Beard \& McLain \cite{suaBEARD}. (Referere til Gryte?)
 
-The model is split into to parts, kinematics and forces. The kinematics module implements all the aircraft-specific equations and parameters, 
+The model is split into to parts, forces and aircraft dynamics. The forces module implements the equations for describing all the forces working on the aircraft, based on wind, aircraft states and the control inputs. The calculated forces are then sent do the aircraft dynamics module which calculates the new states of the aircraft based on the forces.
 
 
 \subsection{Autopilot}
