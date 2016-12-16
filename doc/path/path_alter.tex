@@ -1,0 +1,30 @@
+\begin{center}
+\begin{tikzpicture}
+	[scale=7,
+	axis/.style={->,black,thick}]
+	
+	% Draw main axes
+	\draw[axis] (0,0) -- (1,0);
+	\draw[axis] (0,0) -- (0,1);
+
+	% Draw grid
+	\foreach \x in {0,0.1,...,1}
+		\foreach \y in {0,0.1,...,1}
+		{
+			\draw[very thin, gray, opacity=0.05] (\x, 0) -- (\x, 1);
+			\draw[very thin, gray, opacity=0.05] (0, \y) -- (1, \y);
+		}
+
+	% Create circles
+	\coordinate (C1) at (1.0, 0.0);
+	%\draw[] (C1) circle(0.5);
+	
+	\begin{scope}
+		\path[clip] (C1) -- (0, 0) -- (1.0, 1.0);
+		\draw[] (C1) circle (7mm);
+	\end{scope}
+	
+	
+
+\end{tikzpicture}
+\end{center}

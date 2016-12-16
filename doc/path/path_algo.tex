@@ -41,15 +41,30 @@
 	
 	\coordinate (Z2) at (0.65858, 0.94142);
 	\begin{scope}
-		\path[clip] (C2) -- (0.6, 1.0) -- (1.1, 1.0);
+		\path[clip] (C2) -- (0.6, 1.0) -- (1.2, 1.0);
+		\draw[thick] (C2) circle (2mm);
+	\end{scope}
+	
+	\begin{scope}
+		\path[clip] (C2) -- (1.0, 0.9) -- (1.0, 0.8);
 		\draw[thick] (C2) circle (2mm);
 	\end{scope}
 	
 	\draw[thick] (Z1) -- (Z2);
 
+	
+	% Create radiusesesesess
+	\draw (0.3, 0.3) -- (0.3, 0.1) node[midway, anchor=east]{R};
+	\draw (0.8, 0.8) -- (0.8, 0.6) node[midway, anchor=east]{R};
 
-
-
+	% Draw direction
+	\draw[-latex] (0.35,0.3) arc (0:-60:2.0pt) node[near start,right] {$\lambda_s$};
+	\draw[-latex] (0.85,0.8) arc (0:-60:2.0pt) node[near start,right] {$\lambda_e$};
+	
+	% First half plane
+	\fill (START) circle[radius=0.3pt] node[anchor=west]{$z_1$};
+	
+	
 
 \end{tikzpicture}
 \end{center}
