@@ -1,5 +1,19 @@
 \section{Simulation of Path Planner}
 
+The same autopilot that was used for simulating the controller will be used when simulating the path planner. A path follower will be used to gice course commands to the autopilot during simulation, while the rest of the states will be controlled only by the autopilot.
+
+
+\subsection{Path Follower}
+\label{ch:path_follower}
+
+Two different path followers will be used in this simulation. The first path follower will be used to follow the Dubins path, while the second will be used to follow the continuous path that is generated as an improvement to the Dubins path.
+
+The path planner used to follow Dubins path will be based on two algorithms presented in \cite{suaBEARD} by Beard \& McLain. The two algorithms are used to follow straight and curved line paths.
+
+In order to follow straight line paths, the algorithm uses the position and heading of the aircraft, the previous waypoint and the direction from the previous to the next waypoint as input. The previous waypoint and direction to the next waypoint are given as output from the algorithm generating Dubins path described in chapter \ref{ch:dubins_path}. The new course is calculated so that the aircrafts position will converge towards the original path.
+
+The algorithm for following circular paths is based on following perfect circles. Therefore it takes center and radius of the circle, the direction to orbit the circle, and the current position and heading of the aircraft. The heading calculated here will also ensure that the aircrafts position converges to the cirular path.
+
 
 
 \subsection{Simulation Setup}
@@ -10,14 +24,7 @@
 \end{itemize}
 
 
-\subsection{Path Follower}
-\label{ch:path_follower}
 
-\begin{itemize}
-	\item How it is build up
-	\item Equations?
-	\item Algorithms
-\end{itemize}
 
 
 \subsection{Results}
