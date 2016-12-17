@@ -62,8 +62,14 @@
 	\draw[-latex] (0.85,0.8) arc (0:-60:2.0pt) node[near start,right] {$\lambda_e$};
 	
 	% First half plane
-	\fill (START) circle[radius=0.3pt] node[anchor=west]{$z_1$};
+	\fill (Z1) circle[radius=0.3pt] node[anchor=west]{$z_1$};
+	\draw[->, thick] (Z1) -- ($(Z2)!0.6cm!(Z1)$) node[anchor=east]{$q_1$};
 	
+	\fill (Z2) circle[radius=0.3pt] node[anchor=west]{$z_2$};
+	\draw[->, thick] (Z2) -- ($(1.01213, 1.26568)!0.3cm!(Z1)$) node[anchor=east]{$q_1$};
+	
+	\fill (END) circle[radius=0.3pt] node[anchor=east]{$z_3$};
+	\draw[->, thick] (END) -- (1, 0.7) node[anchor=east]{$q_3$};
 	
 
 \end{tikzpicture}

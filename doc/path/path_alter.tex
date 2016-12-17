@@ -1,12 +1,14 @@
 \begin{center}
 \begin{tikzpicture}
-	[scale=7,
+	[scale=10,
 	axis/.style={->,black,thick}]
 	
 	% Draw main axes
-	\draw[axis] (0,0) -- (1,0);
-	\draw[axis] (0,0) -- (0,1);
-
+	\draw[axis] (0,0) -- (0.9,0);
+	\draw[axis] (0,0) -- (0,0.7);
+	
+	\clip (0,0) rectangle (0.9, 0.7);
+	
 	% Draw grid
 	\foreach \x in {0,0.1,...,1}
 		\foreach \y in {0,0.1,...,1}
@@ -16,15 +18,32 @@
 		}
 
 	% Create circles
-	\coordinate (C1) at (1.0, 0.0);
-	%\draw[] (C1) circle(0.5);
+	\coordinate (C1) at (0.8, 0.0);
 	
 	\begin{scope}
-		\path[clip] (C1) -- (0, 0) -- (1.0, 1.0);
-		\draw[] (C1) circle (7mm);
+		\path[clip] (C1) -- (0, 0.0) -- (.8, 1.0);
+		\draw[gray] (C1) circle (5mm);
 	\end{scope}
 	
+	\draw[gray] (0.8, 0.5) -- (1.0, 0.5);
 	
+	% Draw aircraft
+	\coordinate (AC) at (0.5, 0.4);
+	\fill (AC) circle[radius=0.3pt];
+	
+	\draw[->] (AC) -- (0.7, 0.56);
+	\draw[dashed] (AC) -- (0.5, 0.6);
+	
+	\begin{scope}
+		\path[clip] (AC) -- (0.5, 1.0) -- (0.8, 0.64);
+		\draw[] (AC) circle (1.5mm);
+		\node[] at ($(AC)+(60:2mm)$) {$\psi$};
+	\end{scope}
 
+	\draw[] (AC) -- (0.7, 0.2) node[anchor=north west]{$\bm{p}_{n,d}$};
+	
+	\draw[dashed] (AC) -- (0.5, 0.2) node[midway, sloped, below]{$y_{b,d}$};
+	\draw[dashed] (0.5, 0.2) -- (0.7, 0.2) node[midway, sloped, below]{$x_{b,d}$};
+	
 \end{tikzpicture}
 \end{center}
