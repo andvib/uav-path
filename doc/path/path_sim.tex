@@ -51,7 +51,7 @@ The radius of the circles in the Dubins path was chosen to $600$ m, and is the s
 With $R$ set to $600$ m, and the airspeed equal to the groundspeed at $35$ m/s, the corresponding roll $\phi$ is about $15\degree$. This seems reasonable, as it is not expected that a UAV performing ground observation will be performing high dynamic maneouvres. The LOS distance was set to $200$ m by trial and failure.
 
 
-\subsection{Results}
+\subsection{Result: Path Following}
 
 Figure \ref{fig:first_run_path} and figure \ref{fig:first_run_turns} shows the result of the simulation when the UAV follows the generated Dubins path that is to be observed. The aircraft follows the observation path closely, and in turns it drifts slightly off and takes the outer turn. 
 
@@ -119,6 +119,8 @@ The result of the simulation when following the altered path is shown in figures
 
 
 \subsection{Result: Camera Footprint}
+
+The camera footprint for the original path is shown in figures \ref{fig:first_camera_path} and \ref{fig:first_camera_turns}. While the camera footprint is positioned fairly straight above the observation path, the observation path is outside of the camera footprint during turns. The footprint drifts completely off the observation path in the beginning of the turn, but it catches up after the initial "NUDGE". This matches the results from the previous section where the roll $\phi$ was the highest in the beginning of the turn. There is also a big change in $\phi$ at the end of the turn, which leads to a large movement of the camera footprint.
 
 \begin{figure}[!ht]
     \centering
