@@ -1,62 +1,61 @@
 close all;
 clear all;
 
-res = load('second_run.mat');
-
+%% LOAD FIRST DATASET
+res = load('first_run.mat');
 start_idx = 5277;
 end_idx = 37549;
 length = (end_idx - start_idx);
 t = res.states.Position.p_N.Time(start_idx:end_idx)-start_idx*0.01;
 
-p_N = res.states2.Position.p_N.Data(start_idx:end_idx);
-p_E = res.states2.Position.p_E.Data(start_idx:end_idx);
-p_D = res.states2.Position.p_D.Data(start_idx:end_idx);
+p_N1 = res.states.Position.p_N.Data(start_idx:end_idx);
+p_E1 = res.states.Position.p_E.Data(start_idx:end_idx);
+p_D1 = res.states.Position.p_D.Data(start_idx:end_idx);
 
-phi = res.states2.Attitude.phi.Data(start_idx:end_idx);
-theta = res.states2.Attitude.theta.Data(start_idx:end_idx);
-psi = res.states2.Attitude.psi.Data(start_idx:end_idx);
+phi1 = res.states.Attitude.phi.Data(start_idx:end_idx);
+theta1 = res.states.Attitude.theta.Data(start_idx:end_idx);
+psi1 = res.states.Attitude.psi.Data(start_idx:end_idx);
 
+%% LOAD SECOND DATASET
+res = load('second_run.mat');
+p_N2 = res.states2.Position.p_N.Data(start_idx:end_idx);
+p_E2 = res.states2.Position.p_E.Data(start_idx:end_idx);
+p_D2 = res.states2.Position.p_D.Data(start_idx:end_idx);
 
-%% PLOT STATES
-% figure(3);
-% hold on;
-% grid on;
-% plot(t, phi);
-% plot(t, theta);
-% plot(t, psi);
-% legend('\phi', '\theta', '\psi', 'Location', 'NW');
-% xlabel('Time [s]');
-% ylabel('Angle [rad]');
-% xlim([0 325]);
-
-%% ALTER PATH
-% d = fdesign.lowpass('Fp,Fst,Ap,Ast',0.001,0.2,0.5,40,100);
-% Hd = design(d,'equiripple');
-% phi_filtered = filter(Hd, phi);
-% 
-% c_yb = 1*p_D.*tan(phi_filtered);
-% p_bd = [c_yb.*sin(psi) -c_yb.*cos(psi) zeros(length+1, 1)];
-% position = [p_N p_E p_D];
-% 
-% for i = (1:length)
-%     p_nd(i,:) = position(i,:) + p_bd(i,:);
-% end
-% 
-% c_yb = 1*p_D.*tan(phi);
-% p_bd = [c_yb.*sin(psi) -c_yb.*cos(psi) zeros(length+1, 1)];
-% position = [p_N p_E p_D];
-% 
-% for i = (1:length)
-%     p_nd2(i,:) = position(i,:) + p_bd(i,:);
-% end
+phi2 = res.states2.Attitude.phi.Data(start_idx:end_idx);
+theta2 = res.states2.Attitude.theta.Data(start_idx:end_idx);
+psi2 = res.states2.Attitude.psi.Data(start_idx:end_idx);
 
 
-%% FLOWN ROUTE
+%% CALCULATE CAMERA 1
+c_1_1 = zeros(2,(end_idx-start_idx));
+c_1_2 = zeros(2,(end_idx-start_idx));
+
+for i = (1:(end_idx-start_idx))
+    [x_temp, y_temp] = camera_pos([phi1(i), theta1(i), psi1(i)],...
+                                  [p_N1(i), p_E1(i), p_D1(i)], 0.331612558);
+    c_1_1(:,i) = x_temp(1:2);
+    c_1_2(:,i) = y_temp(1:2);
+end
+
+%% CALCULATE CAMERA 2
+c_2_1 = zeros(2,(end_idx-start_idx-725));
+c_2_2 = zeros(2,(end_idx-start_idx-725));
+
+for i = (1:(end_idx-start_idx-725))
+    [x_temp, y_temp] = camera_pos([phi2(i), theta2(i), psi2(i)],...
+                                  [p_N2(i), p_E2(i), p_D2(i)], 0.331612558);
+    c_2_1(:,i) = x_temp(1:2);
+    c_2_2(:,i) = y_temp(1:2);
+end
+
+
+%% PLOT
 figure(1);
 hold on;
 grid on;
-%plot(p_E, p_N, 'LineWidth', 1);
 
+% Plot dubins Path
 waypoints = [[0,0,0,0]; [1800,10,0,0];[1800,3500,0,pi/2];[5000,6000,0,pi]];
 R = 600;
 
@@ -116,33 +115,18 @@ end
 plot(waypoints(1,2),waypoints(1,1),'*k');
 plot(waypoints(i,2),waypoints(i,1),'*k');
 
-%plot(p_nd(:,2),p_nd(:,1));
-%plot(p_nd2(:,2),p_nd2(:,1));
+% Footprint 1
+h = fill([c_1_1(2,:) fliplr(c_1_2(2,:))],[c_1_1(1,:) fliplr(c_1_2(1,:))],'b');
+set(h, 'facealpha', 0.3);
 
-%legend('Flown Path', 'Observation path', 'Location', 'NW');
+% Footprint 2
+q = fill([c_2_1(2,:) fliplr(c_2_2(2,:))],[c_2_1(1,:) fliplr(c_2_2(1,:))],'r');
+set(q, 'facealpha', 0.3);
+
 ylim([-50 5900]);
 xlim([-100 6100]);
 
-xlabel('East');
-ylabel('North');
-
-%% CAMERA POS
-c_1 = zeros(2,(end_idx-start_idx));
-c_2 = zeros(2,(end_idx-start_idx));
-
-for i = (1:(end_idx-start_idx))
-    [x_temp, y_temp] = camera_pos([phi(i), theta(i), psi(i)],...
-                                  [p_N(i), p_E(i), p_D(i)], 0.331612558);
-    c_1(:,i) = x_temp(1:2);
-    c_2(:,i) = y_temp(1:2);
-end
-
-plot(c_1(2,:),c_1(1,:));
-b = plot(c_2(2,:),c_2(1,:),'k');
-h = fill([c_1(2,:) fliplr(c_2(2,:))],[c_1(1,:) fliplr(c_2(1,:))],'k');
-set(h, 'facealpha', 0.1);
-%legend('Observation path', 'Location', 'NW');
-legend([w b], 'Observation path', 'Camera Footprint', 'Location', 'NW');
+lgnd = legend([h q], 'Original Path', 'Altered Path', 'Location', 'NW');
 
 %% TURN COMPARISON
 figure(2);
@@ -150,7 +134,6 @@ figure(2);
 subplot(1,3,1);
 hold on;
 grid on;
-m1 = plot(p_E, p_N);
 waypoints = [[0,0,0,0]; [1800,10,0,0];[1800,3500,0,pi/2];[5000,6000,0,pi]];
 R = 600;
 
@@ -210,24 +193,22 @@ end
 plot(waypoints(1,2),waypoints(1,1),'*k');
 plot(waypoints(i,2),waypoints(i,1),'*k');
 
-%plot(p_nd(:,2),p_nd(:,1));
-%h(2) = plot(p_nd2(:,2),p_nd2(:,1));
-
-plot(c_1(2,:),c_1(1,:));
-zq = plot(c_2(2,:),c_2(1,:), 'k');
-h = fill([c_1(2,:) fliplr(c_2(2,:))],[c_1(1,:) fliplr(c_2(1,:))],'k');
-set(h, 'facealpha', 0.1);
+% Footprint 1
+h = fill([c_1_1(2,:) fliplr(c_1_2(2,:))],[c_1_1(1,:) fliplr(c_1_2(1,:))],'b');
+set(h, 'facealpha', 0.3);
+% Footprint 2
+q = fill([c_2_1(2,:) fliplr(c_2_2(2,:))],[c_2_1(1,:) fliplr(c_2_2(1,:))],'r');
+set(q, 'facealpha', 0.3);
+lgnd = legend([h q], 'Original Path', 'Altered Path', 'Location', 'NW');
 
 ylim([1800 2800]);
 xlim([-50 1400]);
-legend([m1 w zq], 'Flown Path', 'Observation path', 'Camera Footprint', 'Location', 'NW');
 
 
 %Figure 2
 subplot(1,3,2);
 hold on;
 grid on;
-plot(p_E, p_N);
 
 waypoints = [[0,0,0,0]; [1800,10,0,0];[1800,3500,0,pi/2];[5000,6000,0,pi]];
 R = 600;
@@ -288,13 +269,12 @@ end
 plot(waypoints(1,2),waypoints(1,1),'*k');
 plot(waypoints(i,2),waypoints(i,1),'*k');
 
-%plot(p_nd(:,2),p_nd(:,1));
-%plot(p_nd2(:,2),p_nd2(:,1));
-
-plot(c_1(2,:),c_1(1,:));
-plot(c_2(2,:),c_2(1,:));
-h = fill([c_1(2,:) fliplr(c_2(2,:))],[c_1(1,:) fliplr(c_2(1,:))],'k');
-set(h, 'facealpha', 0.1);
+% Footprint 1
+h = fill([c_1_1(2,:) fliplr(c_1_2(2,:))],[c_1_1(1,:) fliplr(c_1_2(1,:))],'b');
+set(h, 'facealpha', 0.3);
+% Footprint 2
+q = fill([c_2_1(2,:) fliplr(c_2_2(2,:))],[c_2_1(1,:) fliplr(c_2_2(1,:))],'r');
+set(q, 'facealpha', 0.3);
 
 ylim([1700 2800]);
 xlim([3200 4300]);
@@ -303,7 +283,6 @@ xlim([3200 4300]);
 subplot(1,3,3);
 hold on;
 grid on;
-plot(p_E, p_N);
 
 waypoints = [[0,0,0,0]; [1800,10,0,0];[1800,3500,0,pi/2];[5000,6000,0,pi]];
 R = 600;
@@ -364,13 +343,12 @@ end
 plot(waypoints(1,2),waypoints(1,1),'*k');
 plot(waypoints(i,2),waypoints(i,1),'*k');
 
-%plot(p_nd(:,2),p_nd(:,1));
-%plot(p_nd2(:,2),p_nd2(:,1));
-
-plot(c_1(2,:),c_1(1,:));
-plot(c_2(2,:),c_2(1,:));
-h = fill([c_1(2,:) fliplr(c_2(2,:))],[c_1(1,:) fliplr(c_2(1,:))],'k');
-set(h, 'facealpha', 0.1);
+% Footprint 1
+h = fill([c_1_1(2,:) fliplr(c_1_2(2,:))],[c_1_1(1,:) fliplr(c_1_2(1,:))],'b');
+set(h, 'facealpha', 0.3);
+% Footprint 2
+q = fill([c_2_1(2,:) fliplr(c_2_2(2,:))],[c_2_1(1,:) fliplr(c_2_2(1,:))],'r');
+set(q, 'facealpha', 0.3);
 
 ylim([4900 5700]);
 xlim([4800 6100]);
