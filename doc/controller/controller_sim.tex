@@ -51,10 +51,46 @@ The bode-plot in figure \ref{fig:ratc_bode} shows the frequency response of the 
 	\label{fig:ratc_bode}
 \end{figure}
 
-\subsection{Results Case 2}
 
+\subsection{Results: Path}
 
-\subsection{Results Case 3}
+The results of the simulation for the rudder controller can be seen in figures \ref{fig:ratc_path_hundred} and \ref{fig:ratc_comp_hundred}. The figures show that the controller manages to keep the ground path that is to be observed within the camera footprint when the path is straight. However, it does need to be a sharp turn for the camera to shift away from the ground path. The effect of the roll that the rudder induces, which can be seen in figure \ref{fig:ratc_step_states} with the step response, is also visible on the camera footprint. At the beginning of each turn there are a small "NUDGE" in the footprint, but none of them moves the camera outside the observation path.
 
+\begin{figure}[]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/path/ratc_path_hundred.eps}}
+    \caption{The path flown and the camera footprint when following the path using the rudder controller. Altitude is $100$ m.}
+	\label{fig:ratc_path_hundred}
+\end{figure}
 
-\subsection{Results}
+\begin{figure}[]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/path/ratc_comp_hundred.eps}}
+    \caption{Detailed view of the path flown and the camera footprint when following the path using the rudder controller. Altitude is $100$ m.}
+	\label{fig:ratc_comp_hundred}
+\end{figure}
+
+The flown path and the camera footprint for the controller using the aileron to change course is shown in figures \ref{fig:aotc_path_hundred} and \ref{fig:aotc_comp_hundred}. The obsevation path is within the camera footprint almost throughout the flight, but the edge of the camera footprint is close to the observation path at multiple times. At the beginning of every turn there is rapid shift in the camera footprint because of an abrupt roll change, and after every turn the roll of the aircraft is swining back and forth before it settles.
+
+\begin{figure}[]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/path/aotc_path_hundred.eps}}
+    \caption{The path flown and the camera footprint when following the path using the aileron controller. Altitude is $100$ m.}
+	\label{fig:aotc_path_hundred}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/path/aotc_comp_hundred.eps}}
+    \caption{Detailed view of the path flown and the camera footprint when following the path using the aileron controller. Altitude is $100$ m.}
+	\label{fig:aotc_comp_hundred}
+\end{figure}
+
+The camera footprint for the two paths are shown in figure \ref{fig:ratc_aotc_comparison}. The figure shows that the camera footprint of the aileron controller SWINGS more than the footprint of the rudder controller, but it doesn't necessarily move further away from the observaton path. At the beginning of the turns both of the controllers causes a "NUDGE" in the camera footprint in opposite directions. The "NUDGE" of the aileron controller is bigger and remains longer than the "NUDGE" for the rudder controller.
+
+\begin{figure}[]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/path/comparison.eps}}
+    \caption{A comparison of the camera footprints of the two controllers. Altitude is $100$ m.}
+	\label{fig:ratc_aotc_comparison}
+\end{figure}
