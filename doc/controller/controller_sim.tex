@@ -15,8 +15,41 @@ The altitude used when using a pushbroom sensor from an UAV for ground observati
 The controller has been tested in three different cases. The first case is a simple $45\degree$ turn in order to test the step response of the controller. The second case will follow a path in order to compare the controller with a "regular" course controller. The third and last case is the same path as in the second case, but with wind.
 
 
-\subsection{Results Case 1}
+\subsection{Results: Step Response}
 
+The step response of the controller is shown in figure \ref{fig:ratc_step_course}, together with the step response of a controller using the aileron to turn. The course angle $\chi$ reaches the desired $45\degree$ ($0.76$ $rad$) after about $80$ seconds. This is $20$ seconds after the aileron-controller starts to stabilize at $45\degree$, and while the aileron-controller is underdamped the rudder-controller is overdamped. Just after the step response has occured, the course angle for the rudder-controller starts off in the slightly wrong direction before it starts increasing.
+
+\begin{figure}[]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/step/step_course.eps}}
+    \caption{The step response of the course controller, compared to the course step response of a course controller using the ailerons.}
+	\label{fig:ratc_step_course}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/step/step_states.eps}}
+    \caption{The attitude states of the UAV during the step response.}
+	\label{fig:ratc_step_states}
+\end{figure}
+
+Figure \ref{fig:ratc_step_states} show that the pitch $\theta$ has only small variations when the step response occurs. When the step occurs the roll $\psi$ changes rapidly back and forth. This is because the deflection of the rudder actuator also induces a roll on the aircraft. This can also be seen on the inputs shown in figure \ref{fig:ratc_step_input}. At the time of the step both the aileron and the rudder increases rapidly, with an almost "mirrored" response.
+
+\begin{figure}[]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/step/step_input.eps}}
+    \caption{Input used during the step response. The input is given as a signal between $\pm1$.}
+	\label{fig:ratc_step_input}
+\end{figure}
+
+The bode-plot in figure \ref{fig:ratc_bode} shows the frequency response of the rudder controller. The phase margin is $61.2\degree$ and since the pase never goes below $-180\degree$, this is a stable system (REFERERE TIL ANDRESEN). This tuning was achieved with $\zeta$ set to $42$ and $\omega_n$ set to $42$, which corresponds to a $k_p$ of $42$ and a $k_d$ of $42$.
+
+\begin{figure}[]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/step/bode.eps}}
+    \caption{The camera footprint during simulation of the first path.}
+	\label{fig:ratc_bode}
+\end{figure}
 
 \subsection{Results Case 2}
 

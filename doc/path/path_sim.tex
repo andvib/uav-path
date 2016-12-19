@@ -7,7 +7,7 @@ The same autopilot that was used for simulating the controller will be used when
 
 The simulation was performed using the same Simulink and Matlab setup as previously, using the path followers to generate the desired course angle. The Dubin's path that will be used as a reference is shown in figure \ref{fig:dubins_reference}.
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=2.2\textwidth, keepaspectratio=true]{dubins_reference.eps}}
     \caption{The path that will be simulated, with the direction associated with every waypoint.}
@@ -27,21 +27,21 @@ With $R$ set to $600$ m, and the airspeed equal to the groundspeed at $35$ m/s, 
 
 Figure \ref{fig:first_run_path} and figure \ref{fig:first_run_turns} shows the result of the simulation when the UAV follows the generated Dubins path that is to be observed. The aircraft follows the observation path closely, and in turns it drifts slightly off and takes the outer turn. 
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/path/first_run_path.eps}}
     \caption{The path flown by the aircraft on the first run.}
 	\label{fig:first_run_path}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.8\textwidth, keepaspectratio=true]{../../results/path/first_run_turns.eps}}
     \caption{The path the aircraft took through the turns on the first run.}
 	\label{fig:first_run_turns}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/path/first_run_states.eps}}
     \caption{The attitude states of the aircraft during the first run.}
@@ -50,7 +50,7 @@ Figure \ref{fig:first_run_path} and figure \ref{fig:first_run_turns} shows the r
 
 Figure \ref{fig:first_run_states} shows the attitude states of the aircraft during the flight, and shows that the roll $\phi$ is just below $0.25$ rad for each turn, which is about $15 \degree$ as predicted previously. However, it can be seen that $\phi$ varies during the course changes, meaning that the aircraft is not doing a perfectly smooth turn. When using equation (\ref{eq:roll_impact}) to calculate how the path should be altered, these uneven turns will cause the path to be uneven as well. The altered path is shown together with the original flown path in figure \ref{fig:altered_vs_flown}. The figure shows some "NUDGES" due to the uneven turn, mainly at the beginning and end of the turns.
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.8\textwidth, keepaspectratio=true]{../../results/path/altered_vs_flown.eps}}
     \caption{The figure shows how the altered path is compared to the flown path. Only the turns are shown as they are matching during the straight levelled sections.}
@@ -59,7 +59,7 @@ Figure \ref{fig:first_run_states} shows the attitude states of the aircraft duri
 
 The altered path is supposed to counteract the slow and more constant changes in roll during a turn. The changes in roll caused by the uneven turn are much faster than than the slow changes. This means that the unwanted changes in roll can be removed by passing the signal through a low-pass filter. The result of altering the path with the low-pass filtered $\phi$ is shown in figure \ref{fig:filtered_vs_unfiltered}, and the result that the new path is smoother than the first one.
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.8\textwidth, keepaspectratio=true]{../../results/path/filtered_vs_unfiltered.eps}}
     \caption{The path created by using the filtered signal for $\phi$ compared to using the unfiltered.}
@@ -68,21 +68,21 @@ The altered path is supposed to counteract the slow and more constant changes in
 
 The result of the simulation when following the altered path is shown in figures (\ref{fig:second_run_path}), (\ref{fig:second_run_turns}) and (\ref{fig:second_run_states}). It can be seen that instead of taking the outer path during turns, the aircraft now takes the inner turn which is what we want. It can be seen that $\phi$ is still uneven during turns, and about the same value as during the first run.
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/path/second_run_path.eps}}
     \caption{The path flown by the aircraft when following the altered path.}
 	\label{fig:second_run_path}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.8\textwidth, keepaspectratio=true]{../../results/path/second_run_turns.eps}}
     \caption{The path the aircraft took through the turns when following the altered path.}
 	\label{fig:second_run_turns}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/path/second_run_states.eps}}
     \caption{The attitude states of the aircraft when following the altered path.}
@@ -94,14 +94,14 @@ The result of the simulation when following the altered path is shown in figures
 
 The camera footprint for the original path is shown in figures \ref{fig:first_camera_path} and \ref{fig:first_camera_turns}. While the camera footprint is positioned fairly straight above the observation path, the observation path is outside of the camera footprint during turns. The footprint drifts completely off the observation path in the beginning of the turn, but it catches up after the initial "NUDGE". This matches the results from the previous section where the roll $\phi$ was the highest in the beginning of the turn. There is also a big change in $\phi$ at the end of the turn, which leads to a large movement of the camera footprint.
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/path/first_camera_path.eps}}
     \caption{The camera footprint during simulation of the first path.}
 	\label{fig:first_camera_path}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.8\textwidth, keepaspectratio=true]{../../results/path/first_camera_turns.eps}}
     \caption{The camera footprint in turns during the simulation of the first path.}
@@ -110,14 +110,14 @@ The camera footprint for the original path is shown in figures \ref{fig:first_ca
 
 For the altered path the camera footprint covers the observation path for the entire path as seen in figures \ref{fig:second_camera_path} and \ref{fig:second_camera_turns}. However, the observation path is not in the middle of the footprint during turns, during turns the camera footprint may drift so the observation path is only visble on the edge of the footprint.
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/path/second_camera_path.eps}}
     \caption{The camera footprint during simulation of the altered path.}
 	\label{fig:second_camera_path}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.8\textwidth, keepaspectratio=true]{../../results/path/second_camera_turns.eps}}
     \caption{The camera footprint in turns during the simulation of the altered path.}
@@ -126,14 +126,14 @@ For the altered path the camera footprint covers the observation path for the en
 
 When the two paths are compared in figures \ref{fig:both_camera_path} and \ref{fig:both_camera_turns} the biggest difference is that the when following the original path the camera takes the outer turn, and when following the altered path it takes the inner turn. The figures also show that the altered path is smoother than the original. At the end of the two first turns for the original path the aircraft levels the wings quickly, as can be seen in figure \ref{fig:first_run_states}, which leads to a sideways shift in the camera footprint.
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/path/both_camera_path.eps}}
     \caption{The camera footprint during simulation of the altered path.}
 	\label{fig:both_camera_path}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.8\textwidth, keepaspectratio=true]{../../results/path/both_camera_turn.eps}}
     \caption{The camera footprint in turns during the simulation of the altered path.}
