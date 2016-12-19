@@ -1,0 +1,44 @@
+\begin{center}
+\begin{tikzpicture}
+	[scale=7,
+	axis/.style={->,black,thick}]
+	
+	% Draw main axes
+	\draw[axis] (0,0) -- (1,0) node[anchor=north]{E};
+	\draw[axis] (0,0) -- (0,1) node[anchor=east]{N};
+
+	\clip (0,0) rectangle (1, 1);
+	
+	% Draw grid
+	\foreach \x in {0,0.1,...,1}
+		\foreach \y in {0,0.1,...,1}
+		{
+			\draw[very thin, gray, opacity=0.05] (\x, 0) -- (\x, 1);
+			\draw[very thin, gray, opacity=0.05] (0, \y) -- (1, \y);
+		}
+
+	% Crate boat
+	\coordinate (B) at (0.5,0.3);
+	\fill (B) circle[radius=0.3pt];
+	
+	% Create line
+	\draw[thick] (0,0.4) -- (1, 0.9);
+	\draw (B) circle[radius=13pt];
+	
+	% Draw line of sigt
+	\coordinate (LOS) at (0.66,0.73);
+	\fill (LOS) circle[radius=0.3pt] node[anchor=west]{$(x_{los},y_{los})$};
+	\draw[->, thick] (B) -- (0.66, 0.72);
+	
+	% Draw heading
+	\begin{scope}
+		\path[clip] (B) -- (0.5, 1.0) -- (LOS);
+		\draw[] (B) circle (1.5mm);
+		\node[] at ($(B)+(80:2mm)$) {$\chi_d$};
+	\end{scope}
+	\draw[dashed] (B) -- (0.5, 0.6);
+	
+	\draw[dashed] (B) -- (0.0403,0.3) node[midway,below]{$R$};
+
+\end{tikzpicture}
+\end{center}
