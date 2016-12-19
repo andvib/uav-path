@@ -3,34 +3,6 @@
 The same autopilot that was used for simulating the controller will be used when simulating the path planner. A path follower will be used to give course commands to the autopilot during simulation, while the rest of the states will be controlled only by the autopilot.
 
 
-\subsection{Path Follower}
-\label{ch:path_follower}
-
-Two different path followers will be used in this simulation. The first path follower will be used to follow the Dubins path, while the second will be used to follow the continuous path that is generated as an improvement to the Dubins path.
-
-The strategy used to follow Dubins path will be based on two algorithms presented in \cite{suaBEARD} by Beard \& McLain. The two algorithms are used to follow straight and curved line paths.
-
-In order to follow straight line paths, the algorithm uses the position and heading of the aircraft, the previous waypoint and the direction from the previous to the next waypoint as input. The previous waypoint and direction to the next waypoint are given as output from the algorithm generating Dubins path described in chapter \ref{ch:dubins_path}. The new course is calculated so that the aircrafts position will converge towards the original path.
-
-The algorithm for following circular paths is based on following perfect circles. Therefore it takes center and radius of the circle, the direction to orbit the circle, and the current position and heading of the aircraft. The heading calculated here will also ensure that the aircrafts position converges to the cirular path.
-
-The altered path is based on the route that is flown in the first simulation, and will therefore not consist of circular arcs and straight lines. Instead the path will be a continuous path which requires a different path follower. The path follower will be based on the principles of Line Of Sight (LOS) steering laws presented by Fossen \cite{fartoyFOSSEN}.
-
-Enclosure-based steering is LOS principle that considers a circle with radius $R$ enclosing the vehicle, which represents the LOS distance. Assuming that the radius is suffieciently large compared to the vehicle's distance from the path, the circle will intersect the path at two different points. One of the points will be in the direction of the vehicle, denoted $x_{los}$ and $y_{los}$. This is the point the vehicle will be directed to, and the course to that point can be expressed as \cite{fartoyFOSSEN}:
-
-\begin{equation}
-	\chi_d(t) = \text{atan2}(y_{los} - y(t), x_{los} - x(t))
-\end{equation}
-
-where $x(t)$ and $y(t)$ is the vehicle's current position. Using Pythagoras theorem, the points $x_{los}$ and $y_{los}$ can be found as:
-
-\begin{equation}
-	[x_{los} - x(t)]^2 + [y_{los} - y(t)]^2 = R^2
-\end{equation}
-
-where $R$ is the chosen LOS distance.
-
-
 \subsection{Simulation Setup}
 
 The simulation was performed using the same Simulink and Matlab setup as previously, using the path followers to generate the desired course angle. The Dubin's path that will be used as a reference is shown in figure \ref{fig:dubins_reference}.
@@ -42,7 +14,7 @@ The simulation was performed using the same Simulink and Matlab setup as previou
 	\label{fig:dubins_reference}
 \end{figure}
 
-The radius of the circles in the Dubins path was chosen to $600$ m, and is the same for every waypoint. IF it is assumed that there is no wing and no sideslip, the equation for a coordinated turn becomes \cite{suaBEARD}:
+The radius of the circles in the Dubins path was chosen to $600$ m, and is the same for every waypoint. If it is assumed that there is no wind and no sideslip, the equation for a coordinated turn becomes \cite{suaBEARD}:
 
 \begin{equation}
 	R = \frac{V_g^2}{g\text{tan}(\phi)}.
@@ -136,6 +108,8 @@ The camera footprint for the original path is shown in figures \ref{fig:first_ca
 	\label{fig:first_camera_turns}
 \end{figure}
 
+For the altered path the camera footprint covers the observation path for the entire path as seen in figures \ref{fig:second_camera_path} and \ref{fig:second_camera_turns}. However, the observation path is not in the middle of the footprint during turns, during turns the camera footprint may drift so the observation path is only visble on the edge of the footprint.
+
 \begin{figure}[!ht]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/path/second_camera_path.eps}}
@@ -150,6 +124,8 @@ The camera footprint for the original path is shown in figures \ref{fig:first_ca
 	\label{fig:second_camera_turns}
 \end{figure}
 
+When the two paths are compared in figures \ref{fig:both_camera_path} and \ref{fig:both_camera_turns} the biggest difference is that the when following the original path the camera takes the outer turn, and when following the altered path it takes the inner turn. The figures also show that the altered path is smoother than the original. At the end of the two first turns for the original path the aircraft levels the wings quickly, as can be seen in figure \ref{fig:first_run_states}, which leads to a sideways shift in the camera footprint.
+
 \begin{figure}[!ht]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/path/both_camera_path.eps}}
@@ -163,3 +139,12 @@ The camera footprint for the original path is shown in figures \ref{fig:first_ca
     \caption{The camera footprint in turns during the simulation of the altered path.}
 	\label{fig:both_camera_turns}
 \end{figure}
+
+
+\subsection{Discussion}
+
+The results of the simulation shows that the altered path does a better job observing the ground path than when trying to track the observation path. Tracking the ground path which in this case is to be observed leads to loss of information, which clearly is not acceptable in this types of mission. Another problem encountered in these simulations when tracking the observation path is rapid sideways shifts caused by a rapid change in the roll. The change between images taken during these sections is big, which most likely makes it very difficult to make good use of these images, even though the observation path has been covered.
+
+There are also some shortcomings with the altered path used in this simulation. Even though it covered the observation path at all times, the observation path was not centered in the camera footprint. At some points during the flight, and especially in the beginning of the turns, the observation path is so close to the edge of the camera footprint that a small change in roll will most likely cause the camera to loose the ground track. One of the reasons this happens is the strategy used to alter the path. Since the path is only altered when there was roll present in the original flight path, the altered path will not start the turn any earlier than the original path did. Because the altered path cuts the corners of the original path but starts the turn at the same time, the turns of the altered path will be sharper than for the original, thus requiring a higher degree of roll. This is somewhat minimized by using a line-of-sight path follower that tracks the path ahead of the UAV, but the results show that this is not enough.
+
+
