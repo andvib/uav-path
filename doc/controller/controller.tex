@@ -3,7 +3,7 @@
 \subsection{Dynamics}
 In his paper, Fisher \cite{ratcFISHER} uses the dynamic model given in Beard and McLain \cite{suaBEARD} to develop a controller that uses rudder to change the heading. A similar controller will be used in this paper, and it will be derived by using the same method as Fisher used.
 
-To simplify the controller, it will be assumed that there is no wind and no sidslip $\beta$. These assumption will simplify the control problem since it can be assumed that $\chi = \psi$. It will also be assumed that the UAV is in trimmed, straight level flight. This will simplify the system since the roll angle $\phi$ and pithc angle $\theta$ both can be assumed to be small.
+To simplify the controller, it will be assumed that there is no wind and no sidslip $\beta$. These assumption will simplify the control problem since it can be assumed that $\chi = \psi$. It will also be assumed that the UAV is in trimmed, straight level flight, as this will simplify the system since the roll angle $\phi$ and pitch angle $\theta$ both can be assumed to be small.
 
 The yaw dynamics for a UAV are (eq. 3.17, Beard and McLain \cite{suaBEARD})
 
@@ -12,7 +12,7 @@ The yaw dynamics for a UAV are (eq. 3.17, Beard and McLain \cite{suaBEARD})
 	\label{eq:yaw_dynamics}
 \end{equation}
 
-where $l$ and $n$ are the moments about the $\bm{i}^b$ and $\bm{j}^b$ axes respectively. The $\Gamma$ equations describe the inertia of the aircraft and are expresed using elements of the inertia matrix $\bm{J}$.
+where $l$ and $n$ are the moments about the $\bm{i}^b$ and $\bm{j}^b$ axes respectively. The $\Gamma$ equations describe the inertia of the aircraft and are expressed using elements of the inertia matrix $\bm{J}$.
 
 %\begin{equation}
 %\begin{gathered}
@@ -27,7 +27,7 @@ where $l$ and $n$ are the moments about the $\bm{i}^b$ and $\bm{j}^b$ axes respe
 %.
 %\end{equation}
 
-The heading dynamic is expressed by the pitch rate $q$, the yaw rate $r$, and the attitude states (eq. 3.3, Beard and McLain \cite{suaBEARD}):
+The heading dynamic is expressed by the pitch rate $q$, the yaw rate $r$, and the attitude states $\bm{\Theta}_{nb}$ (eq. 3.3, Beard and McLain \cite{suaBEARD}):
 
 \begin{equation}
 	\dot{\psi} = sin(\phi)sec(\theta)q + cos(\phi)sec(\theta)r.
@@ -45,7 +45,7 @@ which leads to:
 	\ddot{\psi} = \dot{r}.
 \end{equation}
 
-The equation for the yaw dynamics [\ref{eq:yaw_dynamics}] can now be written as
+The equation for the yaw dynamics (\ref{eq:yaw_dynamics}) can now be written as
 
 \begin{equation}
 	\label{eq:yaw_dynamics2}
@@ -128,7 +128,7 @@ where
 \end{equation}
 \end{subequations}
 
-$a_{\psi_1}$ is chosen to be negative, as this will ease later calculations (see (\ref{eq:controller_kp})). The Laplace transformation brings (\ref{eq:yaw_control}) to the form
+$a_{\psi_1}$ is chosen to be negative as this will ease later calculations (see (\ref{eq:controller_kp})). The Laplace transformation brings (\ref{eq:yaw_control}) to the form
 
 \begin{equation}
 	\label{eq:yaw_controller_s}

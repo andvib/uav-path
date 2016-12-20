@@ -10,9 +10,9 @@ The controller was implemented using a simple block diagram in Simulink, with de
 \subsection{Test Cases}
 
 
-The altitude used when using a pushbroom sensor from an UAV for ground observation varies with what is being observed and the equipment used. When observing the vegetation, low-altitudes around $100$ m is often used (\cite{hymsySUOMALAINEN}, \cite{wheatLELONG}, \cite{lowRAMIREZ}). However, altitudes as high as $1900$ m has been used to observe agricultural crops \cite{mosaicASMAT}. In this paper simulations will be performed mostly at $100$ m, with some simulations at higher altitudes for comparison. The FOV for the camera will be set to $19\degree$ (approximately the same as in \cite{hymsySUOMALAINEN}).
+The altitude used when using a pushbroom sensor from an UAV for ground observation varies with what is being observed and the equipment used. When observing the vegetation, low-altitudes around $100$ m is often used (\cite{hymsySUOMALAINEN}, \cite{wheatLELONG}, \cite{lowRAMIREZ}). However, altitudes as high as $1900$ m has also been used to observe agricultural crops (\cite{mosaicASMAT}). In this paper simulations will be performed mainly at $100$ m. The FOV for the camera will be set to $19\degree$ (approximately the same as in \cite{hymsySUOMALAINEN}).
 
-The controller has been tested in three different cases. The first case is a simple $45\degree$ turn in order to test the step response of the controller. The second case will follow a path in order to compare the controller with a "regular" course controller. The third and last case is the same path as in the second case, but with wind.
+The controller has been tested in two different cases. The first case is a simple $45\degree$ turn in order to test the step response of the controller, and the response will be compared with a controller using ailerons to turn. In the second case the UAV will follow a ground path that is to be observed, and a comparison of the camera footprint made by the two controllers will be performed.
 
 
 \subsection{Results: Step Response}
@@ -21,14 +21,14 @@ The step response of the controller is shown in figure \ref{fig:ratc_step_course
 
 \begin{figure}[]
     \centering
-    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/step/step_course.eps}}
+    \makebox[\textwidth][c]{\includegraphics[width=1.0\textwidth, keepaspectratio=true]{../../results/controller/step/step_course.eps}}
     \caption{The step response of the course controller, compared to the course step response of a course controller using the ailerons.}
 	\label{fig:ratc_step_course}
 \end{figure}
 
 \begin{figure}[]
     \centering
-    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/step/step_states.eps}}
+    \makebox[\textwidth][c]{\includegraphics[width=1.0\textwidth, keepaspectratio=true]{../../results/controller/step/step_states.eps}}
     \caption{The attitude states of the UAV during the step response.}
 	\label{fig:ratc_step_states}
 \end{figure}
@@ -37,12 +37,12 @@ Figure \ref{fig:ratc_step_states} show that the pitch $\theta$ has only small va
 
 \begin{figure}[]
     \centering
-    \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio=true]{../../results/controller/step/step_input.eps}}
+    \makebox[\textwidth][c]{\includegraphics[width=1.0\textwidth, keepaspectratio=true]{../../results/controller/step/step_input.eps}}
     \caption{Input used during the step response. The input is given as a signal between $\pm1$.}
 	\label{fig:ratc_step_input}
 \end{figure}
 
-The bode-plot in figure \ref{fig:ratc_bode} shows the frequency response of the rudder controller. The phase margin is $61.2\degree$ and since the pase never goes below $-180\degree$, this is a stable system (ch. 8.4.7, \cite{regBALCHEN}). This tuning was achieved with $\zeta$ set to $42$ and $\omega_n$ set to $42$, which corresponds to a $k_p$ of $42$ and a $k_d$ of $42$.
+The bode-plot in figure \ref{fig:ratc_bode} shows the frequency response of the rudder controller. The phase margin is $61.2\degree$ and since the pase never goes below $-180\degree$, this is a stable system (ch. 8.4.7, \cite{regBALCHEN}). This tuning was achieved with $\zeta$ set to $0.6$ and $\omega_n$ set to $3.5$, which corresponds to a $k_p$ of $-0.3574$ and a $k_d$ of $0.2090$.
 
 \begin{figure}[]
     \centering

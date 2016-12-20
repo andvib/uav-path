@@ -37,11 +37,3 @@ Banking the aircraft may cause the camera's FOV to move away from the point of i
 %The architecture of this system includes a 'Constraints Governor' that receives input from an image processing unit about the road it is following and telemetry input from the UAV about its position and heading. Based on these inputs the constraints ared calculated so that the road will stay within the camera's FOV. These constraints was forwarded to a previously made controller.
 
 The system was testes by simulating how the UAV would follow two $90\degree$ turns wihtout wind. The results show that the road was lost from the camera's FOV two times during the two turns. This happened because the system did not estimate the road's path well enough, and the paper argues that by pointing the camera forward the estimation can be improved.
-
-
-\subsubsection{Summary of review}
-Course change using rudder is the most common way to reduce the roll during UAV operations, and the reduced roll gives a significant reduction in the image error. These papers also show that even though they do not perform as good as the traditional controllers using ailerons when it comes to position and path following, the rudder controllers perform better in the image plane.
-
-One interesting point made in \cite{ratcFISHER} is that the RATC controller will ease the flight plans for ground observing. When using AOTC controllers for ground observing extra measures often has to be taken to ensure that the entire area of interest is covered by the camera. For a typical $90 \degree$ turn this could be to fly past the turn, make complete circle in the opposite direction of the turn, and then continue on the path after then $90 \degree$ bend. When using the RATC controller developed, the flight path length and time was reduced by about $80 \%$, and the energy spent flying the corner was estimated to give an $75 \%$ redutcion in energy spent. This means that even though the paper concluded the RATC used $400 \%$ more input than the AOTC, the RATC will save time and maybe energy for complicated paths with many turns.
-
-CONSIDER PUTTING THIS AT THE END OF THE LITERATURE REVIEW
