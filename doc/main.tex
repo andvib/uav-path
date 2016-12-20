@@ -10,8 +10,9 @@
 \usetikzlibrary{calc, arrows}
 \usepackage{pgfplots}
 \usepackage{xparse}
+\usepackage{fancyhdr}
 
-%\renewcommand{\baselinestretch}{1.5}
+\renewcommand{\baselinestretch}{1.5}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \newdateformat{monthyear}{\monthname[\THEMONTH], \THEYEAR}
@@ -40,12 +41,18 @@ andreanv@stud.ntnu.no
 \end{center}
 \newpage
 
+% Abstract and preface
+\import{./}{abstract.tex}
+\newpage
+\import{./}{preface.tex}
+\newpage
+
 \tableofcontents
 
 \newpage
 
 \pagenumbering{arabic}
-
+\pagestyle{fancy}
 %% Introduction & Literature Review %%
 \import{literature/}{introduction.tex}
 \newpage
