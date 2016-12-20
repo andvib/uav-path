@@ -19,8 +19,8 @@
 	\coordinate (D) at (0.6, 0);
 	\coordinate (E) at (0.8, 0);
 	
-	\draw[dashed, blue] (X) -- (D);
-	\draw[dashed, red] (X) -- (E);
+	\draw[dashed] (X) -- (D);
+	\draw[dashed] (X) -- (E);
 	
 	\fill (D) circle[radius=0.3pt] node[anchor=north]{$e_{2,b}^b$};
 	\fill (E) circle[radius=0.3pt] node[anchor=north]{$e_{1,b}^b$};
@@ -28,8 +28,8 @@
 	% Draw angles
 	\begin{scope}
 		\path[clip] (X) -- (B) -- (D);
-		\draw[blue] (X) circle (3mm);
-		\node[blue] at ($(X)+(281:3.5mm)$) {$\phi-\sigma$};
+		\draw[] (X) circle (3mm);
+		\node[] at ($(X)+(281:3.5mm)$) {$\phi-\sigma$};
 	\end{scope}
 	
 	\begin{scope}
@@ -40,8 +40,8 @@
 	
 	\begin{scope}
 		\path[clip] (X) -- (B) -- (E);
-		\draw[red] (X) circle (5mm);
-		\node[red] at ($(X)+(280:5.5mm)$) {$\phi+\sigma$};
+		\draw[] (X) circle (5mm);
+		\node[] at ($(X)+(280:5.5mm)$) {$\phi+\sigma$};
 	\end{scope}
 	
 	\begin{scope}

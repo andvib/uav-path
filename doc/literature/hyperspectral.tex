@@ -1,12 +1,11 @@
 \subsection{Hyperspectral Imaging}
-The control methods developed in this paper will be developed with the use of a fixed hyperspectral camera in mind. A hyperspectral camera makes it possible to accurately detect types of material from the UAV, but is also sensitive to errors.
+The control methods developed in this paper will be developed with the use of a fixed hyperspectral, pushbroom sensor in mind. A hyperspectral sensor/camera makes it possible to accurately detect types of material from the UAV, but is also sensitive to errors.
 
-*SPECIFY THAT IT IS A PUSHBROOM SENSOR*
 
 \subsubsection{Description}
 Hyperspectral imaging uses basics from spectroscopy to create images, which means that the basis for the images is the emitted or reflicted light from materials \cite{hypSMITH}. The amount of light that is reflected by a material at different wavelengths is decided by several factors, and this makes it possible to distinguish different materials from each other. The reflected light is passed through a grate or a prism that splits the light into different wavelength bands, so that it can be measured by a spectrometer.
 
-When using a hyperspectral camera for ground observation from a drone, it is very likely that one pixel of the camera covers more than one type of material on the ground. This means that the observed wavelengths will be influenced by more than one type of material. This is called a composite or mixed spectrum \cite{hypSMITH}, and the spectras of the different materials are combined additively. The combined spectra can be split into the different spectras that it is build up of by removing noise and other statistical methods which will not be covered here.
+When using a hyperspectral camera for ground observation from a UAV, it is very likely that one pixel of the camera covers more than one type of material on the ground. This means that the observed wavelengths will be influenced by more than one type of material. This is called a composite or mixed spectrum \cite{hypSMITH}, and the spectras of the different materials are combined additively. The combined spectra can be split into the different spectras that it is build up of by noise removal and other statistical methods which will not be covered here.
 
 
 \subsubsection{UAV ground observation}
