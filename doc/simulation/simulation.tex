@@ -46,3 +46,5 @@ where $R$ is the chosen LOS distance.
 	\caption{Illustration of enclosed line-of-sight path following.}
 	\label{fig:path_los}
 \end{figure}
+
+The last path follower used to navigate between waypoints is also based on an algorithm by Beard \& McLain \cite{suaBEARD}, and is a simpler algorithm than the one for Dubins path. It calculates the unit vectors between the waypoints and uses these to detect when the aircraft passes a waypoint. The algorithm returns the last waypoint visited and the direction for the next waypoint, which can be passed along to the algorithm to follow straight line paths already described.

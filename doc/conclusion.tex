@@ -1,6 +1,20 @@
 \section{Conclusion}
 
+This paper has investigated different control methods that aim to minimize the effect the attitude of the aircraft has on a fixed camera used for ground observation. The kinematics related to camera position was investigated, and a method for describing the camera footprint of a hyperspectral pushbroom sensor was developed.
 
+
+\subsection{Findings}
+The controller simulated in this paper was a PD-controller that alters the course using the rudder to create sideslip, which again causes the course to change. The controller was tuned to perform well on a $45\degree$ step response, and a frequency analysis showed that the controller was stable. The controller was then simulated to follow a path of waypoints connected by straight lines, and its performance was compared to a course controller using aileron to change the course. The simulations show that the rudder controller causes less lateral movement of the camera footprint, but the slower response caused the rudder controller to drift further off the track than the aileron controller did. The rudder controller also induces some unwanted roll effects at the beginning of a turn.
+
+The path planner developed and tested in this paper is based on a is a simple planner that alters a Dubins path which represents the ground track that is to be surveyed. The UAV was first simulated tracking the original Dubins path. Then the path was altered with regards to the roll used in the first run, so that the position of the new path would counteract the roll used. The simulations show that while the camera footprint drifted off the observation path when following the original Dubins path, it did not drift off when following the altered path. The roll used when tracking the altered path was also smoother than for the original path, causing less rapid lateral movement in the camera footprint. However, the observation path was not in the center of the camera footprint throughout the flight, and there is no guarantee that this method works in all cases.
 
 
 \subsection{Future Work}
+
+The controller needs more testing before it can be implemented and used with an actual UAV. The small jerks that occur at the beginning should be able to remove with some more tuning of both the rudder and the aileron controller. The performance of the rudder controller when exposed to wind should also be investigated.
+
+For the path planner, future work should include investigation of methods that will keep the observation path centered in the camera footprint throughout the flight. The study should include optimization methods that can generate a path based on the ground track that is to be surveyed and knowledge about the UAV's dynamics.
+
+The effect of pitch on the camera footprint was modelled in this paper, but not investigated. While all the simulations here were performed on a fixed altitude, methods that allow for altitude change during flight while still keeping the points of interest within the camera's FOV should be investigated.
+
+It should also be investigated how the different UAV attitudes and movements influence the quality of the images captured by the pushbroom spectrometer. The roll of the UAV will create a wider camera footprint, which again means that the pixels closest to the UAV captures a smaller area than the pixels far away. It should be investigated if this is a problem or not, and how an eventual problem can be handled.
