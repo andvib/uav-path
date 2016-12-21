@@ -1,9 +1,11 @@
 \section{Controller}
 
-\subsection{Dynamics}
-In his paper, Fisher \cite{ratcFISHER} uses the dynamic model given in Beard and McLain \cite{suaBEARD} to develop a controller that uses rudder to change the heading. A similar controller will be used in this paper, and it will be derived by using the same method as Fisher used.
+In this chapter the dynamic equations needed to describe how the course of the aircraft changes with the rudder will be presented, and the transfer function for the controller is derived.
 
-To simplify the controller, it will be assumed that there is no wind and no sidslip $\beta$. These assumption will simplify the control problem since it can be assumed that $\chi = \psi$. It will also be assumed that the UAV is in trimmed, straight level flight, as this will simplify the system since the roll angle $\phi$ and pitch angle $\theta$ both can be assumed to be small.
+\subsection{Dynamics}
+In his paper, Fisher \cite{ratcFISHER} uses the dynamic model given in Beard and McLain \cite{suaBEARD} to develop a controller that uses the rudder to change the heading. A similar controller will be used in this paper, and it will be derived by using the same steps that Fisher used.
+
+To simplify the controller, it will be assumed that there is no wind and no sideslip $\beta$. These assumption will simplify the control problem since it can be assumed that $\chi = \psi$. It will also be assumed that the UAV is in trimmed, straight level flight, as this will simplify the system since the roll angle $\phi$ and pitch angle $\theta$ both can be assumed to be small.
 
 The yaw dynamics for a UAV are (eq. 3.17, Beard and McLain \cite{suaBEARD})
 
@@ -13,19 +15,6 @@ The yaw dynamics for a UAV are (eq. 3.17, Beard and McLain \cite{suaBEARD})
 \end{equation}
 
 where $l$ and $n$ are the moments about the $\bm{i}^b$ and $\bm{j}^b$ axes respectively. The $\Gamma$ equations describe the inertia of the aircraft and are expressed using elements of the inertia matrix $\bm{J}$.
-
-%\begin{equation}
-%\begin{gathered}
-%	\Gamma_1 = \frac{J_{xz}(J_x - J_y + J_z)}{J_xJ_z-J_{xz}^2}
-%	\\
-%	\Gamma_4 = \frac{J_{xz}}{J_xJ_z-J_{xz}^2}
-%	\\
-%	\Gamma_7 = \frac{(J_x-J_y)J_x+J_{xz}^2}{J_xJ_z-J_{xz}^2}
-%	\\
-%	\Gamma_8 = \frac{J_x}{J_xJ_z-J_{xz}^2}
-%\end{gathered}
-%.
-%\end{equation}
 
 The heading dynamic is expressed by the pitch rate $q$, the yaw rate $r$, and the attitude states $\bm{\Theta}_{nb}$ (eq. 3.3, Beard and McLain \cite{suaBEARD}):
 
@@ -64,7 +53,7 @@ The moments $l$ and $n$ are the moments on the aircraft caused by the attitude s
 \end{equation}
 \end{subequations}
 
-By continuing to follow Fishers \cite{ratcFISHER} notation, equations (\ref{eq:yaw_dynamics2}) and (\ref{eq:controller_moments}) can be combined to get
+By continuing to follow Fishers \cite{ratcFISHER} notation, equations (\ref{eq:yaw_dynamics2}) and (\ref{eq:controller_moments}) can be combined to
 
 \begin{equation}
 	\label{eq:yaw_dynamics_final}
@@ -107,7 +96,7 @@ where the constants are craft-specific parameters, and
 
 
 \subsection{Controller Transfer Function}
-Since the controller is to use rudder input $\delta_r$ to change the heading $\psi$, equation (\ref{eq:yaw_dynamics_final}) can be rearranged to express these variables:
+Since the controller is to use rudder input $\delta_r$ to alter the heading $\psi$, equation (\ref{eq:yaw_dynamics_final}) can be rearranged to express these variables:
 
 \begin{equation}
 	\label{eq:yaw_control}
@@ -135,7 +124,7 @@ $a_{\psi_1}$ is chosen to be negative as this will ease later calculations (see 
 	\psi(s) = \frac{a_{\psi_2}}{s(s+a_{\psi_1})}\delta_r(s) + \frac{1}{s(s+a_{\psi_1})}d_\psi(s).
 \end{equation}
 
-This equation show that the second term containing $d_\psi$ acts as a disturbance for the controller. As shown in (\ref{eq:constants_controller}), the inputs to this term are the sideslip $\beta$, roll rate $p$, and aileron deflection $\delta_a$. Since the UAV is assumed to be in trimmed straight level flight and the controller will use the rudder to turn instead of roll it is already assumed that $p$ will be zero, as will the aileron deflection $\delta_a$. During normal operation it cannot be assumed that no sideslip will occur. However, any $\beta$ is assumed to be small so that it can be removed from the controller equation. The final transfer function for the controller dynamics will then be
+This equation show that the second term containing $d_\psi$ acts as a disturbance for the controller. As shown in (\ref{eq:constants_controller}), the inputs to this term are the sideslip $\beta$, roll rate $p$, and aileron deflection $\delta_a$. Since the UAV is assumed to be in trimmed straight level flight and the controller will use the rudder to turn instead of roll it is already assumed that the roll rate $p$ will be zero, as will the aileron deflection $\delta_a$. During normal operation it cannot be assumed that no sideslip $\beta$ will occur. However, any $\beta$ is assumed to be small so that it can be removed from the controller equation. The final transfer function for the controller dynamics will then be
 
 \begin{equation}
 	\label{eq:tf_rudder}

@@ -1,8 +1,10 @@
 \section{Kinematics}
 \label{ch:kinematics}
 
+In order to control the UAV with regards to where the camera is pointing, a kinematic model that maps the camera focus to the UAV position and attitude is needed. An overview of the kinematic model for the UAV will be given here, as well as the method used for calculating the camera footprint based on the UAVs attitude states.
+
 \subsection{UAV States}
-In order to control the UAV with regards to where the camera is pointing, a kinematic model that maps the camera focus to the UAV position and attitude is needed. The position of the UAV will be given in reference frame \{n\} using the North East Down (NED) coordinate frame:
+The position of the UAV will be given in reference frame \{n\} using the North East Down (NED) coordinate frame:
 
 \begin{equation}
 	\bm{p}_{b/n}^n =
@@ -24,31 +26,7 @@ The attitude of the UAV will be given as Euler-angles:
 	\end{bmatrix}
 \end{equation}
 	
-where $\phi$ represents the roll angle, $\theta$ the pitch angle and $\psi$ the heading angle. The attitude angles have the corresponding angular velocities noted $p$, $q$ and $r$ respectively. In all the simulations done in this paper there will be no wind, and therefore it can be assumed that the course angle $\chi$ is equal to the heading $\psi$.
-	
-%These two expressions are often put together to make one position and orientation vector $\bm{\eta}$:
-%
-%\begin{equation}
-%	\bm{\eta} =
-%	\begin{bmatrix}
-%		\bm{p}_{b/n}^n \\
-%		\bm{\Theta}_{nb}
-%	\end{bmatrix}.
-%\end{equation}
-	
-%\subsection{Wind}
-%Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane and the angle of attack $\alpha$ in the vertical plane. This will change the UAVs actual course $\chi$ and the air-mass-referenced flight-path angle $\gamma_a$ to \cite{suaBEARD}:
-
-%\begin{subequations}
-%\begin{equation}
-%	\chi = \psi + \chi_c
-%\end{equation}
-%\begin{equation}
-%	\gamma = \theta + \theta_a.
-%\end{equation}
-%\end{subequations}
-
-%The air-mass-referenced flight-path angle $\gamma_a$ is defined as the vertical angle of the airspeed $V_a$ relative to the north-east plane. These angles will only affect the navigational part, and not where the camera is pointed.
+where $\phi$ represents the roll angle, $\theta$ the pitch angle and $\psi$ the heading angle. The attitude angles have the corresponding angular velocities denoted $p$, $q$ and $r$ respectively. In all the simulations done in this paper there will be no wind, and it may therefore be assumed that the course angle $\chi$ is equal to the heading $\psi$.
 
 
 \subsection{Camera Position}
@@ -96,7 +74,7 @@ where:
 	\end{bmatrix}.
 \end{equation}
 
-The point $\bm{c}_b^n$ is not the actual position in \{n\} since it does not take the UAVs position into consideration. This is done by simply adding the UAVs position to $\bm{c}_b^n$:
+The point $\bm{c}_b^n$ is not the actual position of the camera in \{n\} since it does not take the UAV's position into consideration. This is fixed by simply adding the UAVs position to $\bm{c}_b^n$:
 
 \begin{equation} \label{eq:body_ned_trans}
 	\bm{c}^n =
@@ -111,7 +89,7 @@ The point $\bm{c}_b^n$ is not the actual position in \{n\} since it does not tak
 \end{equation}
 
 \subsection{Camera Angle of View}
-Since the camera isn't only focusing on one specific point, it can be useful describing the camera footprint of a pushbroom sensor as two extremities instead of one center point. Equation \eqref{eq:camera_pos} can easily be changed to do this. Assuming the camera has an angle of view $\sigma$, the equation now becomes:
+Since the camera isn't only focusing on one specific point, it can be useful describing the camera footprint of a pushbroom sensor as two extremities instead of one center point. Equation \eqref{eq:camera_pos} can easily be changed to do this. Assuming the camera has an angle of view $\sigma$, the equation for the two extremities can be written as:
 
 \begin{equation}
 	\bm{e}_{1,b}^b = 
