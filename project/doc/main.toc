@@ -1,0 +1,39 @@
+\contentsline {section}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {2}Literature Review}{2}
+\contentsline {subsection}{\numberline {2.1}Course controller}{2}
+\contentsline {subsubsection}{\numberline {2.1.1}Rudder as a course control surface}{2}
+\contentsline {subsubsection}{\numberline {2.1.2}Course controller with constraints}{4}
+\contentsline {subsection}{\numberline {2.2}Path Planner}{4}
+\contentsline {subsubsection}{\numberline {2.2.1}Path Planner for Ground Observation}{5}
+\contentsline {subsection}{\numberline {2.3}Hyperspectral Imaging}{6}
+\contentsline {subsubsection}{\numberline {2.3.1}Description}{6}
+\contentsline {subsubsection}{\numberline {2.3.2}UAV ground observation}{6}
+\contentsline {subsection}{\numberline {2.4}Summary of Literature Review}{7}
+\contentsline {section}{\numberline {3}Kinematics}{9}
+\contentsline {subsection}{\numberline {3.1}UAV States}{9}
+\contentsline {subsection}{\numberline {3.2}Camera Position}{9}
+\contentsline {subsection}{\numberline {3.3}Camera Angle of View}{11}
+\contentsline {section}{\numberline {4}Controller}{14}
+\contentsline {subsection}{\numberline {4.1}Dynamics}{14}
+\contentsline {subsection}{\numberline {4.2}Controller Transfer Function}{16}
+\contentsline {section}{\numberline {5}Path Planner}{19}
+\contentsline {subsection}{\numberline {5.1}Dubins Path}{19}
+\contentsline {subsection}{\numberline {5.2}Altering the original path}{21}
+\contentsline {section}{\numberline {6}Simulation}{24}
+\contentsline {subsection}{\numberline {6.1}Model}{24}
+\contentsline {subsection}{\numberline {6.2}Autopilot}{25}
+\contentsline {subsection}{\numberline {6.3}Path Follower}{25}
+\contentsline {section}{\numberline {7}Simulation of Controller}{28}
+\contentsline {subsection}{\numberline {7.1}Test Cases}{28}
+\contentsline {subsection}{\numberline {7.2}Results: Step Response}{28}
+\contentsline {subsection}{\numberline {7.3}Results: Path}{29}
+\contentsline {subsection}{\numberline {7.4}Discussion}{37}
+\contentsline {section}{\numberline {8}Simulation of Path Planner}{39}
+\contentsline {subsection}{\numberline {8.1}Simulation Setup}{39}
+\contentsline {subsection}{\numberline {8.2}Result: Path Following}{40}
+\contentsline {subsection}{\numberline {8.3}Result: Camera Footprint}{43}
+\contentsline {subsection}{\numberline {8.4}Discussion}{49}
+\contentsline {section}{\numberline {9}Conclusion}{50}
+\contentsline {subsection}{\numberline {9.1}Findings}{50}
+\contentsline {subsection}{\numberline {9.2}Future Work}{51}
+\contentsline {section}{References}{52}
