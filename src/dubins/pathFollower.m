@@ -10,8 +10,8 @@ function chi_c = pathFollower(pos, chi)
     end
     
     % Generate waypoints
-    waypoints = [[0,0,0,0]; [1500,10,0,0];[1800,2500,0,pi/2];[4000,5000,0,pi]];
-    R = 500;
+    waypoints = [[-2000,10,0,0]; [0,0,0,0]; [1800,10,0,0];[1800,3500,0,pi/2];[5000,6000,0,pi]];
+    R = 600;
     
     [flag_ret, r, q, c_ret, ~, lambda_ret] = followWppDubins(waypoints, pos, R);
     

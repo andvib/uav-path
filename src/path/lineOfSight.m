@@ -1,5 +1,5 @@
 function chi_c = lineOfSight(pos, path)
-    R = 150;
+    R = 200;
     cont = 1;
     
     for i = (length(path(:,1)):-1:1)
