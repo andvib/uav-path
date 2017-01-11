@@ -1,6 +1,7 @@
 ## TeX
 *.aux
 *.log
+*eps-converted-to.pdf
 
 ## Matlab
 *.asv
