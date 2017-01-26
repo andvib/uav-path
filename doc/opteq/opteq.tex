@@ -1,6 +1,25 @@
 \section{Optimization Equation}
 
+The states included in the optimization problem:
 	
-\begin{math}
+\begin{equation}
+	\bm{x} = 
+	\begin{bmatrix}
+		p_n \\ p_e \\ p_d \\
+		u \\ v   \\ w   \\ 
+		\phi \\ \theta \\ \psi \\
+		p \\ q \\ r
+	\end{bmatrix}.
+\end{equation}
 
-\end{math}
+\subsection{Problem definition}
+
+\begin{equation}
+	\begin{array}{rrclcl}
+		\displaystyle \min_{\bm{x}} & \multicolumn{3}{l}{\Phi = (\bm{p}_d - \bm{p})} \\
+		\textrm{s.t}
+		& A x & \leq & b \\
+		& \displaystyle \sum_{i=0}^{n} x_i & = & 1 \\
+		& x_j & \geq & 0 & & \forall j \in N \\
+	\end{array}
+\end{equation}
