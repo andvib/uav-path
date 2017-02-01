@@ -5,10 +5,14 @@ The states included in the optimization problem:
 \begin{equation}
 	\mathbf{x} = 
 	\begin{bmatrix}
-		p_n \\ p_e \\ p_d \\
-		u \\ v   \\ w   \\ 
-		\phi \\ \theta \\ \psi \\
-		p \\ q \\ r
+		p_n 	\\ p_e		\\ p_d		\\
+		u 		\\ v   		\\ w   		\\ 
+		\phi	\\ \theta	\\	\psi	\\
+		p		\\ q		\\ r
+	\end{bmatrix}, \hspace{5pt}
+	\mathbf{u} = 
+	\begin{bmatrix}
+		\delta_e\\ \delta_a	\\ \delta_r	\\ \delta_t
 	\end{bmatrix}.
 \end{equation}
 
@@ -25,7 +29,7 @@ The states included in the optimization problem:
 	\end{array}
 \end{equation}
 
-where $f(\mathbf{x},\mathbf{u})$ represents the aircraft dynamics and $\mathbf{A} \mathbf{x} \leq \mathbf{b}$ represents the constraints put on the UAV states. $\bm{\Phi}$ is the distance between the center point of the camera $\mathbf{c}^n$ and the ground path that is to be observed $\mathbf{c}^n_d$.
+where $f(\mathbf{x},\mathbf{u})$ represents the aircraft model and $\mathbf{A} \mathbf{x} \leq \mathbf{b}$ represents the constraints put on the UAV states. $\bm{\Phi}$ is the distance between the center point of the camera $\mathbf{c}^n$ and the ground path that is to be observed $\mathbf{c}^n_d$.
 
 
 \subsubsection*{Cost Function}
@@ -45,10 +49,3 @@ The center point of the camera $\mathbf{c}^n$ is expressed as a function of the 
 	\end{bmatrix}.
 \end{split}
 \end{equation}
-
-The objective of the cost function is to minimize the distance from camera center point $\mathbf{c}^n$ to the ground observation path $\mathbf{c}_d^n$. 
-
-
-\subsubsection*{Constraints}
-
-The equality constraints $\mathbf{\dot{x}} = f(\mathbf{x},\mathbf{u})$ represents the full UAV model. 
