@@ -1,0 +1,19 @@
+\section{Hyperspectral Imaging}
+
+The control method developed in this paper will be developed with the use of a fixed hyperspectral, pushbroom sensor in mind. A hyperspectral sensor/camera makes it possible to accurately detect types of material from the UAV by sensing the wavelength of the received light.
+
+
+\subsection{Description}
+
+Hyperspectral imaging uses basics from spectroscopy to create images, which means that the basis for the images is the emitted or reflected light from materials \cite{hypSMITH}. The amount of light that is reflected by a material at different wavelengths is determined by several factors, and this makes it possible to distinguish different materials from each other. The reflected light is passed through a grate or a prism that splits the light into different wavelength bands, so that it can be measured by a spectrometer.
+
+When using a hyperspectral camera for ground observation from a UAV, it is very likely that one pixel of the camera covers more than one type of material on the ground. This means that the observed wavelengths will be influenced by more than one type of material. This is called a composite or mixed spectrum \cite{hypSMITH}, and the spectra of the different materials are combined additively. The combined spectra can be split into the different spectra that it is build up of by noise removal and other statistical methods which will not be covered here.
+
+
+\subsection{UAV Ground Observation}
+
+Hyperspectral imaging is already being used for ground observation from UAVs. Its ability to distinguish materials based on spectral properties means that it can be used to retrieve information that normal cameras are not able to. For example in agriculture it can be used to map damage to trees caused by bark beetles \cite{beetleNASI}, or it can be used to measure environmental properties, for example chlorophyl fluorescense, on leaf-level in a citrus orchard \cite{waterStressBERNI}.
+
+Systems for ground observation with hyperspectral cameras can be very complex, which often leads to heavy systems. In \cite{hymsySUOMALAINEN}, a lightweight hyperspectral mapping system was created for the use with octocopters. The purpose of the system is to map agricultural areas using a spectrometer and a photogrammetric camera, and the final "ready-to-fly" weight of the system is $2.0$ kg. The resolution of the final images made it possible to gather information on a single-plant basis, and the georeferencing accuracy was off by only a few pixels.
+
+The tests were performed at a low altitude, maximum $120$ m. While this was mainly because of local regulations, it also gave a benefit as there was less atmosphere disturbance in the measurements. The UAVs orientation data combined with surface models was used when recovering the positional data in the images. However, they found that externally produced surface models was not accurate enough as they do not take vegetation into consideration. For this reason they supplemented the existing surface models with information gathered during flight.

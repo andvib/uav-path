@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{report}
 \usepackage[utf8]{inputenc}
 \usepackage{mathptmx}
 \usepackage{parskip}
@@ -10,23 +10,31 @@
 \usepackage{fancyhdr}
 \usepackage{cite}
 
-\renewcommand{\baselinestretch}{1.5}
+
+%\renewcommand{\baselinestretch}{1.5}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \newdateformat{monthyear}{\monthname[\THEMONTH], \THEYEAR}
 
 \numberwithin{equation}{section}
 
+
 \begin{document}
+
 
 \import{./}{front_page.tex}
 
 \tableofcontents
+\newpage
 
-\cite{regtekBALCHEN}
-\cite{uavBEARD}
+\pagenumbering{arabic}
+\pagestyle{fancy}
 
-\bibliographystyle{plain}
+\import{introduction/}{introduction.tex}
+
+\newpage
+
+\bibliographystyle{unsrt}
 \bibliography{sources}{}
 
 
