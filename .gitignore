@@ -1,6 +1,9 @@
 ## TeX
 *.aux
 *.log
+*.bbl
+*.toc
+*.blg
 *eps-converted-to.pdf
 
 ## Matlab

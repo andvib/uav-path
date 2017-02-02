@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage{parskip}
+\usepackage{import}
+\usepackage{gensymb}
+\usepackage{amsmath, amssymb, bm}
+\usepackage{datetime}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{cite}
+
+\renewcommand{\baselinestretch}{1.5}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newdateformat{monthyear}{\monthname[\THEMONTH], \THEYEAR}
+
+\numberwithin{equation}{section}
+
+\begin{document}
+
+\import{./}{front_page.tex}
+
+\tableofcontents
+
+\cite{regtekBALCHEN}
+\cite{uavBEARD}
+
+\bibliographystyle{plain}
+\bibliography{sources}{}
+
+
+\end{document}
