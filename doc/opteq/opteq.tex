@@ -1,13 +1,15 @@
 \section*{Optimization Equation}
 
-The states included in the optimization problem:
-	
+The optimization problem will seek to minimize the distance between the centre of the camera footprint and the path that is to be observed. To achieve this the path will be optimized by minimizing the path error distance with regard to both the current position and the path up ahead. The states in the optimization problem is the UAV states and inputs. The optimization vector only consists of UAV states.
+
+The states of the UAV $\mathbf{x}$ and inputs $\mathbf{u}$ are defined as
+
 \begin{equation}
 	\mathbf{x} = 
 	\begin{bmatrix}
-		p_n 	\\ p_e		\\ p_d		\\
-		u 		\\ v   		\\ w   		\\ 
-		\phi	\\ \theta	\\	\psi	\\
+		p_n 	\\ p_e		\\ p_d	\\
+		u 		\\ v   		\\ w 	\\ 
+		\phi	\\ \theta	\\ \psi	\\
 		p		\\ q		\\ r
 	\end{bmatrix}, \hspace{5pt}
 	\mathbf{u} = 
@@ -16,25 +18,45 @@ The states included in the optimization problem:
 	\end{bmatrix}.
 \end{equation}
 
+For each point $i$ on the parametrized ground path that is to be observed, the UAV states for the current point and the states for the future points that are included needs to be a part of the optimization vector. Therefore, for each parametrized point there is an optimization vector $\mathbf{z}_i$ that consists of $k$ UAV state vectors, with $k$ being the number of future points to include.
+
+\begin{equation}
+	\mathbf{z}_i =
+	\begin{bmatrix}
+		\mathbf{x}_{i,0} \hspace{6pt} \mathbf{x}_{i,1} \hspace{6pt} \mathbf{x}_{i,2} \hspace{6pt} \hdots \hspace{6pt} \mathbf{x}_{i,k}
+	\end{bmatrix}^T.
+\end{equation}
+
+The final optimization vector $\mathbf{z}$ consists of the optimization vector for each of the points on the path:
+
+\begin{equation}
+	\mathbf{z} = 
+	\begin{bmatrix}
+		\mathbf{z}_0 \hspace{6pt} \mathbf{z}_1 \hspace{6pt} \mathbf{z}_2 \hspace{6pt} \hdots \hspace{6pt} \mathbf{z}_i
+	\end{bmatrix}^T.
+\end{equation}
+
 
 \subsection*{Problem Definition}
 
 \begin{equation}
 	\begin{array}{rrclcl}
-		\displaystyle \min_{\mathbf{x}} & \multicolumn{3}{l}{\bm{\Phi} = ||\mathbf{c}^n_d - \mathbf{c}^n||} \\
+		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{\bm{\Phi} = \sum\limits_{i=0}^k e_i} \\
 		\textrm{s.t}
-		& \mathbf{A} \mathbf{x} & \leq & \mathbf{b} \\
-		& \displaystyle \mathbf{\dot{x}} & = & f(\mathbf{x},\mathbf{u}) \\
-		%& x_j & \geq & 0 & & \forall j \in N \\
+		%& \mathbf{A} \mathbf{z} & \leq & \mathbf{b} \\
+		& \mathbf{x}^{low} \leq & \mathbf{z}_i & \leq \mathbf{x}^{high} \\
+		& \mathbf{u}^{low} \leq & \mathbf{u}_i & \leq \mathbf{u}^{high} \\
+		& \displaystyle \mathbf{z}_{i+1} & = & \mathbf{A}_d \mathbf{z}_i + \mathbf{B}_d \mathbf{u}_i
+		%& \displaystyle \mathbf{\dot{z}} & = & f(\mathbf{z},\mathbf{u}) \\
 	\end{array}
 \end{equation}
 
-where $f(\mathbf{x},\mathbf{u})$ represents the aircraft model and $\mathbf{A} \mathbf{x} \leq \mathbf{b}$ represents the constraints put on the UAV states. $\bm{\Phi}$ is the distance between the center point of the camera $\mathbf{c}^n$ and the ground path that is to be observed $\mathbf{c}^n_d$.
+where the inequality constraints represent the limits put on both the UAV states and inputs, and the equaltiy constraints represent the discrete model of the UAV. %$\bm{\Phi}$ is the distance between the center point of the camera $\mathbf{c}^n$ and the ground path that is to be observed $\mathbf{c}^n_d$.
 
 
 \subsubsection*{Cost Function}
 
-The center point of the camera $\mathbf{c}^n$ is expressed as a function of the position of the UAV and its attitude states
+The objective of the cost function is to minimize the cross track error $e$ between the path and the centre of the camera footprint of the UAVs current and future position. The desired ground path is expressed by using a path variable $t$, so that a position on the path is written as $(x_d(t),y_d(t))$. The position of the camera centre is expressed as $(c_x^n, c_y^n)$, calculated by:
 
 \begin{equation}
 \begin{split}
@@ -48,4 +70,22 @@ The center point of the camera $\mathbf{c}^n$ is expressed as a function of the 
 		p_d tan(\theta) \\ p_d tan(\phi)
 	\end{bmatrix}.
 \end{split}
+\end{equation}
+
+The path tangential angle $\gamma$ is a function of the path variable $t$, and can be found by:
+
+\begin{equation}
+	\gamma_d(t) = atan2(\dot{x}_d(t),\dot{y}_d(t)).
+\end{equation}
+
+The final cross track error can be found by rotating the camera position with the path tangential angle, and finding the resulting orthogonal distance.
+
+\begin{equation}
+	\begin{bmatrix}
+		0 \\ e
+	\end{bmatrix}
+	= \mathbf{R}_{z,\gamma}^T
+	\begin{bmatrix}
+		c_x^n - x_d(t) \\ x_y^n - y_d(t)
+	\end{bmatrix}
 \end{equation}
