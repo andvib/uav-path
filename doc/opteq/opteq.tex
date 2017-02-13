@@ -18,7 +18,7 @@ The states of the UAV $\mathbf{x}$ and inputs $\mathbf{u}$ are defined as
 	\end{bmatrix}.
 \end{equation}
 
-For each point $i$ on the parametrized ground path that is to be observed, the UAV states for the current point and the states for the future points that are included needs to be a part of the optimization vector. Therefore, for each parametrized point there is an optimization vector $\mathbf{z}_i$ that consists of $k$ UAV state vectors, with $k$ being the number of future points to include.
+For each point $i$ on the parametrized ground path that is to be observed, the UAV states for the current point and the states for the future points that are included needs to be a part of the optimization vector. Therefore, for each timestep there is an optimization vector $\mathbf{z}_i$ that consists of $k$ UAV state vectors, with $k$ being the number of future points to include:
 
 \begin{equation}
 	\mathbf{z}_i =
@@ -44,19 +44,19 @@ The final optimization vector $\mathbf{z}$ consists of the optimization vector f
 		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{\bm{\Phi} = \sum\limits_{i=0}^k e_i} \\
 		\textrm{s.t}
 		%& \mathbf{A} \mathbf{z} & \leq & \mathbf{b} \\
-		& \mathbf{x}^{low} \leq & \mathbf{z}_i & \leq \mathbf{x}^{high} \\
+		& \mathbf{z}^{low} \leq & \mathbf{z}_i & \leq \mathbf{z}^{high} \\
 		& \mathbf{u}^{low} \leq & \mathbf{u}_i & \leq \mathbf{u}^{high} \\
 		& \displaystyle \mathbf{z}_{i+1} & = & \mathbf{A}_d \mathbf{z}_i + \mathbf{B}_d \mathbf{u}_i
 		%& \displaystyle \mathbf{\dot{z}} & = & f(\mathbf{z},\mathbf{u}) \\
 	\end{array}
 \end{equation}
 
-where the inequality constraints represent the limits put on both the UAV states and inputs, and the equaltiy constraints represent the discrete model of the UAV. %$\bm{\Phi}$ is the distance between the center point of the camera $\mathbf{c}^n$ and the ground path that is to be observed $\mathbf{c}^n_d$.
+where the inequality constraints represent the limits put on both the UAV states and inputs, and the equaltiy constraints represent the discrete model of the UAV. $e_i$ is the cross-track error from the current camera centre point to the path.
 
 
 \subsubsection*{Cost Function}
 
-The objective of the cost function is to minimize the cross track error $e$ between the path and the centre of the camera footprint of the UAVs current and future position. The desired ground path is expressed by using a path variable $t$, so that a position on the path is written as $(x_d(t),y_d(t))$. The position of the camera centre is expressed as $(c_x^n, c_y^n)$, calculated by:
+The objective of the cost function is to minimize the cross track error $e$ between the path and the centre of the camera footprint of the UAVs current and future position. The position of the camera centre is expressed as $(c_x^n, c_y^n)$, calculated by:
 
 \begin{equation}
 \begin{split}
@@ -72,20 +72,8 @@ The objective of the cost function is to minimize the cross track error $e$ betw
 \end{split}
 \end{equation}
 
-The path tangential angle $\gamma$ is a function of the path variable $t$, and can be found by:
+The parametrized path will be expressed by a path variable $t$ so that points on the path that is to be observed $\mathbf{c}_d^n$ can be written as $(x_d(t), y_d(t), z_d(t))$. $z_d$ represents the aircraft altitude, and not the position of the path that is to be observed. The cross-track error $e_i$ can be written as
 
 \begin{equation}
-	\gamma_d(t) = atan2(\dot{x}_d(t),\dot{y}_d(t)).
-\end{equation}
-
-The final cross track error can be found by rotating the camera position with the path tangential angle, and finding the resulting orthogonal distance.
-
-\begin{equation}
-	\begin{bmatrix}
-		0 \\ e
-	\end{bmatrix}
-	= \mathbf{R}_{z,\gamma}^T
-	\begin{bmatrix}
-		c_x^n - x_d(t) \\ x_y^n - y_d(t)
-	\end{bmatrix}
+	e_i = ||\mathbf{c}_d^n - \mathbf{c}^n||
 \end{equation}
