@@ -41,7 +41,7 @@ The final optimization vector $\mathbf{z}$ consists of the optimization vector f
 
 \begin{equation}
 	\begin{array}{rrclcl}
-		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{\bm{\Phi} = \sum\limits_{i=0}^k e_i} \\
+		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{J = \frac{1}{2} \sum\limits_{i=0}^k \mathbf{e}^\intercal_i \mathbf{Q} \mathbf{e}_i} \\
 		\textrm{s.t}
 		%& \mathbf{A} \mathbf{z} & \leq & \mathbf{b} \\
 		& \mathbf{z}^{low} \leq & \mathbf{z}_i & \leq \mathbf{z}^{high} \\
