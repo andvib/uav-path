@@ -14,25 +14,16 @@ The states of the UAV $\mathbf{x}$ and inputs $\mathbf{u}$ are defined as
 	\end{bmatrix}, \hspace{5pt}
 	\mathbf{u} = 
 	\begin{bmatrix}
-		\delta_e\\ \delta_a	\\ \delta_r	\\ \delta_t
+		\delta_e \\ \delta_a	\\ \delta_r	\\ \delta_t
 	\end{bmatrix}.
 \end{equation}
 
-For each point $i$ on the parametrized ground path that is to be observed, the UAV states for the current point and the states for the future points that are included needs to be a part of the optimization vector. Therefore, for each timestep there is an optimization vector $\mathbf{z}_i$ that consists of $k$ UAV state vectors, with $k$ being the number of future points to include:
+The length of the optimization is given by $K$ timesteps. The optimization vector $\mathbf{z}$ will consist of UAV states $\mathbf{x}_i$ and inputs $\mathbf{u}_i$ for each of the $K$ timesteps. $\mathbf{x}_0$ and $\mathbf{u}_0$ equals the trimmed straight level flight of the UAV.
 
 \begin{equation}
-	\mathbf{z}_i =
+	\mathbf{z} =
 	\begin{bmatrix}
-		\mathbf{x}_{i,0} \hspace{6pt} \mathbf{x}_{i,1} \hspace{6pt} \mathbf{x}_{i,2} \hspace{6pt} \hdots \hspace{6pt} \mathbf{x}_{i,k}
-	\end{bmatrix}^T.
-\end{equation}
-
-The final optimization vector $\mathbf{z}$ consists of the optimization vector for each of the points on the path:
-
-\begin{equation}
-	\mathbf{z} = 
-	\begin{bmatrix}
-		\mathbf{z}_0 \hspace{6pt} \mathbf{z}_1 \hspace{6pt} \mathbf{z}_2 \hspace{6pt} \hdots \hspace{6pt} \mathbf{z}_i
+		\mathbf{x}_1 \hspace{6pt} \mathbf{x}_2 \hspace{6pt} \hdots \hspace{6pt} \mathbf{x}_K \hspace{6pt} \mathbf{u}_1 \hspace{6pt} \mathbf{u}_2 \hspace{6pt} \hdots \hspace{6pt} \mathbf{u}_K
 	\end{bmatrix}^T.
 \end{equation}
 
@@ -41,17 +32,15 @@ The final optimization vector $\mathbf{z}$ consists of the optimization vector f
 
 \begin{equation}
 	\begin{array}{rrclcl}
-		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{J = \frac{1}{2} \sum\limits_{i=0}^k \mathbf{e}^\intercal_i \mathbf{Q} \mathbf{e}_i} \\
+		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{J_k = \frac{1}{2} \sum\limits_{i=k}^{k+L} [\mathbf{e}(\mathbf{z}_i)^\intercal \mathbf{Q} \mathbf{e}(\mathbf{z}_i)] + \frac{1}{2} \sum\limits_{i=k}^{k+L} [\mathbf{u}_i^\intercal \mathbf{R} \mathbf{u}_i]}\\
 		\textrm{s.t}
-		%& \mathbf{A} \mathbf{z} & \leq & \mathbf{b} \\
-		& \mathbf{z}^{low} \leq & \mathbf{z}_i & \leq \mathbf{z}^{high} \\
+		& \mathbf{x}^{low} \leq & \mathbf{x}_i & \leq \mathbf{x}^{high} \\
 		& \mathbf{u}^{low} \leq & \mathbf{u}_i & \leq \mathbf{u}^{high} \\
-		& \displaystyle \mathbf{z}_{i+1} & = & \mathbf{A}_d \mathbf{z}_i + \mathbf{B}_d \mathbf{u}_i
-		%& \displaystyle \mathbf{\dot{z}} & = & f(\mathbf{z},\mathbf{u}) \\
+		& \displaystyle \mathbf{x}_{k+1} & = & \mathbf{A}_d \mathbf{x}_k + \mathbf{B}_d \mathbf{u}_k
 	\end{array}
 \end{equation}
 
-where the inequality constraints represent the limits put on both the UAV states and inputs, and the equaltiy constraints represent the discrete model of the UAV. $e_i$ is the cross-track error from the current camera centre point to the path.
+where the inequality constraints represent the limits put on both the UAV states and inputs, and the equaltiy constraints represent the discrete model of the UAV. The prediction horizon will include $L$ timesteps.
 
 
 \subsubsection*{Cost Function}
@@ -75,5 +64,8 @@ The objective of the cost function is to minimize the cross track error $e$ betw
 The parametrized path will be expressed by a path variable $t$ so that points on the path that is to be observed $\mathbf{c}_d^n$ can be written as $(x_d(t), y_d(t), z_d(t))$. $z_d$ represents the aircraft altitude, and not the position of the path that is to be observed. The cross-track error $e_i$ can be written as
 
 \begin{equation}
-	e_i = ||\mathbf{c}_d^n - \mathbf{c}^n||
+\begin{split}
+	\mathbf{e}(\mathbf{z}_i) & = ||\mathbf{c}^n - \mathbf{c}^n_d|| \\
+	& = \sqrt{(c_x^n - x_d)^2 + (c_y^n - y_d)^2}
+\end{split}
 \end{equation}
