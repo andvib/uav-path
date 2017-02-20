@@ -1,24 +1,22 @@
 \section*{Optimization Equation}
 
-The optimization problem will seek to minimize the distance between the centre of the camera footprint and the path that is to be observed. To achieve this the path will be optimized by minimizing the path error distance with regard to both the current position and the path up ahead. The states in the optimization problem is the UAV states and inputs. The optimization vector only consists of UAV states.
-
-The states of the UAV $\mathbf{x}$ and inputs $\mathbf{u}$ are defined as
+The optimization problem will seek to minimize the distance between the centre of the camera footprint and the path that is to be observed. The states of the UAV $\mathbf{x}$ and inputs $\mathbf{u}$ are defined as
 
 \begin{equation}
-	\mathbf{x} = 
+	\mathbf{x}_j = 
 	\begin{bmatrix}
-		p_n 	\\ p_e		\\ p_d	\\
-		u 		\\ v   		\\ w 	\\ 
-		\phi	\\ \theta	\\ \psi	\\
-		p		\\ q		\\ r
+		{p_n}_j 	\\ {p_e}_j		\\ {p_d}_j	\\
+		u_j 		\\ v_j   		\\ w_j 	\\ 
+		\phi_j	\\ \theta_j	\\ \psi_j	\\
+		p_j		\\ q_j		\\ r_j
 	\end{bmatrix}, \hspace{5pt}
-	\mathbf{u} = 
+	\mathbf{u}_j = 
 	\begin{bmatrix}
-		\delta_e \\ \delta_a	\\ \delta_r	\\ \delta_t
+		{\delta_e}_j \\ {\delta_a}_j	\\ {\delta_r}_j	\\ {\delta_t}_j
 	\end{bmatrix}.
 \end{equation}
 
-The length of the optimization is given by $K$ timesteps. The optimization vector $\mathbf{z}$ will consist of UAV states $\mathbf{x}_i$ and inputs $\mathbf{u}_i$ for each of the $K$ timesteps. $\mathbf{x}_0$ and $\mathbf{u}_0$ equals the trimmed straight level flight of the UAV.
+The length of the optimization is given by $K$ timesteps. The optimization vector $\mathbf{z}$ will consist of UAV states $\mathbf{x}_j$ and inputs $\mathbf{u}_j$ for each of the $K$ timesteps. $\mathbf{x}_0$ and $\mathbf{u}_0$ equals the trimmed state of the UAV.
 
 \begin{equation}
 	\mathbf{z} =
@@ -40,7 +38,7 @@ The length of the optimization is given by $K$ timesteps. The optimization vecto
 	\end{array}
 \end{equation}
 
-where the inequality constraints represent the limits put on both the UAV states and inputs, and the equaltiy constraints represent the discrete model of the UAV. The prediction horizon will include $L$ timesteps.
+where the inequality constraints represent the limits put on both the UAV states and inputs, and the equaltiy constraints represent the discrete model of the UAV. The MPC horizon is $[k, k+L]$.
 
 
 \subsubsection*{Cost Function}
@@ -66,6 +64,6 @@ The parametrized path will be expressed by a path variable $t$ so that points on
 \begin{equation}
 \begin{split}
 	\mathbf{e}(\mathbf{z}_i) & = ||\mathbf{c}^n - \mathbf{c}^n_d|| \\
-	& = \sqrt{(c_x^n - x_d)^2 + (c_y^n - y_d)^2}
+	& = \sqrt{(c_x^n - x_d(t))^2 + (c_y^n - y_d(t))^2 + (p_d - z_d(t))^2}
 \end{split}
 \end{equation}
