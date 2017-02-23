@@ -1,0 +1,53 @@
+% Plot display orientation
+\tdplotsetmaincoords{60}{30}
+
+\begin{center}
+\begin{tikzpicture}
+	[scale=7,
+	tdplot_main_coords,
+	axis/.style={->,black,thick},
+	vector/.style={-stealth,red,very thick},
+	vector guide/.style={dashed,black}]
+
+	%standard tikz coordinate definition using x, y, z coords
+	\coordinate (O) at (0,0,0);
+	
+	%tikz-3dplot coordinate definition using r, theta, phi coords
+	\tdplotsetcoord{P}{1}{40}{10}
+	
+	%draw axes
+	\draw[axis] (0,0,0) -- (1,0,0) node[anchor=north east]{$E$};
+	\draw[axis] (0,0,0) -- (0,1,0) node[anchor=north west]{$N$};
+	\draw[axis] (0,0,0) -- (0,0,1) node[anchor=south]{$-D$};
+
+	% Draw grid
+	\foreach \x in {0,0.1,...,1}
+		\foreach \y in {0,0.1,...,1}
+		{
+			\draw[very thin, gray, opacity=0.05] (\x, 0) -- (\x, 1);
+			\draw[very thin, gray, opacity=0.05] (0, \y) -- (1, \y);
+		}
+	
+	\coordinate (X) at (0.2, 0.2, 0.8);
+	
+	\draw[dashed] (0.2, 0.2, 0) -- (0.7, 0.7, 0);
+	\draw[] (X) -- (0.2, 0.2, 0) node[midway, left] {$z_n$};
+	\draw[] (X) -- (0.2, 0.7, 0);
+	\draw[] (X) -- (0.7, 0.7, 0);
+	\draw[dashed] (0.2, 0.2, 0) -- (0.2, 0.7, 0) node[midway, above, sloped] {$z_n tan(\theta)$};
+	\draw[dashed] (0.2, 0.7, 0) -- (0.7, 0.7, 0) node[midway, above, sloped] {$z_n tan(\phi)$};
+	
+	\draw[dashed] (0.2, 0.7, 0) -- (0.7, 0.7, 0);
+	
+	
+	\tdplotdefinepoints(0.2, 0.2, 0.8)(0.2, 0.2, 0)(0.2,0.7,0);
+	\tdplotdrawpolytopearc[<->]{0.3}{anchor=north west}{$\theta$};
+	
+	\tdplotdefinepoints(0.2, 0.2, 0.8)(0.2, 0.7, 0)(0.7, 0.7, 0);
+	\tdplotdrawpolytopearc[<->]{0.3}{anchor=north west}{$\phi$};
+	
+	\fill (X) circle[radius=0.3pt] node[anchor=south]{\{b\}};
+	\fill (0.7, 0.7, 0) circle[radius=0.3pt] node[anchor=north]{$c_n$};
+	
+\end{tikzpicture}
+\end{center}

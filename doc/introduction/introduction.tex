@@ -1,6 +1,10 @@
 \chapter{Introduction}
 
+Unmanned Aerial Vehcles (UAV) are today widely used in ground observation, and by equipping them with different sensors they can be used in different situations. While the use of UAV eases many cases of ground obsercation, there are some difficulties related to the attitude of the aircraft. When the sensor is attached directly to the aircraft the sensor will be coupled with the UAVs states, so that any change in the UAV states will cause a change in what is actually observed by the sensor.
 
+A common solution to decouple the sensor from the UAV states is to attach the sensor to a gimbal which will countaract most of the movements of the UAV. While this is a good solution for decoupling, it raises some new issues regarding its weight and size. As one of the benefits of UAVs is their small size the gimbal can quickly be too big and heavy for the UAV, and it may give less effective aerodynamics. This may again lead to increased fuel consumption for the UAV.
+
+This paper will investigate methods to reduce image errors caused by the UAVs attitude, while also avoiding the extra costs associated with a gimbal. This will be accomplished by optimizing a pre-defined curved path that is to be observed with a model of the UAV. The control method will be developed with a hyperspectral pushbroom camera that is fixed to the UAV in mind.
 
 \import{./}{optimization.tex}
 \import{./}{hyperspectral.tex}
