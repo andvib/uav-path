@@ -10,7 +10,8 @@
 %   krisgry 03.09.14
 %%
 
-function [output] = forces(eta,ny,quat,control,wind,P)
+function [output] = forces(eta,ny,quat,control,wind)
+    global P;
 % relabel the inputs
 %     eta
 %     ny

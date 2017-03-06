@@ -8,7 +8,8 @@
 %   Verified against B&M eq 3.14-3.17
 %   krisgry 10.09.14
 %%
-function output = dynamics(pos,quat,vel,Omega,tau,P)
+function output = dynamics(pos,quat,vel,Omega,tau)
+    global P;
     persistent M_rb gamma first
     if(isempty(first))
         first = 0;
