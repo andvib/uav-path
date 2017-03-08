@@ -1,10 +1,9 @@
 function [ dx ] = uavODE(t, x, control, p, w)
     wind = [0 0 0 0 0 0]';
-    t;
-    global north east;
+    
     % Assign states
-    p_N     = x(1)
-    p_E     = x(2)
+    p_N     = x(1);
+    p_E     = x(2);
     p_D     = x(3);
     q1      = x(4);
     q2      = x(5);
@@ -26,16 +25,17 @@ function [ dx ] = uavODE(t, x, control, p, w)
     % Normalize quaternion and calculate angles
     quat_norm = quatnormalize([q1, q2, q3, q4]);
     [phi, theta, psi] = q2euler(quat_norm);
-    
+
     tau = forces([p_N, p_E, p_D, phi, theta, psi]', ...
                  [u, v, w, p, q, r]', ...
                  quat_norm, ...
                  [elevator, aileron, rudder, throttle]', wind);
              
-     dx(1:13) = dynamics([p_N, p_E, p_D]', ...
-                  quat_norm', ...
-                  [u, v, w]', ...
-                  [p, q, r]', tau(1:6));
-     %dx(14) = throttle*throttle;
-     %dx(14) = v*v + w*w;
-     dx(14) = (35-u)^2;
+    dx(1:13) = dynamics([p_N, p_E, p_D]', ...
+                 quat_norm', ...
+                 [u, v, w]', ...
+                 [p, q, r]', tau(1:6));
+    dx(14) = elevator*elevator + aileron*aileron + rudder*rudder + throttle*throttle;
+    %dx(14) = v*v + w*w;
+    %dx(14) = throttle*throttle;
+end
