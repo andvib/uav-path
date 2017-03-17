@@ -17,7 +17,7 @@ int main(){
     /* CONTROL STATES */
     Control elevator;
     Control aileron;
-    Control rudder;
+    //Control rudder;
     Control throttle;
 
     /* INTERMEDIATE STATES */
@@ -39,6 +39,7 @@ int main(){
     //_________________________________________________________________
     /* AIRDATA */
 
+    // ONLY CORRECT AS LONG AS THERE IS NO WIND
     Va = sqrt(u*u + v*v + w*w);
     alpha = atan(w/u);
     beta = asin(v/Va);    
@@ -58,7 +59,7 @@ int main(){
     Cx   = -C_D*cos(alpha) + C_L*sin(alpha);
     Cxq  = - C_Dq*cos(alpha) + C_Lq*sin(alpha);
     Cxde = - C_Dde*cos(alpha) + C_Lde*sin(alpha);
-    f_ax =   aero * (Cx + Cxq*(1.0/(2.0*Va))*q + Cxde*elevator);
+    f_ax =   aero * (Cx + Cxq*(c/(2.*Va))*q + Cxde*elevator);
 
     f_px = 0.5*rho*S_prop*C_prop*(k_motor*k_motor*throttle*throttle - Va*Va);
 
@@ -97,7 +98,7 @@ int main(){
     //_________________________________________________________________
 	/* DIFFERENTIAL EQUATION */
 
-    /* POSITION */
+    /* Position */
 	f << dot(p_N) == cos(theta)*cos(psi)*u + \
                     (sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi))*v + \
                     (cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi))*w;
@@ -108,17 +109,17 @@ int main(){
 
     f << dot(p_D) == -sin(theta)*u + sin(phi)*cos(theta)*v + cos(phi)*cos(theta)*w;
 	
-    /* SPEED */
-    f << dot(u) == (r*v - q*w) + (1./m)*f_x;
-	f << dot(v) == (p*w - r*u) + (1./m)*f_y;
-    f << dot(w) == (q*u - p*v) + (1./m)*f_z;
+    /* Speed */
+    f << dot(u) == (r*v - q*w) + (1./mass)*f_x;
+	f << dot(v) == (p*w - r*u) + (1./mass)*f_y;
+    f << dot(w) == (q*u - p*v) + (1./mass)*f_z;
 	
-    /* ANGLES */
+    /* Angles */
     f << dot(phi)   == p + sin(phi)*tan(theta)*q + cos(phi)*tan(theta)*r;
     f << dot(theta) == cos(phi)*q - sin(phi)*r;
     f << dot(psi)   == (sin(phi)/cos(theta))*q + (cos(phi)/cos(theta))*r;
 
-    /* ANGLE RATES */
+    /* Angle Rates */
 	f << dot(p) == gamma_1*p*q - gamma_2*q*r + gamma_3*l + gamma_4*n;
     f << dot(q) == gamma_5*p*r - gamma_6*(p*p-r*r) + (1./J_y)*m;
 	f << dot(r) == gamma_7*p*q - gamma_1*q*r + gamma_4*l + gamma_8*n;
@@ -128,29 +129,29 @@ int main(){
 	/* DEFINE THE CONTROL PROBLEM */
 	OCP ocp( t_start, t_end, 10 );
 	
-	ocp.minimizeMayerTerm( v*v );
+	ocp.minimizeMayerTerm( (p_D-150)*(p_D-150) );
 	ocp.subjectTo( f );
-	ocp.subjectTo( AT_START,  p_N ==  0 );
-	ocp.subjectTo( AT_START,  p_E ==  0 );
-    ocp.subjectTo( AT_START,  p_D ==  0 );
-	ocp.subjectTo( AT_START,   u  == 18 );
-	ocp.subjectTo( AT_START,   v  ==  0 );
-    ocp.subjectTo( AT_START,   w  ==  0 );
-	ocp.subjectTo( AT_START,  phi ==  0 );
-    ocp.subjectTo( AT_START, theta==  0.046 );
-	ocp.subjectTo( AT_START,  psi ==  0 );
-	ocp.subjectTo( AT_START,   p  ==  0 );
-    ocp.subjectTo( AT_START,   q  ==  0 );
-	ocp.subjectTo( AT_START,   r  ==  0 );
+	ocp.subjectTo( AT_START,  p_N ==  0      );
+	ocp.subjectTo( AT_START,  p_E ==  0      );
+    ocp.subjectTo( AT_START,  p_D ==  -150      );
+	ocp.subjectTo( AT_START,   u  == 18      );
+	//ocp.subjectTo( AT_START,   v  ==  0      );
+    ocp.subjectTo( AT_START,   w  ==  0.8366 );
+	ocp.subjectTo( AT_START,  phi ==  0      );
+    ocp.subjectTo( AT_START, theta==  0.046  );
+	ocp.subjectTo( AT_START,  psi ==  0      );
+	//ocp.subjectTo( AT_START,   p  ==  0      );
+    //ocp.subjectTo( AT_START,   q  ==  0      );
+	//ocp.subjectTo( AT_START,   r  ==  0      );
 
     ocp.subjectTo( AT_START, elevator == 0.0079 );
 	ocp.subjectTo( AT_START,  aileron == 0      );
-	ocp.subjectTo( AT_START,   rudder == 0      );
+	//ocp.subjectTo( AT_START,   rudder == 0      );
 	ocp.subjectTo( AT_START, throttle == 0.1240 );
 
 	//ocp.subjectTo( AT_END, u == 18 );
 
-	//ocp.subjectTo( 15 <= u <= 22 );
+	//ocp.subjectTo( 0 <= u <= 22 );
 	//ocp.subjectTo( -1 <= v <= 1 );
 
 	//ocp.subjectTo( -1 <= psi <= 1 );
@@ -161,7 +162,7 @@ int main(){
 	//ocp.subjectTo( -1 <= r <= 1 );
 
 	//ocp.subjectTo( -10 <= p_N <= 250 );
-	//ocp.subjectTo( -10 <= p_E <= 250 );*/
+	//ocp.subjectTo( -10 <= p_E <= 250 );
 
     //ocp.subjectTo( -1 <= elevator <= 1 );
 	//ocp.subjectTo( -1 <= aileron  <= 1 );
@@ -169,24 +170,35 @@ int main(){
 	//ocp.subjectTo(  0 <= throttle <= 1 );
 	
 
-	GnuplotWindow window;
-	window.addSubplot(p_E, p_N, "POSITION");
-	window.addSubplot(u, "SPEED");
-	window.addSubplot(psi, "HEADING");
-	window.addSubplot(phi, "ROLL");
-	window.addSubplot(aileron, "AILERON");
-	window.addSubplot(throttle, "THROTTLE");
+    //_________________________________________________________________
+    /* PREPARE SOLUTION */
 
-	/* DEFINE ALGORITHM */
+	GnuplotWindow windowStates;
+	windowStates.addSubplot(p_E, p_N, "POSITION");
+	windowStates.addSubplot(u, "SPEED");
+    windowStates.addSubplot(p_D, "DOWN");
+	windowStates.addSubplot(psi, "HEADING");
+	windowStates.addSubplot(phi, "ROLL");
+    windowStates.addSubplot(theta, "PITCH");
+
+    GnuplotWindow windowInputs;
+    windowInputs.addSubplot(elevator, "ELEVATOR");
+	windowInputs.addSubplot(aileron, "AILERON");
+    //windowInputs.addSubplot(rudder, "RUDDER");
+	windowInputs.addSubplot(throttle, "THROTTLE");
+
+	/* Define Algorithm */
 	OptimizationAlgorithm algorithm(ocp);
 	
-	algorithm.set( ABSOLUTE_TOLERANCE, 1.0 );
+    /* Solver constraints */
+	algorithm.set( ABSOLUTE_TOLERANCE, 10.0 );
 	algorithm.set( INTEGRATOR_TOLERANCE, 10.0 );
 	//algorithm.set( HESSIAN_APPROXIMATION, EXACT_HESSIAN );
-	//algorithm.set( MAX_NUM_ITERATIONS, 200 );
-	//algorithm.set( KKT_TOLERANCE, 1.0 );	
+	algorithm.set( MAX_NUM_ITERATIONS, 200 );
+	algorithm.set( KKT_TOLERANCE, 1.0e5 );	
 
-	algorithm << window;
+	algorithm << windowStates;
+    //algorithm << windowInputs;
 	algorithm.solve();
 
 	return 0;
