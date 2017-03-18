@@ -4,6 +4,10 @@
 
 #include "x8_param.hpp"
 
+
+#define PI 3.14
+
+
 int main(){
 
 	USING_NAMESPACE_ACADO;
@@ -17,7 +21,6 @@ int main(){
     /* CONTROL STATES */
     Control elevator;
     Control aileron;
-    //Control rudder;
     Control throttle;
 
     /* INTERMEDIATE STATES */
@@ -127,75 +130,78 @@ int main(){
 
     //_________________________________________________________________
 	/* DEFINE THE CONTROL PROBLEM */
-	OCP ocp( t_start, t_end, 10 );
+	OCP ocp( t_start, t_end, 80 );
 	
-	ocp.minimizeMayerTerm( (p_D-150)*(p_D-150) );
+	ocp.minimizeMayerTerm( psi*psi + (u-18)*(u-18) + (p_D+150)*(p_D+150));
 	ocp.subjectTo( f );
 	ocp.subjectTo( AT_START,  p_N ==  0      );
 	ocp.subjectTo( AT_START,  p_E ==  0      );
-    ocp.subjectTo( AT_START,  p_D ==  -150      );
+    ocp.subjectTo( AT_START,  p_D ==  -150   );
 	ocp.subjectTo( AT_START,   u  == 18      );
-	//ocp.subjectTo( AT_START,   v  ==  0      );
-    ocp.subjectTo( AT_START,   w  ==  0.8366 );
-	ocp.subjectTo( AT_START,  phi ==  0      );
-    ocp.subjectTo( AT_START, theta==  0.046  );
-	ocp.subjectTo( AT_START,  psi ==  0      );
+	ocp.subjectTo( AT_START,   v  ==  0      );
+    ocp.subjectTo( AT_START,   w  ==  0 );
+	//ocp.subjectTo( AT_START,  phi ==  0      );
+    //ocp.subjectTo( AT_START, theta==  0.046  );
+	//ocp.subjectTo( AT_START,  psi ==  0      );
 	//ocp.subjectTo( AT_START,   p  ==  0      );
     //ocp.subjectTo( AT_START,   q  ==  0      );
 	//ocp.subjectTo( AT_START,   r  ==  0      );
 
-    ocp.subjectTo( AT_START, elevator == 0.0079 );
-	ocp.subjectTo( AT_START,  aileron == 0      );
-	//ocp.subjectTo( AT_START,   rudder == 0      );
-	ocp.subjectTo( AT_START, throttle == 0.1240 );
+    //ocp.subjectTo( AT_START, elevator == 0.0079 );
+	//ocp.subjectTo( AT_START,  aileron == 0      );
+	//ocp.subjectTo( AT_START, throttle == 0.1240 );
 
 	//ocp.subjectTo( AT_END, u == 18 );
 
-	//ocp.subjectTo( 0 <= u <= 22 );
+	//ocp.subjectTo( 17 <= u <= 19 );
 	//ocp.subjectTo( -1 <= v <= 1 );
+    //ocp.subjectTo( -10 <= w <= 10 );
 
-	//ocp.subjectTo( -1 <= psi <= 1 );
-    //ocp.subjectTo( -1 <= theta <= 1 );
-	//ocp.subjectTo( -1 <= phi <= 13);
+	//ocp.subjectTo( -0.3 <= phi <= 0.3 );
+    //ocp.subjectTo( -2*PI <= theta <= 2*PI );
+	//ocp.subjectTo( -0.5 <= psi <= 0.5);
 
 	//ocp.subjectTo( -1 <= p <= 1 );
+    //ocp.subjectTo( -1 <= q <= 1 );
 	//ocp.subjectTo( -1 <= r <= 1 );
 
 	//ocp.subjectTo( -10 <= p_N <= 250 );
 	//ocp.subjectTo( -10 <= p_E <= 250 );
+    //ocp.subjectTo( -190 <= p_D <= -120 );
 
-    //ocp.subjectTo( -1 <= elevator <= 1 );
-	//ocp.subjectTo( -1 <= aileron  <= 1 );
-	//ocp.subjectTo( -1 <=  rudder  <= 1 );
-	//ocp.subjectTo(  0 <= throttle <= 1 );
+    ocp.subjectTo( -1 <= elevator <= 1 );
+	ocp.subjectTo( -1 <= aileron  <= 1 );
+	ocp.subjectTo(  -0.1 <= throttle <= 1 );
 	
 
     //_________________________________________________________________
     /* PREPARE SOLUTION */
 
 	GnuplotWindow windowStates;
-	windowStates.addSubplot(p_E, p_N, "POSITION");
-	windowStates.addSubplot(u, "SPEED");
+	windowStates.addSubplot(p_N, "NORTH");
+    windowStates.addSubplot(p_E, "EAST");
     windowStates.addSubplot(p_D, "DOWN");
 	windowStates.addSubplot(psi, "HEADING");
 	windowStates.addSubplot(phi, "ROLL");
     windowStates.addSubplot(theta, "PITCH");
+    windowStates.addSubplot(Va, "AIRSPEED");
+    windowStates.addSubplot(u, "U");
+    windowStates.addSubplot(v, "V");
 
     GnuplotWindow windowInputs;
     windowInputs.addSubplot(elevator, "ELEVATOR");
 	windowInputs.addSubplot(aileron, "AILERON");
-    //windowInputs.addSubplot(rudder, "RUDDER");
 	windowInputs.addSubplot(throttle, "THROTTLE");
 
 	/* Define Algorithm */
 	OptimizationAlgorithm algorithm(ocp);
 	
     /* Solver constraints */
-	algorithm.set( ABSOLUTE_TOLERANCE, 10.0 );
-	algorithm.set( INTEGRATOR_TOLERANCE, 10.0 );
+	algorithm.set( ABSOLUTE_TOLERANCE, 100.0 );
+	algorithm.set( INTEGRATOR_TOLERANCE, 100.0 );
 	//algorithm.set( HESSIAN_APPROXIMATION, EXACT_HESSIAN );
-	algorithm.set( MAX_NUM_ITERATIONS, 200 );
-	algorithm.set( KKT_TOLERANCE, 1.0e5 );	
+	//algorithm.set( MAX_NUM_ITERATIONS, 200 );
+	algorithm.set( KKT_TOLERANCE, 7.0e15 );	
 
 	algorithm << windowStates;
     //algorithm << windowInputs;
