@@ -32,7 +32,7 @@
 #define C_Dde	 0.3045
 #define C_mde	-0.3254
 #define C_prop	 1.0
-#define M	 50
+#define M	     50
 #define alpha_0	 0.4712
 #define epsilon	 0.1592
 #define C_Dp	 0.0254
@@ -64,3 +64,18 @@
 #define gamma_6  J_xz/J_y
 #define gamma_7 ((J_x-J_y)*J_x+J_xz*J_xz)/gamma
 #define gamma_8  J_x/gamma
+
+/** Aerodynamics coefficients for roll and yaw **/
+#define C_p0    gamma_3*C_l0    + gamma_4*C_n0
+#define C_pbeta gamma_3*C_lbeta + gamma_4*C_nbeta
+#define C_pp    gamma_3*C_lp    + gamma_4*C_np
+#define C_pr    gamma_3*C_lr    + gamma_4*C_nr
+#define C_pda   gamma_3*C_lda   + gamma_4*C_nda
+//#define C_pdr   gamma_3*C_ldr + gamma_4*C_ndr
+#define C_r0    gamma_4*C_l0    + gamma_8*C_n0
+#define C_rbeta gamma_4*C_lbeta + gamma_8*C_nbeta
+#define C_rp    gamma_4*C_lp    + gamma_8*C_np
+#define C_rr    gamma_4*C_lr    + gamma_8*C_nr
+#define C_rda   gamma_4*C_lda   + gamma_8*C_nda
+//#define C_rdr   gamma_4*C_ldr + gamma_8*C_ndr
+

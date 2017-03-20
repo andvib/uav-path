@@ -1,22 +1,21 @@
 #include <acado_optimal_control.hpp>
 #include <acado_gnuplot.hpp>
-#include <math.h>
 
 #include "x8_param.hpp"
 
+#define PI  3.14
+#define  g  9.81
 
-#define PI 3.14
 
 
 int main(){
+    USING_NAMESPACE_ACADO
 
-	USING_NAMESPACE_ACADO;
-
-	/* UAV STATES */
-	DifferentialState p_N, p_E, p_D;    // Position
-	DifferentialState u, v, w;	        // Speed
-	DifferentialState phi, theta, psi;  // Attitude
-	DifferentialState p, q, r;          // Angle rates
+    /* UAV STATES */
+    DifferentialState p_N, p_E, p_D;
+    DifferentialState q0, q1, q2, q3;
+    DifferentialState u, v, w;
+    DifferentialState p, q, r;
 
     /* CONTROL STATES */
     Control elevator;
@@ -24,178 +23,142 @@ int main(){
     Control throttle;
 
     /* INTERMEDIATE STATES */
-	IntermediateState f_x, f_gx, f_ax, f_px, Cx, Cxq, Cxde;
-    IntermediateState f_y, f_gy, f_ay;
-    IntermediateState f_z, f_gz, f_az, Cz, Czq, Czde;
+    IntermediateState Cx, Cxq, Cxde;
+    IntermediateState Cz, Czq, Czde;
 	IntermediateState l, m, n;
 	IntermediateState Va, alpha, beta;
     IntermediateState aero, C_D, C_L;
+    IntermediateState quatLength;    
+    IntermediateState e0, e1, e2, e3;
 
+    /* DEFINE DIFFERENTIAL EQUATION */
+    DifferentialEquation f;
 
-    /* Define Differential equation */
-	DifferentialEquation f;
-
-	const double t_start =  0.0;
-	const double t_end 	 = 10.0;
+    const double t_start =  0.0;
+    const double t_end   =  10.0;
 
 
     //_________________________________________________________________
     /* AIRDATA */
-
-    // ONLY CORRECT AS LONG AS THERE IS NO WIND
+    // ONLY VALID AS LONG AS THERE IS NO WIND
     Va = sqrt(u*u + v*v + w*w);
     alpha = atan(w/u);
     beta = asin(v/Va);    
 
-    aero = 0.5*rho*Va*Va*S;
-
-
-    //_________________________________________________________________
-    /* FORCES */
-
+    aero = 0.5*rho*Va*Va*S/mass;
+    
     C_L = C_L0 + C_Lalp*alpha;
     C_D = C_D0 + C_Dalp*alpha;
 
-    // Forces in x-direction
-    f_gx = -mass * 9.81 * sin(theta);
-    
     Cx   = -C_D*cos(alpha) + C_L*sin(alpha);
-    Cxq  = - C_Dq*cos(alpha) + C_Lq*sin(alpha);
-    Cxde = - C_Dde*cos(alpha) + C_Lde*sin(alpha);
-    f_ax =   aero * (Cx + Cxq*(c/(2.*Va))*q + Cxde*elevator);
-
-    f_px = 0.5*rho*S_prop*C_prop*(k_motor*k_motor*throttle*throttle - Va*Va);
-
-    f_x  = f_gx + f_ax + f_px;
-
-    
-    // Forces in y-direction
-    f_gy = mass * 9.81 * cos(theta) * sin(phi);
-
-    f_ay = aero*(C_Y0+C_Ybeta*beta+C_Yp*(b/(2.*Va))*p+C_Yr*(b/(2.*Va))*r+C_Yda*aileron);
-
-    f_y  = f_gy + f_ay;
-
-
-    // Forces in z-direction
-    f_gz = mass * 9.81 * cos(theta) * cos(phi);
+    Cxq  = -C_Dq*cos(alpha) + C_Lq*sin(alpha);
+    Cxde = -C_Dde*cos(alpha) + C_Lde*sin(alpha);
 
     Cz   = -C_D*sin(alpha) - C_L*cos(alpha);
     Czq  = -C_Dq*sin(alpha) - C_Lq*cos(alpha);
     Czde = -C_Dde*sin(alpha) - C_Lde*cos(alpha);
-    f_az = aero * (Cz + Czq*(c/(2.*Va))*q + Czde*elevator);
 
-    f_z  = f_gz + f_az;
-
-
-    //_________________________________________________________________
-    /* MOMENTS */
-
-    l = aero*b*(C_l0+C_lbeta*beta+C_lp*(b/(2.*Va))*p+C_lr*(b/(2.*Va))*r+C_lda*aileron);
+    quatLength = sqrt(q0*q0 + q1*q1 + q2*q2 + q3*q3);
     
-    m = aero*c*(C_m0 + C_malp*alpha + C_mq*(c/(2.*Va))*q + C_mde*elevator);
-	
-    n = aero*b*(C_n0+C_nbeta*beta+C_np*(b/(2.*Va))*p+C_nr*(b/(2.*Va))*r+C_nda*aileron);
+    e0 = q0/quatLength;
+    e1 = q1/quatLength;
+    e2 = q2/quatLength;
+    e3 = q3/quatLength;
 
 
     //_________________________________________________________________
-	/* DIFFERENTIAL EQUATION */
+    /* DYNAMICS */
+    
+    // Position
+    f << dot(p_N) == (e1*e1 + e0*e0 - e2*e2 - e3*e3)*u + \
+                     2*(e1*e2 - e3*e0)*v + 2*(e1*e3 + e2*e0)*w;
+    
+    f << dot(p_E) == 2*(e1*e2 + e3*e0)*u + \
+                     (e2*e2 + e0*e0 - e1*e1 - e3*e3)*v +\
+                     2*(e2*e3 - e1*e0)*w;
 
-    /* Position */
-	f << dot(p_N) == cos(theta)*cos(psi)*u + \
-                    (sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi))*v + \
-                    (cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi))*w;
-	
-    f << dot(p_E) == cos(theta)*sin(psi)*u + \
-                    (sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi))*v + \
-                    (cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi))*w;
+    f << dot(p_D) == -2*(e1*e3 - e2*e0)*u - 2*(e2*e3 + e1*e0)*v - \
+                     (e3*e3 + e0*e0 - e1*e1 - e2*e2)*w;
 
-    f << dot(p_D) == -sin(theta)*u + sin(phi)*cos(theta)*v + cos(phi)*cos(theta)*w;
-	
-    /* Speed */
-    f << dot(u) == (r*v - q*w) + (1./mass)*f_x;
-	f << dot(v) == (p*w - r*u) + (1./mass)*f_y;
-    f << dot(w) == (q*u - p*v) + (1./mass)*f_z;
-	
-    /* Angles */
-    f << dot(phi)   == p + sin(phi)*tan(theta)*q + cos(phi)*tan(theta)*r;
-    f << dot(theta) == cos(phi)*q - sin(phi)*r;
-    f << dot(psi)   == (sin(phi)/cos(theta))*q + (cos(phi)/cos(theta))*r;
 
-    /* Angle Rates */
-	f << dot(p) == gamma_1*p*q - gamma_2*q*r + gamma_3*l + gamma_4*n;
-    f << dot(q) == gamma_5*p*r - gamma_6*(p*p-r*r) + (1./J_y)*m;
-	f << dot(r) == gamma_7*p*q - gamma_1*q*r + gamma_4*l + gamma_8*n;
-	
+    // Velocity
+    f << dot(u) == r*v - q*w + 2*g*(e1*e3 - e2*e0) + \
+                   aero*(Cx + Cxq*(c*q/(2*Va)) + Cxde*elevator +\
+              ((rho*S_prop*C_prop)/(2*mass))*(k_motor*k_motor*throttle*throttle-Va*Va));
+
+    f << dot(v) == p*w - r*u + 2*g*(e2*e3 + e1*e0) + aero*\
+                   (C_Y0 + C_Ybeta*beta + C_Yp*(b*p/(2*Va)) + C_Yr*(b*r/(2*Va)) + \
+                    C_Yda*aileron);
+
+    f << dot(w) == q*u - p*v + g*(e3*e3 + e0*e0 - e1*e1 - e2*e2) + \
+                   aero*(Cz + Czq*(c*q/(2*Va)) + Czde*elevator);
+
+    
+    // Quaternion
+    f << dot(q0) == -0.5*(p*e1 + q*e2 + r*e3);
+
+    f << dot(q1) == 0.5*(p*e0 + r*e2 - q*e3);
+
+    f << dot(q2) == 0.5*(q*e0 - r*e1 + p*e3);
+
+    f << dot(q3) == 0.5*(r*e0 + q*e1 - p*e2);
+
+
+    // Angle rates
+    f << dot(p) == gamma_1*p*q - gamma_2*q*r + \
+                   0.5*rho*Va*Va*S*b*(C_p0 + C_pbeta*beta + C_pp*(b*p/(2*Va)) +\
+                   C_pr*(b*r/(2*Va)) + C_pda*aileron);
+
+    f << dot(q) == gamma_5*p*r - gamma_6*(p*p - r*r) + ((rho*Va*Va*S*c)/(2*J_y))*\
+                   (C_m0 + C_malp*alpha + C_mq*(c*q/(2*Va)) + C_mde*elevator);
+
+    f << dot(r) == gamma_7*p*q - gamma_1*q*r + 0.5*rho*Va*Va*S*b*(C_r0 + \
+                   C_rbeta*beta + C_rp*(b*p/(2*Va)) + C_rr*(b*r/(2*Va))+C_rda*aileron);
+
 
     //_________________________________________________________________
-	/* DEFINE THE CONTROL PROBLEM */
-	OCP ocp( t_start, t_end, 80 );
-	
-	ocp.minimizeMayerTerm( psi*psi + (u-18)*(u-18) + (p_D+150)*(p_D+150));
-	ocp.subjectTo( f );
-	ocp.subjectTo( AT_START,  p_N ==  0      );
-	ocp.subjectTo( AT_START,  p_E ==  0      );
-    ocp.subjectTo( AT_START,  p_D ==  -150   );
-	ocp.subjectTo( AT_START,   u  == 18      );
-	ocp.subjectTo( AT_START,   v  ==  0      );
-    ocp.subjectTo( AT_START,   w  ==  0 );
-	//ocp.subjectTo( AT_START,  phi ==  0      );
-    //ocp.subjectTo( AT_START, theta==  0.046  );
-	//ocp.subjectTo( AT_START,  psi ==  0      );
-	//ocp.subjectTo( AT_START,   p  ==  0      );
-    //ocp.subjectTo( AT_START,   q  ==  0      );
-	//ocp.subjectTo( AT_START,   r  ==  0      );
+    /* DEFINE THE CONTROL PROBLEM */
+    OCP ocp( t_start, t_end, 100 );
+
+    ocp.minimizeMayerTerm( r*r );
+    ocp.subjectTo( f );
+    //ocp.subjectTo( AT_START, p_N == 0      );
+    //ocp.subjectTo( AT_START, p_E == 0      );
+    //ocp.subjectTo( AT_START, p_D == 150   );
+
+    //ocp.subjectTo( AT_START, q0  == 0.9997 );
+    //ocp.subjectTo( AT_START, q1  == 0      );
+    //ocp.subjectTo( AT_START, q2  == 0.0232 );
+    //ocp.subjectTo( AT_START, q3  == 0      );
+
+    //ocp.subjectTo( AT_START,   u == 18     );
+    //ocp.subjectTo( AT_START,   w == 0.8366 );
 
     //ocp.subjectTo( AT_START, elevator == 0.0079 );
-	//ocp.subjectTo( AT_START,  aileron == 0      );
-	//ocp.subjectTo( AT_START, throttle == 0.1240 );
+    //ocp.subjectTo( AT_START, aileron == 0 );
+    //ocp.subjectTo( AT_START, throttle == 0.1240 );
 
-	//ocp.subjectTo( AT_END, u == 18 );
+    //ocp.subjectTo( -1 <= elevator <= 1 );
+    //ocp.subjectTo( -1 <= aileron <= 1);
+    //ocp.subjectTo( -0.1 <= throttle <= 1 );
 
-	//ocp.subjectTo( 17 <= u <= 19 );
-	//ocp.subjectTo( -1 <= v <= 1 );
-    //ocp.subjectTo( -10 <= w <= 10 );
-
-	//ocp.subjectTo( -0.3 <= phi <= 0.3 );
-    //ocp.subjectTo( -2*PI <= theta <= 2*PI );
-	//ocp.subjectTo( -0.5 <= psi <= 0.5);
-
-	//ocp.subjectTo( -1 <= p <= 1 );
-    //ocp.subjectTo( -1 <= q <= 1 );
-	//ocp.subjectTo( -1 <= r <= 1 );
-
-	//ocp.subjectTo( -10 <= p_N <= 250 );
-	//ocp.subjectTo( -10 <= p_E <= 250 );
-    //ocp.subjectTo( -190 <= p_D <= -120 );
-
-    ocp.subjectTo( -1 <= elevator <= 1 );
-	ocp.subjectTo( -1 <= aileron  <= 1 );
-	ocp.subjectTo(  -0.1 <= throttle <= 1 );
-	
 
     //_________________________________________________________________
     /* PREPARE SOLUTION */
 
-	GnuplotWindow windowStates;
-	windowStates.addSubplot(p_N, "NORTH");
+    /* Figures */
+    GnuplotWindow windowStates;
+    windowStates.addSubplot(p_N, "NORTH");
     windowStates.addSubplot(p_E, "EAST");
     windowStates.addSubplot(p_D, "DOWN");
-	windowStates.addSubplot(psi, "HEADING");
-	windowStates.addSubplot(phi, "ROLL");
-    windowStates.addSubplot(theta, "PITCH");
-    windowStates.addSubplot(Va, "AIRSPEED");
+	windowStates.addSubplot(Va, "AIRSPEED");
     windowStates.addSubplot(u, "U");
     windowStates.addSubplot(v, "V");
 
-    GnuplotWindow windowInputs;
-    windowInputs.addSubplot(elevator, "ELEVATOR");
-	windowInputs.addSubplot(aileron, "AILERON");
-	windowInputs.addSubplot(throttle, "THROTTLE");
+    
+    /* Define algorithm */
+    OptimizationAlgorithm algorithm(ocp);
 
-	/* Define Algorithm */
-	OptimizationAlgorithm algorithm(ocp);
-	
     /* Solver constraints */
 	algorithm.set( ABSOLUTE_TOLERANCE, 100.0 );
 	algorithm.set( INTEGRATOR_TOLERANCE, 100.0 );
@@ -203,9 +166,12 @@ int main(){
 	//algorithm.set( MAX_NUM_ITERATIONS, 200 );
 	algorithm.set( KKT_TOLERANCE, 7.0e15 );	
 
-	algorithm << windowStates;
-    //algorithm << windowInputs;
-	algorithm.solve();
 
-	return 0;
+
+    algorithm << windowStates;
+    algorithm.solve();
+
+    return 0;
+
+
 }
