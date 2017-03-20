@@ -38,6 +38,19 @@ with corresponding angular velocities:
 
 ADD WIND KINEMATICS
 
+\subsubsection*{Wind}
+Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane and the angle of attack $\gamma_a$ in the vertical plane. This will change the UAVs actual heading $\psi$ and pitch $\theta$ to:
+
+\begin{subequations}
+\begin{equation}
+	\chi = \psi + \chi_c
+\end{equation}
+\begin{equation}
+	\gamma = \theta + \gamma_a
+\end{equation}
+\end{subequations}
+	
+where $\chi$ is called the course and $\gamma$ is maybe called something???? These angles will only affect the navigational part, and not what the camera is pointed at.
 
 \subsection{Camera Footprint}
 
