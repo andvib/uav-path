@@ -1,6 +1,5 @@
 #include <acado_optimal_control.hpp>
 #include <acado_gnuplot.hpp>
-#include <math.h>
 
 #include "x8_param.hpp"
 
@@ -17,7 +16,6 @@ int main(){
     /* CONTROL STATES */
     Control elevator;
     Control aileron;
-    //Control rudder;
     Control throttle;
 
     /* INTERMEDIATE STATES */
@@ -33,7 +31,7 @@ int main(){
 	DifferentialEquation f;
 
 	const double t_start =  0.0;
-	const double t_end 	 = 10.0;
+	const double t_end 	 = 4.0;
 
 
     //_________________________________________________________________
@@ -127,9 +125,9 @@ int main(){
 
     //_________________________________________________________________
 	/* DEFINE THE CONTROL PROBLEM */
-	OCP ocp( t_start, t_end, 10 );
+	OCP ocp( t_start, t_end, 80 );
 	
-	ocp.minimizeMayerTerm( (p_D-150)*(p_D-150) );
+	ocp.minimizeMayerTerm( 30*(p_D+150)*(p_D+150) + theta*theta + phi*phi);
 	ocp.subjectTo( f );
 	ocp.subjectTo( AT_START,  p_N ==  0      );
 	ocp.subjectTo( AT_START,  p_E ==  0      );
@@ -144,14 +142,14 @@ int main(){
     //ocp.subjectTo( AT_START,   q  ==  0      );
 	//ocp.subjectTo( AT_START,   r  ==  0      );
 
-    ocp.subjectTo( AT_START, elevator == 0.0079 );
-	ocp.subjectTo( AT_START,  aileron == 0      );
-	//ocp.subjectTo( AT_START,   rudder == 0      );
-	ocp.subjectTo( AT_START, throttle == 0.1240 );
+    //ocp.subjectTo( AT_START, elevator == 0.0079 );
+	//ocp.subjectTo( AT_START,  aileron == 0      );
+	//ocp.subjectTo( AT_START, throttle == 0.1240 );
 
 	//ocp.subjectTo( AT_END, u == 18 );
 
-	//ocp.subjectTo( 0 <= u <= 22 );
+
+	//ocp.subjectTo( 18 == u );
 	//ocp.subjectTo( -1 <= v <= 1 );
 
 	//ocp.subjectTo( -1 <= psi <= 1 );
@@ -166,8 +164,7 @@ int main(){
 
     //ocp.subjectTo( -1 <= elevator <= 1 );
 	//ocp.subjectTo( -1 <= aileron  <= 1 );
-	//ocp.subjectTo( -1 <=  rudder  <= 1 );
-	//ocp.subjectTo(  0 <= throttle <= 1 );
+	ocp.subjectTo(  0 <= throttle <= 1 );
 	
 
     //_________________________________________________________________
@@ -180,11 +177,11 @@ int main(){
 	windowStates.addSubplot(psi, "HEADING");
 	windowStates.addSubplot(phi, "ROLL");
     windowStates.addSubplot(theta, "PITCH");
+    windowStates.addSubplot(v, "V");
 
     GnuplotWindow windowInputs;
     windowInputs.addSubplot(elevator, "ELEVATOR");
 	windowInputs.addSubplot(aileron, "AILERON");
-    //windowInputs.addSubplot(rudder, "RUDDER");
 	windowInputs.addSubplot(throttle, "THROTTLE");
 
 	/* Define Algorithm */
@@ -194,8 +191,8 @@ int main(){
 	algorithm.set( ABSOLUTE_TOLERANCE, 10.0 );
 	algorithm.set( INTEGRATOR_TOLERANCE, 10.0 );
 	//algorithm.set( HESSIAN_APPROXIMATION, EXACT_HESSIAN );
-	algorithm.set( MAX_NUM_ITERATIONS, 200 );
-	algorithm.set( KKT_TOLERANCE, 1.0e5 );	
+	//algorithm.set( MAX_NUM_ITERATIONS, 200 );
+	algorithm.set( KKT_TOLERANCE, 1.0e12 );	
 
 	algorithm << windowStates;
     //algorithm << windowInputs;
