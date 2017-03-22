@@ -31,7 +31,7 @@ int main(){
 	DifferentialEquation f;
 
 	const double t_start =  0.0;
-	const double t_end 	 = 4.0;
+	const double t_end 	 =  4.0;
 
 
     //_________________________________________________________________
@@ -67,7 +67,8 @@ int main(){
     // Forces in y-direction
     f_gy = mass * 9.81 * cos(theta) * sin(phi);
 
-    f_ay = aero*(C_Y0+C_Ybeta*beta+C_Yp*(b/(2.*Va))*p+C_Yr*(b/(2.*Va))*r+C_Yda*aileron);
+    f_ay = aero*(C_Y0 + C_Ybeta*beta + C_Yp*(b/(2.*Va))*p + C_Yr*(b/(2.*Va))*r + \
+                                                    C_Yda*aileron + C_Ydr*rudder);
 
     f_y  = f_gy + f_ay;
 
@@ -86,11 +87,13 @@ int main(){
     //_________________________________________________________________
     /* MOMENTS */
 
-    l = aero*b*(C_l0+C_lbeta*beta+C_lp*(b/(2.*Va))*p+C_lr*(b/(2.*Va))*r+C_lda*aileron);
+    l = aero*b*(C_l0 + C_lbeta*beta + C_lp*(b/(2.*Va))*p + C_lr*(b/(2.*Va))*r + \
+                                                    C_lda*aileron + C_ldr*rudder);
     
     m = aero*c*(C_m0 + C_malp*alpha + C_mq*(c/(2.*Va))*q + C_mde*elevator);
 	
-    n = aero*b*(C_n0+C_nbeta*beta+C_np*(b/(2.*Va))*p+C_nr*(b/(2.*Va))*r+C_nda*aileron);
+    n = aero*b*(C_n0 + C_nbeta*beta + C_np*(b/(2.*Va))*p + C_nr*(b/(2.*Va))*r +\
+                                                    C_nda*aileron + C_ndr*rudder);
 
 
     //_________________________________________________________________
@@ -127,20 +130,20 @@ int main(){
 	/* DEFINE THE CONTROL PROBLEM */
 	OCP ocp( t_start, t_end, 80 );
 	
-	ocp.minimizeMayerTerm( 30*(p_D+150)*(p_D+150) + theta*theta + phi*phi);
+	ocp.minimizeMayerTerm( (p_D+150)*(p_D+150) );
 	ocp.subjectTo( f );
 	ocp.subjectTo( AT_START,  p_N ==  0      );
 	ocp.subjectTo( AT_START,  p_E ==  0      );
     ocp.subjectTo( AT_START,  p_D ==  -150      );
 	ocp.subjectTo( AT_START,   u  == 18      );
-	//ocp.subjectTo( AT_START,   v  ==  0      );
+	ocp.subjectTo( AT_START,   v  ==  0      );
     ocp.subjectTo( AT_START,   w  ==  0.8366 );
 	ocp.subjectTo( AT_START,  phi ==  0      );
     ocp.subjectTo( AT_START, theta==  0.046  );
 	ocp.subjectTo( AT_START,  psi ==  0      );
-	//ocp.subjectTo( AT_START,   p  ==  0      );
-    //ocp.subjectTo( AT_START,   q  ==  0      );
-	//ocp.subjectTo( AT_START,   r  ==  0      );
+	ocp.subjectTo( AT_START,   p  ==  0      );
+    ocp.subjectTo( AT_START,   q  ==  0      );
+	ocp.subjectTo( AT_START,   r  ==  0      );
 
     //ocp.subjectTo( AT_START, elevator == 0.0079 );
 	//ocp.subjectTo( AT_START,  aileron == 0      );
@@ -188,12 +191,12 @@ int main(){
 	OptimizationAlgorithm algorithm(ocp);
 	
     /* Solver constraints */
-	algorithm.set( ABSOLUTE_TOLERANCE, 10.0 );
-	algorithm.set( INTEGRATOR_TOLERANCE, 10.0 );
+	algorithm.set( ABSOLUTE_TOLERANCE, 200.0 );
+	algorithm.set( INTEGRATOR_TOLERANCE, 200.0 );
 	//algorithm.set( HESSIAN_APPROXIMATION, EXACT_HESSIAN );
 	//algorithm.set( MAX_NUM_ITERATIONS, 200 );
 	algorithm.set( KKT_TOLERANCE, 1.0e12 );	
-
+    algorithm.set( LEVENBERG_MARQUARDT, 1.0 );
 	algorithm << windowStates;
     //algorithm << windowInputs;
 	algorithm.solve();
