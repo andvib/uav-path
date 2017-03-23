@@ -1,7 +1,11 @@
 #include <acado_optimal_control.hpp>
 #include <acado_gnuplot.hpp>
 
-#include "x8_param.hpp"
+#include "aerosonde_param.hpp"
+//#include "x8_param.hpp"
+
+#define PI 3.14
+
 
 int main(){
 
@@ -15,6 +19,7 @@ int main(){
 
     /* CONTROL STATES */
     Control elevator;
+    Control rudder;
     Control aileron;
     Control throttle;
 
@@ -26,13 +31,37 @@ int main(){
 	IntermediateState Va, alpha, beta;
     IntermediateState aero, C_D, C_L;
 
-
     /* Define Differential equation */
 	DifferentialEquation f;
 
-	const double t_start =  0.0;
-	const double t_end 	 =  4.0;
+    /* Define LSQ function */
+    DMatrix weights(14,14); weights.setIdentity();
+    DVector ref(14);        ref.setAll(0.0);
+    
 
+    //_________________________________________________________________
+    /* SET CONFIGURATIONS */
+    Function h;
+    h << p_D;   ref(0) = -150;
+    h << u;     ref(1) = 35; weights(1,1) = 2;
+    h << v;
+    h << w;
+    h << phi;
+    h << theta;
+    h << psi;
+    h << p;     weights(7,7) = 2;
+    h << q;
+    h << r;
+    h << elevator;
+    h << aileron;
+    h << rudder;
+    h << throttle;
+
+	const double t_start = 0.0;
+	const double t_end 	 = 5.0;
+    const int    samples = 10*t_end;
+
+    const double kkt = 1.0e0;
 
     //_________________________________________________________________
     /* AIRDATA */
@@ -128,77 +157,95 @@ int main(){
 
     //_________________________________________________________________
 	/* DEFINE THE CONTROL PROBLEM */
-	OCP ocp( t_start, t_end, 80 );
+	OCP ocp( t_start, t_end, samples );
 	
-	ocp.minimizeMayerTerm( (p_D+150)*(p_D+150) );
+	ocp.minimizeLSQ( weights, h, ref );
 	ocp.subjectTo( f );
 	ocp.subjectTo( AT_START,  p_N ==  0      );
 	ocp.subjectTo( AT_START,  p_E ==  0      );
-    ocp.subjectTo( AT_START,  p_D ==  -150      );
-	ocp.subjectTo( AT_START,   u  == 18      );
+    ocp.subjectTo( AT_START,  p_D ==  -150   );
+	ocp.subjectTo( AT_START,   u  == 35      );
 	ocp.subjectTo( AT_START,   v  ==  0      );
-    ocp.subjectTo( AT_START,   w  ==  0.8366 );
+    ocp.subjectTo( AT_START,   w  ==  0      );
+
 	ocp.subjectTo( AT_START,  phi ==  0      );
-    ocp.subjectTo( AT_START, theta==  0.046  );
+    //ocp.subjectTo( AT_START, theta==  0.046  );
 	ocp.subjectTo( AT_START,  psi ==  0      );
-	ocp.subjectTo( AT_START,   p  ==  0      );
-    ocp.subjectTo( AT_START,   q  ==  0      );
-	ocp.subjectTo( AT_START,   r  ==  0      );
 
-    //ocp.subjectTo( AT_START, elevator == 0.0079 );
+	//ocp.subjectTo( AT_START,   p  ==  0      );
+    //ocp.subjectTo( AT_START,   q  ==  0      );
+	//ocp.subjectTo( AT_START,   r  ==  0      );
+
+    //ocp.subjectTo( AT_START, elevator == -0.0594 );
 	//ocp.subjectTo( AT_START,  aileron == 0      );
-	//ocp.subjectTo( AT_START, throttle == 0.1240 );
+    //ocp.subjectTo( AT_START,   rudder == 0      );	
+    //ocp.subjectTo( AT_START, throttle == 0.0978 );
 
-	//ocp.subjectTo( AT_END, u == 18 );
 
+    //ocp.subjectTo( AT_END, u == 35 );
 
-	//ocp.subjectTo( 18 == u );
-	//ocp.subjectTo( -1 <= v <= 1 );
+	ocp.subjectTo( 30 <= Va <= 40 );
+    //ocp.subjectTo( -10 <= v <= 10  );
 
-	//ocp.subjectTo( -1 <= psi <= 1 );
-    //ocp.subjectTo( -1 <= theta <= 1 );
-	//ocp.subjectTo( -1 <= phi <= 13);
+    ocp.subjectTo( -PI/2 <= phi <= PI/2);
+    //ocp.subjectTo( -PI/2 <= theta <= PI/2 );
 
-	//ocp.subjectTo( -1 <= p <= 1 );
-	//ocp.subjectTo( -1 <= r <= 1 );
+	//ocp.subjectTo( -0.25 <= p <= 0.25 );
+    ocp.subjectTo( -0.25 <= q <= 0.25 );	
+    ocp.subjectTo( -0.5 <= r <= 0.5 );
 
-	//ocp.subjectTo( -10 <= p_N <= 250 );
-	//ocp.subjectTo( -10 <= p_E <= 250 );
+	//ocp.subjectTo( -10 <= p_N <= 400 );
+	//ocp.subjectTo( -10 <= p_E <= 400 );
 
-    //ocp.subjectTo( -1 <= elevator <= 1 );
-	//ocp.subjectTo( -1 <= aileron  <= 1 );
-	ocp.subjectTo(  0 <= throttle <= 1 );
+    ocp.subjectTo( -1 <= elevator <= 1 );
+	ocp.subjectTo( -1 <= aileron  <= 1 );
+    ocp.subjectTo( -1 <= rudder   <= 1 );	
+    ocp.subjectTo(  0 <= throttle <= 1 );
 	
 
     //_________________________________________________________________
     /* PREPARE SOLUTION */
 
 	GnuplotWindow windowStates;
-	windowStates.addSubplot(p_E, p_N, "POSITION");
-	windowStates.addSubplot(u, "SPEED");
+    windowStates.addSubplot(u, "U");
+    windowStates.addSubplot(v, "V");	
+    //windowStates.addSubplot(p_N, "NORTH");
+    //windowStates.addSubplot(p_E, "EAST");
     windowStates.addSubplot(p_D, "DOWN");
-	windowStates.addSubplot(psi, "HEADING");
 	windowStates.addSubplot(phi, "ROLL");
     windowStates.addSubplot(theta, "PITCH");
-    windowStates.addSubplot(v, "V");
+	windowStates.addSubplot(psi, "HEADING");
+    windowStates.addSubplot(p, "P");
+    windowStates.addSubplot(q, "Q");
+    windowStates.addSubplot(r, "R");
 
     GnuplotWindow windowInputs;
     windowInputs.addSubplot(elevator, "ELEVATOR");
 	windowInputs.addSubplot(aileron, "AILERON");
+    windowInputs.addSubplot(rudder, "RUDDER");
 	windowInputs.addSubplot(throttle, "THROTTLE");
 
 	/* Define Algorithm */
 	OptimizationAlgorithm algorithm(ocp);
 	
     /* Solver constraints */
-	algorithm.set( ABSOLUTE_TOLERANCE, 200.0 );
-	algorithm.set( INTEGRATOR_TOLERANCE, 200.0 );
-	//algorithm.set( HESSIAN_APPROXIMATION, EXACT_HESSIAN );
-	//algorithm.set( MAX_NUM_ITERATIONS, 200 );
-	algorithm.set( KKT_TOLERANCE, 1.0e12 );	
-    algorithm.set( LEVENBERG_MARQUARDT, 1.0 );
-	algorithm << windowStates;
-    //algorithm << windowInputs;
+    algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
+    //algorithm.set( MAX_NUM_INTEGRATOR_STEPS, 10000 );	
+    algorithm.set( ABSOLUTE_TOLERANCE, 1.0 );
+	algorithm.set( INTEGRATOR_TOLERANCE, 1.0 );
+	algorithm.set( HESSIAN_APPROXIMATION, GAUSS_NEWTON );
+    algorithm.set( DISCRETIZATION_TYPE, SINGLE_SHOOTING );
+	algorithm.set( MAX_NUM_ITERATIONS, 100 );
+	algorithm.set( KKT_TOLERANCE, kkt );	
+    //algorithm.set( LEVENBERG_MARQUARDT, 1.0 );
+    //algorithm.set( STEPSIZE_TUNING, 100. );
+    //algorithm.set( DYNAMIC_SENSITIVITY, FORWARD_SENSITIVITY);	
+    //algorithm.set( OBJECTIVE_SENSITIVITY, FORWARD_SENSITIVITY);
+    //algorithm.set( CONSTRAINT_SENSITIVITY, FORWARD_SENSITIVITY);
+
+
+    algorithm << windowStates;
+    algorithm << windowInputs;
 	algorithm.solve();
 
 	return 0;
