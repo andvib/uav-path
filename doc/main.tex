@@ -10,6 +10,7 @@
 \usepackage{fancyhdr}
 \usepackage{cite}
 \usepackage{tikz, tikz-3dplot}
+\usepackage[toc,page]{appendix}
 
 
 %\renewcommand{\baselinestretch}{1.5}
@@ -17,7 +18,7 @@
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \newdateformat{monthyear}{\monthname[\THEMONTH], \THEYEAR}
 
-\numberwithin{equation}{section}
+\numberwithin{equation}{chapter}
 
 
 \begin{document}
@@ -33,6 +34,12 @@
 
 \import{introduction/}{introduction.tex}
 \import{theory/}{theory.tex}
+
+\begin{appendices}
+\import{implementation/}{UAV_model.tex}
+\import{implementation/}{optimization.tex}
+\end{appendices}
+
 
 \newpage
 

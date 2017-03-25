@@ -9,3 +9,6 @@
 ## Matlab
 *.asv
 *.autosave
+*_RUN.mexw64
+*_RUN.m
+*_acadodata_*

@@ -1,5 +1,9 @@
 \section{Kinematics}
 
+The 
+
+The position of the camera footprint is dependent on the position and attitude angles of the aircraft. 
+
 When the camera is fixed to the aircraft body, what is actually captured by the camera, the camera footprint, depends on the angles of the aircraft. The equations needed to express the position of the centre and outer points of the camera footprint will be given here. The kinematic model for the UAV used in this paper will also be given here.
 
 
@@ -15,6 +19,15 @@ The position of the UAV will be given using the North East Down (NED) coordinate
 	=
 	\begin{bmatrix}
 		x_n \\ y_n \\ z_n
+	\end{bmatrix},
+\end{equation}
+
+with the corresponding velocities
+
+\begin{equation}
+	\mathbf{V}^b_g =
+	\begin{bmatrix}
+		u \\ v \\ w
 	\end{bmatrix}.
 \end{equation}
 
@@ -36,21 +49,46 @@ with corresponding angular velocities:
 	\end{bmatrix}.
 \end{equation}
 
-ADD WIND KINEMATICS
 
-\subsubsection*{Wind}
-Wind will introduce what is called crab angle $\chi_c$ in the horizontal plane and the angle of attack $\gamma_a$ in the vertical plane. This will change the UAVs actual heading $\psi$ and pitch $\theta$ to:
+\subsection{Wind and Airspeed}
+Wind will be introduced to the vehicle in order to test how the system withstands disturbances. Since the camera footprint is dependent only on the attitude angles of the aircraft and not the course of the aircraft, the wind will only affect the navigation of the UAV. Wind speed is given in the $\{n\}$ frame as \cite{uavBEARD}
 
-\begin{subequations}
 \begin{equation}
-	\chi = \psi + \chi_c
+	\mathbf{V}^n_w =
+	\begin{bmatrix}
+		w_n \\ w_e \\ w_d
+	\end{bmatrix},
 \end{equation}
+
+and the air speed $\mathbf{V}_a$ of the aircraft is given by the wind speed $\mathbf{V}_w$ and ground speed $\mathbf{V}_g$ as
+
 \begin{equation}
-	\gamma = \theta + \gamma_a
+\begin{split}
+	\mathbf{V}_a & = \mathbf{V}_g - \mathbf{V}_w\\
+	\begin{bmatrix}
+		u_r \\ v_r \\ w_r
+	\end{bmatrix}
+	& =
+	\begin{bmatrix}
+		u \\ v \\ w
+	\end{bmatrix}
+	- \mathbf{R}_n^b
+	\begin{bmatrix}
+		w_n \\ w_e \\ w_d
+	\end{bmatrix}
+\end{split}
 \end{equation}
-\end{subequations}
-	
-where $\chi$ is called the course and $\gamma$ is maybe called something???? These angles will only affect the navigational part, and not what the camera is pointed at.
+
+where $\mathbf{R}_n^b$ is the rotation matrix between the NED frame $\{n\}$ and the body frame $\{b\}$. 
+
+%% Is the last part really needed?
+
+When in the presence of wind, the heading of the UAV isn't necessarily the direction that the UAV is moving. Wind will introduce a crab angle $\chi_c$ that together with the heading $\psi$ gives the course angle $\chi$:
+
+\begin{equation}
+	\chi = \psi + \chi_c.
+\end{equation}
+
 
 \subsection{Camera Footprint}
 
