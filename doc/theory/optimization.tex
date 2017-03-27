@@ -1,8 +1,20 @@
 \section{Optimization}
+\label{ch:optimization}
 
 In this chapter the methods and equations used for the optimization problem will be given. The goal of the optimization problem is to minimize the distance between the centre of the camera footprint and the path that is to be observed. The optimization program/routine/algorithm will be given as an offline Model Predictive Control (MPC) problem, that includes the entire UAV model as constraints.
 
 \subsection{MPC Method}
+
+Model Predictive Control (MPC) is a control method that uses knowledge about the process to calculate the control signals. By calculating the future states of the process over a prediction horizon it calculates the control signals that will cause the process to follow a reference trajectory in the best way possible. The MPC strategy can be broken down into three tasks \cite{mpcCAMACHO}:
+
+\begin{enumerate}
+	\item Predict the future outputs of the process for the given prediction horizon using past inputs to the process and the past measured states of the process, and by using the future control signals.
+	\item Optimize an objective function in order to determine the future control signals that follows a given reference trajectory as closely as possible.
+	\item Apply the optimal control signals to the process, and measure the resulting output so that it may be used to calculate the next prediction horizon in the first task.
+\end{enumerate}
+
+
+
 
 \subsection{Problem Definition}
 
