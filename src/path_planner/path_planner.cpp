@@ -2,66 +2,37 @@
 #include <acado_gnuplot.hpp>
 
 #include "aerosonde_param.hpp"
-//#include "x8_param.hpp"
 
 #define PI 3.14
 
 
 int main(){
 
-	USING_NAMESPACE_ACADO;
+    USING_NAMESPACE_ACADO
 
-	/* UAV STATES */
-	DifferentialState p_N, p_E, p_D;    // Position
-	DifferentialState u, v, w;	        // Speed
-	DifferentialState phi, theta, psi;  // Attitude
-	DifferentialState p, q, r;          // Angle rates
+    
+    //_________________________________________________________________
+    /* Introduce Variables */
+    DifferentialState p_N, p_E, p_D;
+    DifferentialState u, v, w;
+    DifferentialState phi, theta, psi;
+    DifferentialState p, q, r;
+    DifferentialState elevator, aileron, rudder, throttle;
 
-    /* CONTROL STATES */
-    Control elevator;
-    Control rudder;
-    Control aileron;
-    Control throttle;
+    Control d_elevator;
+    Control d_aileron;
+    Control d_rudder;
+    Control d_throttle;
 
-    /* INTERMEDIATE STATES */
-	IntermediateState f_x, f_gx, f_ax, f_px, Cx, Cxq, Cxde;
+    IntermediateState f_x, f_gx, f_ax, f_px, Cx, Cxq, Cxde;
     IntermediateState f_y, f_gy, f_ay;
     IntermediateState f_z, f_gz, f_az, Cz, Czq, Czde;
 	IntermediateState l, m, n;
 	IntermediateState Va, alpha, beta;
     IntermediateState aero, C_D, C_L;
 
-    /* Define Differential equation */
-	DifferentialEquation f;
+    DifferentialEquation f;
 
-    /* Define LSQ function */
-    DMatrix weights(14,14); weights.setIdentity();
-    DVector ref(14);        ref.setAll(0.0);
-    
-
-    //_________________________________________________________________
-    /* SET CONFIGURATIONS */
-    Function h;
-    h << p_D;   ref(0) = -150;
-    h << u;     ref(1) = 35; weights(1,1) = 2;
-    h << v;
-    h << w;
-    h << phi;
-    h << theta;
-    h << psi;
-    h << p;     weights(7,7) = 2;
-    h << q;
-    h << r;
-    h << elevator;
-    h << aileron;
-    h << rudder;
-    h << throttle;
-
-	const double t_start = 0.0;
-	const double t_end 	 = 5.0;
-    const int    samples = 10*t_end;
-
-    const double kkt = 1.0e0;
 
     //_________________________________________________________________
     /* AIRDATA */
@@ -154,99 +125,133 @@ int main(){
     f << dot(q) == gamma_5*p*r - gamma_6*(p*p-r*r) + (1./J_y)*m;
 	f << dot(r) == gamma_7*p*q - gamma_1*q*r + gamma_4*l + gamma_8*n;
 	
+    f << dot(elevator) == d_elevator;
+    f << dot(aileron)  == d_aileron;
+    f << dot(rudder)   == d_rudder;
+    f << dot(throttle) == d_throttle;
+
 
     //_________________________________________________________________
-	/* DEFINE THE CONTROL PROBLEM */
-	OCP ocp( t_start, t_end, samples );
-	
-	ocp.minimizeLSQ( weights, h, ref );
-	ocp.subjectTo( f );
-	ocp.subjectTo( AT_START,  p_N ==  0      );
+    /* DEFINE LEAST SQUARE FUNCTION */
+
+    Function h;
+    DMatrix weights(2,2);  weights.setIdentity();
+    DVector ref(2);        ref.setAll(0.0);
+
+    h << p_D; ref(0) = -150.0; weights(0,0) = 2;
+    h << u;   ref(1) = 35;      weights(1,1) = 4;
+    
+
+    //_________________________________________________________________
+    /* Configure OCP */
+
+    const double t_start =  0.0;
+	const double t_end 	 = 10.0;
+    const int    samples = 10*(t_end-t_start);
+
+    const double kkt = 1.0e0;
+
+
+    OCP ocp( t_start, t_end, samples );
+
+    ocp.minimizeLSQ(        weights, h, ref );
+    ocp.minimizeLSQEndTerm( weights, h, ref );
+    ocp.subjectTo( f );
+
+    //______________________________________________________________
+    /* Start configurations */
+    ocp.subjectTo( AT_START,  p_N ==  0      );
 	ocp.subjectTo( AT_START,  p_E ==  0      );
-    ocp.subjectTo( AT_START,  p_D ==  -150   );
-	ocp.subjectTo( AT_START,   u  == 35      );
+    ocp.subjectTo( AT_START,  p_D == -150    );
+	ocp.subjectTo( AT_START,   u  ==  35     );
 	ocp.subjectTo( AT_START,   v  ==  0      );
     ocp.subjectTo( AT_START,   w  ==  0      );
 
 	ocp.subjectTo( AT_START,  phi ==  0      );
-    //ocp.subjectTo( AT_START, theta==  0.046  );
+    ocp.subjectTo( AT_START, theta==  0.0664 );
 	ocp.subjectTo( AT_START,  psi ==  0      );
 
-	//ocp.subjectTo( AT_START,   p  ==  0      );
-    //ocp.subjectTo( AT_START,   q  ==  0      );
-	//ocp.subjectTo( AT_START,   r  ==  0      );
+	ocp.subjectTo( AT_START,   p  ==  0      );
+    ocp.subjectTo( AT_START,   q  ==  0      );
+	ocp.subjectTo( AT_START,   r  ==  0      );
 
-    //ocp.subjectTo( AT_START, elevator == -0.0594 );
-	//ocp.subjectTo( AT_START,  aileron == 0      );
-    //ocp.subjectTo( AT_START,   rudder == 0      );	
-    //ocp.subjectTo( AT_START, throttle == 0.0978 );
+    ocp.subjectTo( AT_START, elevator == 0.1  );
+    ocp.subjectTo( AT_START,  aileron == 0   );
+    ocp.subjectTo( AT_START,   rudder == 0   );
+    ocp.subjectTo( AT_START, throttle == 0.5 );
 
+    ocp.subjectTo( AT_START, d_elevator == 0 );
+	ocp.subjectTo( AT_START,  d_aileron == 0 );
+    ocp.subjectTo( AT_START,   d_rudder == 0 );	
+    ocp.subjectTo( AT_START, d_throttle == 0 );
 
-    //ocp.subjectTo( AT_END, u == 35 );
-
-	ocp.subjectTo( 30 <= Va <= 40 );
-    //ocp.subjectTo( -10 <= v <= 10  );
-
-    ocp.subjectTo( -PI/2 <= phi <= PI/2);
-    //ocp.subjectTo( -PI/2 <= theta <= PI/2 );
-
-	//ocp.subjectTo( -0.25 <= p <= 0.25 );
-    ocp.subjectTo( -0.25 <= q <= 0.25 );	
-    ocp.subjectTo( -0.5 <= r <= 0.5 );
-
-	//ocp.subjectTo( -10 <= p_N <= 400 );
-	//ocp.subjectTo( -10 <= p_E <= 400 );
+    
+    //_________________________________________________________________
+    /* Constraints */
 
     ocp.subjectTo( -1 <= elevator <= 1 );
 	ocp.subjectTo( -1 <= aileron  <= 1 );
     ocp.subjectTo( -1 <= rudder   <= 1 );	
     ocp.subjectTo(  0 <= throttle <= 1 );
-	
+
+
+    ocp.subjectTo( -0.1 <= d_elevator <= 0.1 );
+    ocp.subjectTo( -0.1 <= d_aileron  <= 0.1 );
+    ocp.subjectTo( -0.1 <=  d_rudder  <= 0.1 );
+    ocp.subjectTo( -0.6 <= d_throttle <= 0.6 );
+
+
 
     //_________________________________________________________________
-    /* PREPARE SOLUTION */
+    /* Configure solver algorithm */
+    OptimizationAlgorithm algorithm(ocp);
 
-	GnuplotWindow windowStates;
-    windowStates.addSubplot(u, "U");
-    windowStates.addSubplot(v, "V");	
-    //windowStates.addSubplot(p_N, "NORTH");
-    //windowStates.addSubplot(p_E, "EAST");
+    algorithm.set( INTEGRATOR_TYPE, INT_RK45 );
+    algorithm.set( ABSOLUTE_TOLERANCE, 1.0e-1 );
+	algorithm.set( INTEGRATOR_TOLERANCE, 1.0e-1 );
+	//algorithm.set( HESSIAN_APPROXIMATION, GAUSS_NEWTON );
+    algorithm.set( DISCRETIZATION_TYPE, SINGLE_SHOOTING );
+	algorithm.set( MAX_NUM_ITERATIONS, 20 );
+	algorithm.set( KKT_TOLERANCE, kkt );
+
+
+
+    //_________________________________________________________________
+    /* Prepare solution */
+
+    GnuplotWindow windowStates;
+    windowStates.addSubplot(u, "u");
+    //windowStates.addSubplot(v, "v");	
     windowStates.addSubplot(p_D, "DOWN");
 	windowStates.addSubplot(phi, "ROLL");
     windowStates.addSubplot(theta, "PITCH");
-	windowStates.addSubplot(psi, "HEADING");
-    windowStates.addSubplot(p, "P");
-    windowStates.addSubplot(q, "Q");
-    windowStates.addSubplot(r, "R");
+	windowStates.addSubplot(psi, "YAW");
+    windowStates.addSubplot(elevator, "ELEVATOR");
+    windowStates.addSubplot(aileron, "AILERON");
+    windowStates.addSubplot(rudder, "RUDDER");
+    windowStates.addSubplot(throttle, "THROTTLE");
+    //windowStates.addSubplot(p, "p");
+    //windowStates.addSubplot(q, "q");
+    //windowStates.addSubplot(r, "r");
 
-    GnuplotWindow windowInputs;
-    windowInputs.addSubplot(elevator, "ELEVATOR");
-	windowInputs.addSubplot(aileron, "AILERON");
-    windowInputs.addSubplot(rudder, "RUDDER");
-	windowInputs.addSubplot(throttle, "THROTTLE");
 
-	/* Define Algorithm */
-	OptimizationAlgorithm algorithm(ocp);
-	
-    /* Solver constraints */
-    algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
-    //algorithm.set( MAX_NUM_INTEGRATOR_STEPS, 10000 );	
-    algorithm.set( ABSOLUTE_TOLERANCE, 1.0 );
-	algorithm.set( INTEGRATOR_TOLERANCE, 1.0 );
-	algorithm.set( HESSIAN_APPROXIMATION, GAUSS_NEWTON );
-    algorithm.set( DISCRETIZATION_TYPE, SINGLE_SHOOTING );
-	algorithm.set( MAX_NUM_ITERATIONS, 100 );
-	algorithm.set( KKT_TOLERANCE, kkt );	
-    //algorithm.set( LEVENBERG_MARQUARDT, 1.0 );
-    //algorithm.set( STEPSIZE_TUNING, 100. );
-    //algorithm.set( DYNAMIC_SENSITIVITY, FORWARD_SENSITIVITY);	
-    //algorithm.set( OBJECTIVE_SENSITIVITY, FORWARD_SENSITIVITY);
-    //algorithm.set( CONSTRAINT_SENSITIVITY, FORWARD_SENSITIVITY);
+
+    GnuplotWindow windowInputRates;
+    windowInputRates.addSubplot(d_elevator, "D ELEVATOR");
+	windowInputRates.addSubplot(d_aileron, "D AILERON");
+    windowInputRates.addSubplot(d_rudder, "D RUDDER");
+	windowInputRates.addSubplot(d_throttle, "D THROTTLE");
+
+
 
 
     algorithm << windowStates;
-    algorithm << windowInputs;
+    algorithm << windowInputRates;
+
+
 	algorithm.solve();
 
-	return 0;
+
+
+    return 0;
 }
