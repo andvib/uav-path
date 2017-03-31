@@ -30,6 +30,7 @@ int main(){
 	IntermediateState l, m, n;
 	IntermediateState Va, alpha, beta;
     IntermediateState aero, C_D, C_L;
+    IntermediateState chi, GAMMA, p_N_dot, p_E_dot, p_D_dot;
 
     DifferentialEquation f;
 
@@ -44,6 +45,7 @@ int main(){
 
     aero = 0.5*rho*Va*Va*S;
 
+    
 
     //_________________________________________________________________
     /* FORCES */
@@ -96,6 +98,24 @@ int main(){
                                                     C_nda*aileron + C_ndr*rudder);
 
 
+
+
+    p_N_dot = cos(theta)*cos(psi)*u + \
+                    (sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi))*v + \
+                    (cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi))*w;
+	
+    p_E_dot = cos(theta)*sin(psi)*u + \
+                    (sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi))*v + \
+                    (cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi))*w;
+
+    p_D_dot = -sin(theta)*u + sin(phi)*cos(theta)*v + cos(phi)*cos(theta)*w;
+
+
+    GAMMA = -atan(p_D_dot/sqrt(p_N_dot*p_N_dot + p_E_dot*p_E_dot + p_D_dot*p_D_dot)); 
+    chi = asin(p_E_dot/sqrt(p_N_dot*p_N_dot + p_E_dot*p_E_dot + p_D_dot*p_D_dot));
+
+
+
     //_________________________________________________________________
 	/* DIFFERENTIAL EQUATION */
 
@@ -135,22 +155,22 @@ int main(){
     /* DEFINE LEAST SQUARE FUNCTION */
 
     Function h;
-    DMatrix weights(4,4);  weights.setIdentity();
-    DVector ref(4);        ref.setAll(0.0);
+    DMatrix weights(6,6);  weights.setIdentity();
+    DVector ref(6);        ref.setAll(0.0);
 
-    h << p_D; ref(0) = -150.0; weights(0,0) = 1;
-    h << u;   ref(1) = 15;     weights(1,1) = 1;
+    //h << p_D; ref(0) = -150.0; weights(0,0) = 1;
+    //h << u;   ref(1) = 25;     weights(1,1) = 1;
 
-    //h << d_elevator;    weights(0,0) = 10;
-    //h << d_aileron;     weights(1,1) = 10;
-    //h << d_rudder;      weights(2,2) = 10;
-    //h << d_throttle;    weights(3,3) = 10;
+    h << d_elevator;    weights(0,0) = 10;
+    h << d_aileron;     weights(1,1) = 10;
+    h << d_rudder;      weights(2,2) = 10;
+    h << d_throttle;    weights(3,3) = 10;
 
-    h << phi;   weights(2,2) = 1000;
+    //h << phi;   weights(2,2) = 1000;
     //h << theta; weights(9,9) = 1000;
     //h << psi;   weights(3,3) = 1;
 
-    h << p;     weights(3,3) = 10;
+    //h << p;     weights(3,3) = 10;
     //h << q;     weights(4,4) = 1;
     //h << r;     weights(8,8) = 1;
 
@@ -161,6 +181,13 @@ int main(){
     //h << dot(phi);      weights(4,4) = 10000;
     //h << dot(theta);    weights(4,4) = 1000;
     //h << dot(psi);      weights(4,4) = 1000;
+
+    h << GAMMA;     weights(4,4) = 100;
+    h << chi;   weights(5,5) = 100;
+
+    //h << l; weights(6,6) = 300;
+    //h << m; weights(7,7) = 1800;
+    //h << n; weights(8,8) = 300;
 
     //_________________________________________________________________
     /* Configure OCP */
@@ -181,7 +208,7 @@ int main(){
     ocp.subjectTo( AT_START,  p_N ==  0      );
 	ocp.subjectTo( AT_START,  p_E ==  0      );
     ocp.subjectTo( AT_START,  p_D == -150    );
-	ocp.subjectTo( AT_START,   u  ==  15     );
+	ocp.subjectTo( AT_START,   u  ==  25     );
 	ocp.subjectTo( AT_START,   v  ==  0      );
     ocp.subjectTo( AT_START,   w  ==  0      );
 
@@ -206,9 +233,9 @@ int main(){
     
     //_________________________________________________________________
     /* Constraints */
-    ocp.subjectTo( -1 <= elevator <= 1 );
-	ocp.subjectTo( -1 <= aileron  <= 1 );
-    ocp.subjectTo( -1 <= rudder   <= 1 );	
+    ocp.subjectTo( -PI/6 <= elevator <= PI/6 );
+	ocp.subjectTo( -PI/6 <= aileron  <= PI/6 );
+    ocp.subjectTo( -PI/6 <= rudder   <= PI/6 );	
     ocp.subjectTo(  0 <= throttle <= 1 );
 
     //ocp.subjectTo( -1 <= d_elevator <= 1 );
@@ -216,14 +243,16 @@ int main(){
     //ocp.subjectTo( -1 <=  d_rudder  <= 1 );
     //ocp.subjectTo( -0.7 <= d_throttle <= 0.7 );
 
+    //ocp.subjectTo( 0 <= p_D );
+
 
     //_________________________________________________________________
     /* Configure solver algorithm */
     OptimizationAlgorithm algorithm(ocp);
 
     algorithm.set( INTEGRATOR_TYPE, INT_RK45  );
-    //algorithm.set( ABSOLUTE_TOLERANCE, 1.0e0 );
-	//algorithm.set( INTEGRATOR_TOLERANCE, 1.0e0 );
+    algorithm.set( ABSOLUTE_TOLERANCE, 1.0e0 );
+	algorithm.set( INTEGRATOR_TOLERANCE, 1.0e0 );
 	algorithm.set( HESSIAN_APPROXIMATION, GAUSS_NEWTON );
     algorithm.set( DISCRETIZATION_TYPE, SINGLE_SHOOTING );
 	algorithm.set( MAX_NUM_ITERATIONS, 10 );
@@ -241,14 +270,18 @@ int main(){
     windowStates.addSubplot(p_D, "DOWN");
     windowStates.addSubplot(elevator, "ELEVATOR");
     windowStates.addSubplot(aileron, "AILERON");
-    windowStates.addSubplot(rudder, "RUDDER");
-    windowStates.addSubplot(throttle, "THROTTLE");
+    //windowStates.addSubplot(rudder, "RUDDER");
+    //windowStates.addSubplot(throttle, "THROTTLE");
 	windowStates.addSubplot(phi, "ROLL");
     windowStates.addSubplot(theta, "PITCH");
     windowStates.addSubplot(psi, "YAW");
     //windowStates.addSubplot(p, "p");
     //windowStates.addSubplot(q, "q");
     //windowStates.addSubplot(r, "r");
+    //windowStates.addSubplot(h, "COST");
+    windowStates.addSubplot(GAMMA, "GAMMA");
+    windowStates.addSubplot(chi, "CHI");
+    
     
 
     GnuplotWindow windowInputRates;
