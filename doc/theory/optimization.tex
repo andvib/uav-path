@@ -3,6 +3,7 @@
 
 In this chapter the methods and equations used for the optimization problem will be given. The goal of the optimization problem is to minimize the distance between the centre of the camera footprint and the path that is to be observed. The optimization problem will be given as an offline Model Predictive Control (MPC) problem, that includes the entire UAV model as constraints.
 
+
 \subsection{MPC Method}
 
 Model Predictive Control (MPC) is a control method that uses knowledge about the process to calculate the control signals. By calculating the future states of the process over a prediction horizon it calculates the control signals that will cause the process to follow a reference trajectory in the best way possible. The MPC strategy can be broken down into three tasks \cite{mpcCAMACHO}:
@@ -28,6 +29,42 @@ A mathematical formulation of the three elements that make up the optimization p
 \end{equation}
 
 
+\subsection{LSQ Algorithm}
+
+
 \subsection{Problem Definition}
 
-\subsection{ACADO Implementation}
+For the problem definition the 12 DOF UAV model presented by Beard \& McLain \cite{uavBEARD} will be implemented. This means that the optimization vector will consist of 12 states, and there will be 4 control signals:
+
+\begin{equation}
+	\mathbf{x} =
+	\begin{bmatrix}
+		p_N \\ p_E \\ p_D \\
+		u \\ v \\ w \\
+		\phi \\ \theta \\ \psi \\
+		p \\ q \\ r
+	\end{bmatrix}
+	, \hspace{5pt} \mathbf{u} =
+	\begin{bmatrix}
+		\delta_e \\ \delta_a \\ \delta_r \\ \delta_t
+	\end{bmatrix}.
+\end{equation}
+
+
+\subsubsection{Prediction Model}
+
+The prediction model relates to the equality constraints of equation \ref{eq:optimization_formulation} in the form of differential equations. Based on the control inputs and current states, $\mathbf{\dot{x}}$ is calculated by the differential equation. The attitude angles will be expressed in Euler angles. Even though quaternions offer more efficient computations and no gimbal lock \cite{uavBEARD}, this optimization will be run on an offboard computer/offline so that computation capacity is not a big issue and the UAV is not going to undergo any extreme maneuvers so that a gimbal lock should never occur.
+
+
+\subsubsection{Objective Function}
+
+
+\subsubsection{Control Law}
+
+The only physical constraints in this optimization problem is constraints on the control inputs, as shown in equation \ref{eq:control_constraint}. This inequality constraint ensures that the control surfaces of the UAV simulated in the optimization do not excede what the UAV is physically capable of.
+
+\begin{equation}
+	\label{eq:control_constraint}
+	\mathbf{u}^{low} \leq \mathbf{u} \leq \mathbf{u}^{high}
+\end{equation}
+% Should maybe come from a source? Different formulation?
