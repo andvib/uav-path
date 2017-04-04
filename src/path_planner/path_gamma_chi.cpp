@@ -46,7 +46,6 @@ int main(){
     aero = 0.5*rho*Va*Va*S;
 
     
-
     //_________________________________________________________________
     /* FORCES */
 
@@ -155,39 +154,21 @@ int main(){
     /* DEFINE LEAST SQUARE FUNCTION */
 
     Function h;
-    DMatrix weights(6,6);  weights.setIdentity();
-    DVector ref(6);        ref.setAll(0.0);
+    DMatrix weights(9,9);  weights.setIdentity();
+    DVector ref(9);        ref.setAll(0.0);
 
-    //h << p_D; ref(0) = -150.0; weights(0,0) = 1;
-    //h << u;   ref(1) = 25;     weights(1,1) = 1;
 
-    h << d_elevator;    weights(0,0) = 10;
-    h << d_aileron;     weights(1,1) = 10;
-    h << d_rudder;      weights(2,2) = 10;
-    h << d_throttle;    weights(3,3) = 10;
+    h << GAMMA;     weights(0,0) = 1;
+    h << chi;   weights(1,1) = 1;
 
-    //h << phi;   weights(2,2) = 1000;
-    //h << theta; weights(9,9) = 1000;
-    //h << psi;   weights(3,3) = 1;
+    h << p; weights(2,2) = 10;
+    h << q; weights(3,3) = 10;
+    h << r; weights(4,4) = 1;
 
-    //h << p;     weights(3,3) = 10;
-    //h << q;     weights(4,4) = 1;
-    //h << r;     weights(8,8) = 1;
-
-    //h << dot(u);        weights(2,2) = 1000;
-    //h << dot(v);
-    //h << dot(w);
-
-    //h << dot(phi);      weights(4,4) = 10000;
-    //h << dot(theta);    weights(4,4) = 1000;
-    //h << dot(psi);      weights(4,4) = 1000;
-
-    h << GAMMA;     weights(4,4) = 100;
-    h << chi;   weights(5,5) = 100;
-
-    //h << l; weights(6,6) = 300;
-    //h << m; weights(7,7) = 1800;
-    //h << n; weights(8,8) = 300;
+    h << d_elevator;    weights(5,5) = 10;
+    h << d_aileron;     weights(6,6) = 10;
+    h << d_rudder;      weights(7,7) = 10;
+    h << d_throttle;    weights(8,8) = 100;
 
     //_________________________________________________________________
     /* Configure OCP */
@@ -208,7 +189,7 @@ int main(){
     ocp.subjectTo( AT_START,  p_N ==  0      );
 	ocp.subjectTo( AT_START,  p_E ==  0      );
     ocp.subjectTo( AT_START,  p_D == -150    );
-	ocp.subjectTo( AT_START,   u  ==  25     );
+	ocp.subjectTo( AT_START,   u  ==  35     );
 	ocp.subjectTo( AT_START,   v  ==  0      );
     ocp.subjectTo( AT_START,   w  ==  0      );
 
@@ -243,17 +224,17 @@ int main(){
     //ocp.subjectTo( -1 <=  d_rudder  <= 1 );
     //ocp.subjectTo( -0.7 <= d_throttle <= 0.7 );
 
-    //ocp.subjectTo( 0 <= p_D );
+    //ocp.subjectTo( -PI <= phi <= PI );
 
 
     //_________________________________________________________________
     /* Configure solver algorithm */
     OptimizationAlgorithm algorithm(ocp);
 
-    algorithm.set( INTEGRATOR_TYPE, INT_RK45  );
-    algorithm.set( ABSOLUTE_TOLERANCE, 1.0e0 );
-	algorithm.set( INTEGRATOR_TOLERANCE, 1.0e0 );
-	algorithm.set( HESSIAN_APPROXIMATION, GAUSS_NEWTON );
+    algorithm.set( INTEGRATOR_TYPE, INT_RK78  );
+    //algorithm.set( ABSOLUTE_TOLERANCE, 1.0e0 );
+	//algorithm.set( INTEGRATOR_TOLERANCE, 1.0e0 );
+	//algorithm.set( HESSIAN_APPROXIMATION, GAUSS_NEWTON );
     algorithm.set( DISCRETIZATION_TYPE, SINGLE_SHOOTING );
 	algorithm.set( MAX_NUM_ITERATIONS, 10 );
 	//algorithm.set( KKT_TOLERANCE, 1.0e0 );
@@ -266,21 +247,25 @@ int main(){
     GnuplotWindow windowStates;
     windowStates.addSubplot(u, "u");
     //windowStates.addSubplot(v, "v");	
-    //windowStates.addSubplot(w, "W");
+    //windowStates.addSubplot(w, "W")
+;
     windowStates.addSubplot(p_D, "DOWN");
+
     windowStates.addSubplot(elevator, "ELEVATOR");
     windowStates.addSubplot(aileron, "AILERON");
-    //windowStates.addSubplot(rudder, "RUDDER");
-    //windowStates.addSubplot(throttle, "THROTTLE");
+    windowStates.addSubplot(rudder, "RUDDER");
+    windowStates.addSubplot(throttle, "THROTTLE");
+
 	windowStates.addSubplot(phi, "ROLL");
     windowStates.addSubplot(theta, "PITCH");
     windowStates.addSubplot(psi, "YAW");
+
     //windowStates.addSubplot(p, "p");
     //windowStates.addSubplot(q, "q");
     //windowStates.addSubplot(r, "r");
-    //windowStates.addSubplot(h, "COST");
-    windowStates.addSubplot(GAMMA, "GAMMA");
-    windowStates.addSubplot(chi, "CHI");
+
+    //windowStates.addSubplot(GAMMA, "GAMMA");
+    //windowStates.addSubplot(chi, "CHI");
     
     
 
