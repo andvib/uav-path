@@ -28,8 +28,24 @@ A mathematical formulation of the three elements that make up the optimization p
 	\end{array}
 \end{equation}
 
+\subsection{Least-Squares Problem}
 
-\subsection{LSQ Algorithm}
+\begin{equation}
+	\label{eq:lsq}
+	f(x) = \frac{1}{2} \sum_{j=1}^m r_j^2(x)
+\end{equation}
+
+In many applications the objective functions is formulated as a least-square (LSQ) problem and the general form of an LSQ is shown in equation \ref{eq:lsq} \cite{nocedalOPTIMIZATION}. This method is often used when problem involves measurements that is expected to follow a model that is known in advance. By formulating this as a LSQ problem and minmizing the resulting optimization problem, it is possible to find parameters that minimizes the difference between the model and the measurements. 
+
+The matching of measurements and a model relates to this task because the optimization problem will be given a path, and needs to find the best control inputs in order for the camera centre point to stay as close to this path as possible. However, since the path is prametrized and the position of the UAV on the path is not related to the path by time, there might be errors in calculating the difference between the path and the UAV because the UAV postion and the closest parametrized point may not be aligned/orthogonal. 
+
+To solve this problem a method called 'orthogonal distance regression' may be used \cite{nocedalOPTIMIZATION}. This method adds a perturbation to one of the coordinates on the path and a perturbation to the UAV position. By minimizing these perturbations, the shortest distance from the path that is also orthogonal to the path can be found. How this relates to equation \ref{eq:lsq} is shown in equation \ref{eq:odr}, and a visual representation is shown in figure \ref{fig:ord}. The equations for the distance between the camera centre point and the path that it is to follow will be derived in the next subsection.
+% This paragraph REALLY needs to be rewritten
+
+\begin{equation}
+	\label{eq:odr}
+	\min_{x, \delta} F(x,\delta) = \frac{1}{2}\sum_{j=1}^{2m}r_j^2(x,\delta)
+\end{equation}
 
 
 \subsection{Problem Definition}
