@@ -35,17 +35,28 @@ A mathematical formulation of the three elements that make up the optimization p
 	f(x) = \frac{1}{2} \sum_{j=1}^m r_j^2(x)
 \end{equation}
 
-In many applications the objective functions is formulated as a least-square (LSQ) problem and the general form of an LSQ is shown in equation \ref{eq:lsq} \cite{nocedalOPTIMIZATION}. This method is often used when problem involves measurements that is expected to follow a model that is known in advance. By formulating this as a LSQ problem and minmizing the resulting optimization problem, it is possible to find parameters that minimizes the difference between the model and the measurements. 
+In many applications the objective functions is formulated as a least-square (LSQ) problem and the general form of an LSQ is shown in equation \ref{eq:lsq} \cite{nocedalOPTIMIZATION} where $r_j$ is referred to as the residual function, and it is the function that we seek to minimize. This method is often used when problem involves measurements that is expected to follow a model that is known in advance. By formulating this as a LSQ problem and minmizing the resulting optimization problem, it is possible to find parameters that minimizes the difference between the model and the measurements. 
 
-The matching of measurements and a model relates to this task because the optimization problem will be given a path, and needs to find the best control inputs in order for the camera centre point to stay as close to this path as possible. However, since the path is prametrized and the position of the UAV on the path is not related to the path by time, there might be errors in calculating the difference between the path and the UAV because the UAV postion and the closest parametrized point may not be aligned/orthogonal. 
+The matching of measurements and a model relates to this task because the optimization problem will be given a path, and needs to find the best control inputs in order for the camera centre point to stay as close to this path as possible. However, since the path is prametrized and the position of the UAV on the path is not related to the path by time, there might be errors in calculating the difference between the path and the UAV. This is because the line between the UAV position and the closest parametrized point may not be orthogonal to the path.
 
-To solve this problem a method called 'orthogonal distance regression' may be used \cite{nocedalOPTIMIZATION}. This method adds a perturbation to one of the coordinates on the path and a perturbation to the UAV position. By minimizing these perturbations, the shortest distance from the path that is also orthogonal to the path can be found. How this relates to equation \ref{eq:lsq} is shown in equation \ref{eq:odr}, and a visual representation is shown in figure \ref{fig:ord}. The equations for the distance between the camera centre point and the path that it is to follow will be derived in the next subsection.
+To solve this problem orthogonal distance regression may be used \cite{nocedalOPTIMIZATION}. This method adds a perturbation to one of the coordinates on the path and a perturbation to the UAV position. By minimizing these perturbations, the shortest distance from the path that is also orthogonal to the path can be found. How this relates to equation \ref{eq:lsq} is shown in equation \ref{eq:odr} where $\delta$ is the added perturbation and $d$ is the weighting of the perturbation. A visual representation is shown in figure \ref{fig:ord}. The equations for the distance between the camera centre point and the path that it is to follow will be derived in the next subsection.
 % This paragraph REALLY needs to be rewritten
 
+\begin{subequations}
 \begin{equation}
 	\label{eq:odr}
 	\min_{x, \delta} F(x,\delta) = \frac{1}{2}\sum_{j=1}^{2m}r_j^2(x,\delta)
 \end{equation}
+\begin{equation}
+	r_j(x,\delta) = 
+	\begin{cases}
+	\begin{split}
+		& w_j[\phi(x;t_j+\delta_j)-y_j], & j = 1, 2, ..., m \\
+		& d_{j-m}\delta_{j-m}, & j = m + 1, ..., 2m
+	\end{split}
+	\end{cases}
+\end{equation}
+\end{subequations}
 
 
 \subsection{Problem Definition}
@@ -73,6 +84,26 @@ The prediction model relates to the equality constraints of equation \ref{eq:opt
 
 
 \subsubsection{Objective Function}
+
+The parametrized path that the camera is to observe will be given as a function $P(k)$ where $k$ is the path paramter, and P is a $2xn$ matrix where the elements represent the position in $p_E$ and $p_N$
+
+\begin{equation}
+	\mathbf{P}(k) = 
+	\begin{bmatrix}
+		\mathbf{p}_E(k) \\ \mathbf{p}_N(k)
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		x_0 & x_1 & x_2 & \hdots & x_n \\
+		y_0 & y_1 & y_2 & \hdots & y_n
+	\end{bmatrix}.
+\end{equation}
+
+The residual function $r$ will be defined as the difference between the observation path and the camera centre point $\mathbf{c}^n$ from equation \ref{eq:camera_position_ned}:
+
+\begin{equation}
+	r_j(x) = ||\mathbf{P}(k) - \mathbf{c}^n(x)||.
+\end{equation} 
 
 
 \subsubsection{Control Law}
