@@ -1,5 +1,5 @@
-/** X8 PARAMETERS: Lateral
- * Includes the lateral parameters needed for the X8 model.
+/** AEROSONDE PARAMETERS
+ * Includes the lateral parameters needed for the Aerosonde model.
  */
 
 
@@ -15,8 +15,8 @@
 #define S_prop  0.2027
 #define rho     1.2682
 #define k_motor 80
-#define k_Tp    0
-#define k_omega 0
+#define k_Tp    1e-12
+#define k_omega 1.0472e03
 #define e       0.9
 
 
@@ -24,8 +24,8 @@
 #define C_L0    0.28
 #define C_D0    0.03
 #define C_m0    -0.02338
-#define C_lalp  3.45
-#define C_dalp  0.30
+#define C_Lalp  3.45
+#define C_Dalp  0.30
 #define C_malp  -0.38
 #define C_Lq    0
 #define C_Dq    0
@@ -55,8 +55,8 @@
 #define C_lr    0.14
 #define C_nr    -0.35
 #define C_Yda   0
-#define C_lda   0.08
-#define C_nda   0.06
+#define C_lda   1.08
+#define C_nda   1.06
 #define C_Ydr   -0.17
 #define C_ldr   0.105
 
@@ -71,3 +71,16 @@
 #define gamma_6  J_xz/J_y
 #define gamma_7 ((J_x-J_y)*J_x+J_xz*J_xz)/gamma
 #define gamma_8  J_x/gamma
+
+#define C_p0    gamma_3*C_l0    + gamma_4*C_n0
+#define C_pbeta gamma_3*C_lbeta + gamma_4*C_nbeta
+#define C_pp    gamma_3*C_lp    + gamma_4*C_np
+#define C_pr    gamma_3*C_lr    + gamma_4*C_nr
+#define C_pda   gamma_3*C_lda   + gamma_4*C_nda
+#define C_pdr   gamma_3*C_ldr + gamma_4*C_ndr
+#define C_r0    gamma_4*C_l0    + gamma_8*C_n0
+#define C_rbeta gamma_4*C_lbeta + gamma_8*C_nbeta
+#define C_rp    gamma_4*C_lp    + gamma_8*C_np
+#define C_rr    gamma_4*C_lr    + gamma_8*C_nr
+#define C_rda   gamma_4*C_lda   + gamma_8*C_nda
+#define C_rdr   gamma_4*C_ldr + gamma_8*C_ndr
