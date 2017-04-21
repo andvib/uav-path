@@ -3,32 +3,15 @@
 #include <acado/variables_grid/matrix_variables_grid.hpp>
 #include <acado/matrix_vector/matrix_vector.hpp>
 
+#include <iostream>
+#include <fstream>
+
+#include "path_vector.hpp"
+
 using namespace std;
 
-void objectiveFunction(double *x, double *f, void *user_data){
 
-    f[0] = x[0];
-
-}
-
-void referenceFunction(double *x, double *f, void *user_data){
-
-    double x_state = x[0];
-
-    if(x_state < 2){
-        x_state = 5.0;
-        cout << "Inne i IF\n";
-    }
-
-    f[0] = x_state;
-
-}
-
-//CFunction J(1, &objectiveFunction);
-//CFunction R(1, &referenceFunction);
-
-
-int main(){
+int optimize(){
 
     USING_NAMESPACE_ACADO
 
@@ -39,7 +22,7 @@ int main(){
     Control dy;
     Control k;
 
-    //IntermediateState ref("",1,1);
+    AlgebraicState ref;
 
     DifferentialEquation f;
 
@@ -49,10 +32,9 @@ int main(){
     
     /* PATH */
     VariablesGrid pathGrid;
-    pathGrid.read( "./../examples/my_examples/path.txt" );
+    pathGrid.read( "./../vector_path.txt" );
     cout << "Path to follow: \n";    
     pathGrid.print();
-    //pathGrid.getTimePoints().print();
     cout << "\n";
 
     cout << "Columns: " << pathGrid.getNumCols() << "\n" ;
@@ -77,7 +59,7 @@ int main(){
     h << x;
     //h << y;
 
-    DMatrix Q(1,1); Q(0,0) = 100; //Q(1,1) = 1;
+    DMatrix Q(1,1); Q(0,0) = 100;
     DVector ref(1);
     c1.evaluate(k.getComponent(0), ref);
 
@@ -104,20 +86,21 @@ int main(){
     /* Results */
     OptimizationAlgorithm algorithm(ocp);
     
-    GnuplotWindow windowStates;
-    windowStates.addSubplot(x, "X" );
-    windowStates.addSubplot(y, "Y" );
-    //windowStates.addSubplot(ref, "REF");
+    LogRecord logRecord( LOG_AT_END);
+    logRecord.setPrintScheme( PS_MATLAB );
+    logRecord.addItem( LOG_DIFFERENTIAL_STATES, "STATES");
+    logRecord.addItem( LOG_CONTROLS, "CONTROLS");
 
-    GnuplotWindow windowControl;
-    windowControl.addSubplot( dx, "DX" );
-    windowControl.addSubplot( dy, "DY" );
-    windowControl.addSubplot( k, "K" );
-
-    algorithm << windowStates;
-    algorithm << windowControl;
+    algorithm << logRecord;
 
     algorithm.solve();
+
+    algorithm.getLogRecord( logRecord );
+
+    ofstream myfile;
+    myfile.open("./../results/output.m");
+    logRecord.print(myfile);
+    myfile.close();
 
     return 0;
 }

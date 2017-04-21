@@ -1,7 +1,6 @@
 #include <acado_optimal_control.hpp>
-#include <acado_gnuplot.hpp>
-#include <acado/variables_grid/matrix_variables_grid.hpp>
-#include <acado/user_interaction/log_record.hpp>
+//#include <acado_gnuplot.hpp>
+//#include <acado/variables_grid/matrix_variables_grid.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -59,27 +58,13 @@ int main(){
     ocp.subjectTo( -10 <= dx <= 10 );
     ocp.subjectTo( -10 <= dy <= 10 );
 
-    //ocp.subjectTo( x <= 10 );
-    //ocp.subjectTo( y <= 10 );
 
     /* Results */
     OptimizationAlgorithm algorithm(ocp);
     
-    /*GnuplotWindow windowStates;
-    windowStates.addSubplot(x, "X" );
-    windowStates.addSubplot(y, "Y" );
-
-    GnuplotWindow windowControl;
-    windowControl.addSubplot( dx, "DX" );
-    windowControl.addSubplot( dy, "DY" );
-
-    algorithm << windowStates;
-    algorithm << windowControl;*/
-
-    //LogRecord logRecord();
     LogRecord logRecord( LOG_AT_END);
     logRecord.setPrintScheme( PS_MATLAB );
-    logRecord.addItem( LOG_DIFFERENTIAL_STATES, "STATES");//PS_MATLAB);
+    logRecord.addItem( LOG_DIFFERENTIAL_STATES, "STATES");
     logRecord.addItem( LOG_CONTROLS, "CONTROLS");
 
     algorithm << logRecord;
@@ -87,16 +72,11 @@ int main(){
     algorithm.solve();
 
     algorithm.getLogRecord( logRecord );
-    //logRecord.print();
-
 
     ofstream myfile;
     myfile.open("./../results/output.m");
     logRecord.print(myfile);
     myfile.close();
-
-    //algorithm.getDifferentialStates("./../results/states.txt");
-    //algorithm.getControls("./../results/controls.txt");
 
     return 0;
 }
