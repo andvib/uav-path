@@ -2,10 +2,13 @@
 
 #include "mpc_script.hpp"
 
-BEGIN_NAMESPACE_ACADO
 
-DMatrix optimize_path(VariablesGrid path, int xstart, int ystart,
-                                          int dxstart, int dystart){
+
+ACADO::DMatrix optimize_path(ACADO::VariablesGrid path, double xstart, double ystart,
+                                          double dxstart, double dystart){
+
+    USING_NAMESPACE_ACADO
+
 
     /* Introduce Variables */
     DifferentialState x, y;
@@ -42,12 +45,15 @@ DMatrix optimize_path(VariablesGrid path, int xstart, int ystart,
     ocp.subjectTo( AT_START, dx == dxstart );
     ocp.subjectTo( AT_START, dy == dystart );
 
-    ocp.subjectTo( -10 <= dx <= 10 );
-    ocp.subjectTo( -10 <= dy <= 10 );
+    ocp.subjectTo( 0 <= dx <= 10 );
+    ocp.subjectTo( 0 <= dy <= 10 );
 
 
     /* Solve Problem */
     OptimizationAlgorithm algorithm( ocp );
+
+    algorithm.set(PRINT_COPYRIGHT, BT_FALSE);
+    algorithm.set(PRINTLEVEL, NONE);
 
     algorithm.solve();
 
@@ -55,15 +61,16 @@ DMatrix optimize_path(VariablesGrid path, int xstart, int ystart,
     algorithm.getDifferentialStates(states);
     algorithm.getControls(controls);
 
-    DMatrix ret_values(2,2);
-    ret_values(0, 0) =   states(1, 0);
-    ret_values(0, 1) =   states(1, 1);
-    ret_values(1, 0) = controls(1, 0);
-    ret_values(1, 1) = controls(1, 1);
+    DMatrix ret_values(path.getLastTime(), 4);
+
+    for(int i = 0 ; i < path.getLastTime() ; i++){
+        ret_values(i, 0) =   states(i+1, 0);
+        ret_values(i, 1) =   states(i+1, 1);
+        ret_values(i, 2) = controls(i+1, 0);
+        ret_values(i, 3) = controls(i+1, 1);
+    }
 
     return ret_values;
 
 }
-
-CLOSE_NAMESPACE_ACADO
 
