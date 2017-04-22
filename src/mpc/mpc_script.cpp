@@ -12,10 +12,11 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path, double xstart, double ys
 
     /* Introduce Variables */
     DifferentialState x, y;
-
+    
     Control dx;
     Control dy;
 
+    //IntermediateState speed;
 
     /* Differential Equation */
     DifferentialEquation f;
@@ -23,6 +24,7 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path, double xstart, double ys
     f << dot(x) == dx;
     f << dot(y) == dy;
 
+    //speed = sqrt(dx*dx + dy*dy);
 
     /* Least Squares Problem */
     Function h;
@@ -33,10 +35,17 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path, double xstart, double ys
     DMatrix Q(2,2); Q.setIdentity();
 
 
+    /*Function i;
+    i << speed;
+    DMatrix Qi(1,1); Qi.setIdentity();
+    DVector Ri(1); Ri(0) = 1.0;*/
+
     /* Initialize Optimal Control Problem */
     OCP ocp( path.getTimePoints() );
+
     ocp.minimizeLSQ( Q, h, path );
 
+    //ocp.minimizeLSQ( Qi, i, Ri );
 
     /* Constraints */
     ocp.subjectTo( f );
@@ -45,12 +54,15 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path, double xstart, double ys
     ocp.subjectTo( AT_START, dx == dxstart );
     ocp.subjectTo( AT_START, dy == dystart );
 
-    ocp.subjectTo( 0 <= dx <= 10 );
-    ocp.subjectTo( 0 <= dy <= 10 );
+    ocp.subjectTo( -35 <= dx <= 35 );
+    ocp.subjectTo( -35 <= dy <= 35 );
 
 
     /* Solve Problem */
     OptimizationAlgorithm algorithm( ocp );
+
+    //algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
+    //algorithm.set( DISCRETIZATION_TYPE, SINGLE_SHOOTING );
 
     algorithm.set(PRINT_COPYRIGHT, BT_FALSE);
     algorithm.set(PRINTLEVEL, NONE);
