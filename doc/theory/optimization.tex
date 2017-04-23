@@ -1,10 +1,10 @@
-\section{Optimization}
+\chapter{Optimization}
 \label{ch:optimization}
 
 In this chapter the methods and equations used for the optimization problem will be given. The goal of the optimization problem is to minimize the distance between the centre of the camera footprint and the path that is to be observed. The optimization problem will be given as an offline Model Predictive Control (MPC) problem, that includes the entire UAV model as constraints.
 
 
-\subsection{MPC Method}
+\section{MPC Method}
 
 Model Predictive Control (MPC) is a control method that uses knowledge about the process to calculate the control signals. By calculating the future states of the process over a prediction horizon it calculates the control signals that will cause the process to follow a reference trajectory in the best way possible. The MPC strategy can be broken down into three tasks \cite{mpcCAMACHO}:
 
@@ -28,7 +28,7 @@ A mathematical formulation of the three elements that make up the optimization p
 	\end{array}
 \end{equation}
 
-\subsection{Least-Squares Problem}
+\section{Least-Squares Problem}
 
 \begin{equation}
 	\label{eq:lsq}
@@ -37,29 +37,8 @@ A mathematical formulation of the three elements that make up the optimization p
 
 In many applications the objective functions is formulated as a least-square (LSQ) problem and the general form of an LSQ is shown in equation \ref{eq:lsq} \cite{nocedalOPTIMIZATION} where $r_j$ is referred to as the residual function, and it is the function that we seek to minimize. This method is often used when problem involves measurements that is expected to follow a model that is known in advance. By formulating this as a LSQ problem and minmizing the resulting optimization problem, it is possible to find parameters that minimizes the difference between the model and the measurements. 
 
-The matching of measurements and a model relates to this task because the optimization problem will be given a path, and needs to find the best control inputs in order for the camera centre point to stay as close to this path as possible. However, since the path is prametrized and the position of the UAV on the path is not related to the path by time, there might be errors in calculating the difference between the path and the UAV. This is because the line between the UAV position and the closest parametrized point may not be orthogonal to the path.
 
-To solve this problem orthogonal distance regression may be used \cite{nocedalOPTIMIZATION}. This method adds a perturbation to one of the coordinates on the path and a perturbation to the UAV position. By minimizing these perturbations, the shortest distance from the path that is also orthogonal to the path can be found. How this relates to equation \ref{eq:lsq} is shown in equation \ref{eq:odr} where $\delta$ is the added perturbation and $d$ is the weighting of the perturbation. A visual representation is shown in figure \ref{fig:ord}. The equations for the distance between the camera centre point and the path that it is to follow will be derived in the next subsection.
-% This paragraph REALLY needs to be rewritten
-
-\begin{subequations}
-\begin{equation}
-	\label{eq:odr}
-	\min_{x, \delta} F(x,\delta) = \frac{1}{2}\sum_{j=1}^{2m}r_j^2(x,\delta)
-\end{equation}
-\begin{equation}
-	r_j(x,\delta) = 
-	\begin{cases}
-	\begin{split}
-		& w_j[\phi(x;t_j+\delta_j)-y_j], & j = 1, 2, ..., m \\
-		& d_{j-m}\delta_{j-m}, & j = m + 1, ..., 2m
-	\end{split}
-	\end{cases}
-\end{equation}
-\end{subequations}
-
-
-\subsection{Problem Definition}
+\section{Problem Definition}
 
 For the problem definition the 12 DOF UAV model presented by Beard \& McLain \cite{uavBEARD} will be implemented. This means that the optimization vector will consist of 12 states, and there will be 4 control signals:
 
@@ -78,12 +57,12 @@ For the problem definition the 12 DOF UAV model presented by Beard \& McLain \ci
 \end{equation}
 
 
-\subsubsection{Prediction Model}
+\subsection{Prediction Model}
 
 The prediction model relates to the equality constraints of equation \ref{eq:optimization_formulation} in the form of differential equations. Based on the control inputs and current states, $\mathbf{\dot{x}}$ is calculated by the differential equation. The attitude angles will be expressed in Euler angles. Even though quaternions offer more efficient computations and no gimbal lock \cite{uavBEARD}, this optimization will be run on an offboard computer/offline so that computation capacity is not a big issue and the UAV is not going to undergo any extreme maneuvers so that a gimbal lock should never occur.
 
 
-\subsubsection{Objective Function}
+\subsection{Objective Function}
 
 The parametrized path that the camera is to observe will be given as a function $P(k)$ where $k$ is the path paramter, and P is a $2xn$ matrix where the elements represent the position in $p_E$ and $p_N$
 
@@ -106,7 +85,7 @@ The residual function $r$ will be defined as the difference between the observat
 \end{equation} 
 
 
-\subsubsection{Control Law}
+\subsection{Control Law}
 
 The only physical constraints in this optimization problem is constraints on the control inputs, as shown in equation \ref{eq:control_constraint}. This inequality constraint ensures that the control surfaces of the UAV simulated in the optimization do not excede what the UAV is physically capable of.
 

@@ -1,10 +1,13 @@
-\section{Kinematics}
+\chapter{Kinematics}
 \label{ch:kinematics}
 
 What is captured by the camera, the camera footprint, when the camera is fixed to the aircraft body is dependent of the position and the attitude angles of the aircraft. In this section a model for calculating the camera footprint on the ground assuming flat earth will be presented, as well as the necessary UAV states for this thesis.
 
 
-\subsection{UAV States}
+\section{Linear UAV Model}
+
+
+\section{UAV States}
 
 The position of the UAV will be given using the North East Down (NED) coordinate frame, denoted $\{n\}$:
 
@@ -47,7 +50,7 @@ with corresponding angular velocities:
 \end{equation}
 
 
-\subsection{Wind and Airspeed}
+\section{Wind and Airspeed}
 Wind will be introduced to the vehicle in order to test how the system withstands disturbances. Since the camera footprint is dependent only on the attitude angles of the aircraft and not the course of the aircraft, the wind will only affect the navigation of the UAV. Wind speed is given in the $\{n\}$ frame as \cite{uavBEARD}
 
 \begin{equation}
@@ -87,7 +90,7 @@ When in the presence of wind, the heading of the UAV isn't necessarily the direc
 \end{equation}
 
 
-\subsection{Camera Footprint}
+\section{Camera Footprint}
 
 The camera footprint is coupled with all of the three angles given in $\bm{\Theta}$. The position of the camera footprint will be calculated using forward kinematics, and the situation is shown in figure \ref{fig:footprint_centre}.
 
@@ -97,7 +100,7 @@ The camera footprint is coupled with all of the three angles given in $\bm{\Thet
 	\label{fig:footprint_centre}
 \end{figure}
 
-\subsubsection{Centre Position}
+\subsection{Centre Position}
 
 The attitude of the UAV is given in the body frame $\{b\}$ and the height $z_n$ is given in the NED frame $\{n\}$, and the model assumes flat earth. The position of the footprint centre point $\mathbf{c}_b^b$ in the body frame $\{b\}$ is expressed as the geometric (???) distance from the UAV position to the footprint centre point:
 
@@ -141,7 +144,7 @@ The final expression for the camera footprint centre position $\mathbf{c}^n$ in 
 \end{equation}
 
 
-\subsubsection{Edge Points}
+\subsection{Edge Points}
 
 A hyperspectral pushbroom sensor captures images in a line, and the centre point of the camera footprint does not express the entire area that is captured by the sensor. The edge points of the camera footprint are calculated with respect to the sensor's field of view, as shown in figure \ref{fig:kinematics_edge_points}. These points $\mathbf{e}$ can be found by altering \ref{eq:camera_position_body}:
 

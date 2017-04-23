@@ -6,14 +6,14 @@
     scale=6,]
 
 
-	\draw[thick] (0.6, 0.0) .. controls (0.9, -0.8) and (0.2, -0.7) .. (0.1, -1.0);
-	\draw[dashed] (0.58, 0.0) .. controls (0.8, -0.3) and (0.7, -0.6) .. (0.5, -0.7);
+	\draw[thick] (0.57, 0.0) .. controls (0.9, -0.8) and (0.2, -0.7) .. (0.1, -1.0);
+	\draw[dashed] (0.55, 0.0) .. controls (0.82, -0.3) and (0.72, -0.6) .. (0.5, -0.7);
 
-	\draw (0.51, 0.0) .. controls (0.75, -0.3) and (0.65, -0.6) .. (0.48, -0.67);
-	\draw (0.65, 0.0) .. controls (0.85, -0.3) and (0.75, -0.6) .. (0.52, -0.73);
+	\draw (0.48, 0.0) .. controls (0.77, -0.3) and (0.67, -0.6) .. (0.48, -0.67);
+	\draw (0.62, 0.0) .. controls (0.87, -0.3) and (0.77, -0.6) .. (0.52, -0.73);
 	
 	\begin{scope}[on background layer]
-		\fill[gray, opacity=.8] (0.51, 0.0) .. controls (0.75, -0.3) and (0.65, -0.6) .. (0.48, -0.67) -- (0.52, -0.73) .. controls (0.75, -0.6) and (0.85, -0.3) .. (0.65, 0.0);
+		\fill[gray, opacity=.8] (0.48, 0.0) .. controls (0.77, -0.3) and (0.67, -0.6) .. (0.48, -0.67) -- (0.52, -0.73) .. controls (0.77, -0.6) and (0.87, -0.3) .. (0.62, 0.0);
 	\end{scope}
 	
 	\coordinate (X) at (0.4, -0.6, 0.6);
@@ -27,13 +27,13 @@
 	\fill[gray, opacity=.3] (X) -- (0.48, -0.67) -- (0.52, -0.73) -- (X);
 	
 	%draw axes
-	\draw[very thick, ->] (0,0,0) -- (1,0,0) node[anchor=north east]{$E$};
-	\draw[very thick, ->] (0,0,0) -- (0,-1,0) node[anchor=south east]{$N$};
-	\draw[very thick, ->] (0,0,0) -- (0,0,1) node[anchor=south]{$-D$};
+	%\draw[very thick, ->] (0,0,0) -- (1,0,0) node[anchor=north east]{$E$};
+	%\draw[very thick, ->] (0,0,0) -- (0,-1,0) node[anchor=south east]{$N$};
+	%\draw[very thick, ->] (0,0,0) -- (0,0,1) node[anchor=south]{$-D$};
 
 	% Draw grid
-	\foreach \x in {0,0.1,...,1}
-		\foreach \y in {0,0.1,...,1}
+	\foreach \x in {0,0.1,...,1.05}
+		\foreach \y in {0,0.1,...,1.05}
 		{
 			\draw[very thin, gray, opacity=0.05] (\x, 0) -- (\x, -1);
 			\draw[very thin, gray, opacity=0.05] (0, -\y) -- (1, -\y);
