@@ -1,12 +1,12 @@
-\chapter{Optimization}
+\chapter{Model Predictive Control}
 \label{ch:optimization}
 
-In this chapter the methods and equations used for the optimization problem will be given. The goal of the optimization problem is to minimize the distance between the centre of the camera footprint and the path that is to be observed. The optimization problem will be given as an offline Model Predictive Control (MPC) problem, that includes the entire UAV model as constraints.
+Model Predictive Control (MPC) is a term used to describe control methods that uses knowledge about the process to calculate the future control inputs to the system in order to follow a reference trajectory \cite{mpcCAMACHO}. In this chapter the equations for a MPC "system" that seeks to minimize the distance between the camera centre point and the ground path that is to be observed. A linear state space-model for the UAV will be used to predict the future states and control inputs.
 
 
 \section{MPC Method}
 
-Model Predictive Control (MPC) is a control method that uses knowledge about the process to calculate the control signals. By calculating the future states of the process over a prediction horizon it calculates the control signals that will cause the process to follow a reference trajectory in the best way possible. The MPC strategy can be broken down into three tasks \cite{mpcCAMACHO}:
+The MPC strategy can be broken down into three tasks \cite{mpcCAMACHO}:
 
 \begin{enumerate}
 	\item Predict the future outputs of the process for the given prediction horizon using past inputs to the process and the past measured states of the process, and by using the future control signals.
@@ -40,21 +40,25 @@ In many applications the objective functions is formulated as a least-square (LS
 
 \section{Problem Definition}
 
-For the problem definition the 12 DOF UAV model presented by Beard \& McLain \cite{uavBEARD} will be implemented. This means that the optimization vector will consist of 12 states, and there will be 4 control signals:
+The linear decoupled 12 DOF UAV model presented by Bear \& McLain \cite{uavBEARD} will be implemented. This model is associated with the following states and control inputs:
 
+\begin{subequations}
 \begin{equation}
 	\mathbf{x} =
 	\begin{bmatrix}
-		p_N \\ p_E \\ p_D \\
-		u \\ v \\ w \\
-		\phi \\ \theta \\ \psi \\
-		p \\ q \\ r
-	\end{bmatrix}
-	, \hspace{5pt} \mathbf{u} =
-	\begin{bmatrix}
-		\delta_e \\ \delta_a \\ \delta_r \\ \delta_t
-	\end{bmatrix}.
+		p_N \hspace{5pt} p_E \hspace{5pt} h \hspace{5pt}
+		u \hspace{5pt} v \hspace{5pt} w \hspace{5pt}
+		\phi \hspace{5pt} \theta \hspace{5pt} \psi \hspace{5pt}
+		p \hspace{5pt} q \hspace{5pt} r
+	\end{bmatrix}^T
 \end{equation}
+\begin{equation}
+	\mathbf{u} =
+	\begin{bmatrix}
+		\delta_e \hspace{5pt} \delta_a \hspace{5pt} \delta_r \hspace{5pt} \delta_t
+	\end{bmatrix}^T.
+\end{equation}
+\end{subequations}
 
 
 \subsection{Prediction Model}
