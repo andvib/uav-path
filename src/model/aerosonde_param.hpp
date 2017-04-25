@@ -55,32 +55,7 @@
 #define C_lr    0.14
 #define C_nr    -0.35
 #define C_Yda   0
-#define C_lda   1.08
-#define C_nda   1.06
+#define C_lda   0.08
+#define C_nda   0.06
 #define C_Ydr   -0.17
 #define C_ldr   0.105
-
-
-/** Moments of Inertia **/
-#define gamma    J_x*J_z - J_xz*J_xz
-#define gamma_1  J_xz*(J_x-J_y+J_z)/gamma
-#define gamma_2 (J_z*(J_z-J_y)+J_xz*J_xz)/gamma
-#define gamma_3  J_z/gamma
-#define gamma_4  J_xz/gamma
-#define gamma_5 (J_z - J_x)/J_y
-#define gamma_6  J_xz/J_y
-#define gamma_7 ((J_x-J_y)*J_x+J_xz*J_xz)/gamma
-#define gamma_8  J_x/gamma
-
-#define C_p0    gamma_3*C_l0    + gamma_4*C_n0
-#define C_pbeta gamma_3*C_lbeta + gamma_4*C_nbeta
-#define C_pp    gamma_3*C_lp    + gamma_4*C_np
-#define C_pr    gamma_3*C_lr    + gamma_4*C_nr
-#define C_pda   gamma_3*C_lda   + gamma_4*C_nda
-#define C_pdr   gamma_3*C_ldr + gamma_4*C_ndr
-#define C_r0    gamma_4*C_l0    + gamma_8*C_n0
-#define C_rbeta gamma_4*C_lbeta + gamma_8*C_nbeta
-#define C_rp    gamma_4*C_lp    + gamma_8*C_np
-#define C_rr    gamma_4*C_lr    + gamma_8*C_nr
-#define C_rda   gamma_4*C_lda   + gamma_8*C_nda
-#define C_rdr   gamma_4*C_ldr + gamma_8*C_ndr

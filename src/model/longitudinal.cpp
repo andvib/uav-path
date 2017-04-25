@@ -17,27 +17,29 @@ int main(){
     //_________________________________________________________________
     /* Introduce Variables */
 
-    DifferentialState p_N, p_E, h;
+    DifferentialState u, w, q, theta, h, elevator, throttle;
+
+    /*DifferentialState p_N, p_E, h;
     DifferentialState u, v, w;
     DifferentialState phi, theta, psi;
-    DifferentialState p, q, r;
-    DifferentialState elevator, aileron, rudder, throttle;
+    DifferentialState p, q, r;*/
+    //DifferentialState elevator, aileron, rudder, throttle;
 
     Control d_elevator;
-    Control d_aileron;
-    Control d_rudder;
+    //Control d_aileron;
+    //Control d_rudder;
     Control d_throttle;
 
-    IntermediateState p_N_dot, p_E_dot, p_D_dot;
-    IntermediateState Va, alpha, beta;
-    IntermediateState GAMMA, CHI;
+    //IntermediateState p_N_dot, p_E_dot, p_D_dot;
+    //IntermediateState Va, alpha, beta;
+    //IntermediateState GAMMA, CHI;
 
     DifferentialEquation f;
 
     // Lateral state-space model coefficients
-    double Yv, Yp, Yr, Yda, Ydr;
+    /*double Yv, Yp, Yr, Yda, Ydr;
     double Lv, Lp, Lr, Lda, Ldr;
-    double Nv, Np, Nr, Nda, Ndr;
+    double Nv, Np, Nr, Nda, Ndr;*/
 
     // Longitudinal state-space model coefficients
     double Xu, Xw, Xq, Xde, Xdt;
@@ -116,19 +118,20 @@ int main(){
     C_Xde  = -C_Dde*(1-(alpha_trim*alpha_trim/2)) + C_Lde*alpha_trim;
     C_Xq   = -C_Dq*(1-(alpha_trim*alpha_trim/2))  + C_Lq*alpha_trim;
 
-
+    cout << "C_x0: " << C_X0 << ", C_Xalp: " << C_Xalp << ", C_Xde: " << C_Xde << ", C_Xq: " << C_Xq << "\n";
 
     C_Z0   = -C_L0;
     C_Zalp = -C_D0*alpha_trim  - C_L0*(1-(alpha_trim*alpha_trim/2));
     C_Zde  = -C_Dde*alpha_trim - C_Lde*(1-(alpha_trim*alpha_trim/2));
     C_Zq   = -C_Dq*alpha_trim  - C_Lq*(1-(alpha_trim*alpha_trim/2));
 
+    cout << "C_Z0: " << C_Z0 << ", C_Zalp: " << C_Zalp << ", C_Zde: " << C_Zde << ", C_Zq: " << C_Zq << "\n";
 
 
     //_________________________________________________________________
     /* Lateral State-Space model coefficients */
 
-    Yv = ((rho*S*b*v_trim)/(4*mass*Va_trim))*(C_Yp*p_trim + C_Yr*r_trim) \
+    /*Yv = ((rho*S*b*v_trim)/(4*mass*Va_trim))*(C_Yp*p_trim + C_Yr*r_trim) \
        + ((rho*S*v_trim)/mass)*(C_Y0 + C_Ybeta*beta_trim \
                                  + C_Yda*aileron_trim + C_Ydr*rudder_trim) \
        + ((rho*S*C_Ybeta)/(2*mass))*sqrt(u_trim*u_trim + w_trim*w_trim);
@@ -139,16 +142,24 @@ int main(){
     Yda = ((rho*Va_trim*Va_trim*S)/(2*mass))*C_Yda;
     Ydr = ((rho*Va_trim*Va_trim*S)/(2*mass))*C_Ydr;
     
-    Lv = ((rho*S*b*b*v_trim)/(4*Va_trim))*(C_pp*p_trim + C_pr*r_trim) \
+    cout << "Yv: " << Yv << ", Yp: " << Yp << ", Yr: " << Yr << "\n";
+    cout << "Yda: " << Yda << ", Ydr: " << Ydr << "\n";
+    cout << "C_Yda: " << C_Yda << ", C_Ydr: " << C_Ydr << "\n\n";
+    
+    Lv = 141.667;//((rho*S*b*b*v_trim)/(4*Va_trim))*(C_pp*p_trim + C_pr*r_trim) \
        + rho*S*b*v_trim*(C_p0 + C_pbeta*beta_trim \
                             + C_pda*aileron_trim + C_pdr*rudder_trim) \
        + ((rho*S*b*C_pbeta)/2)*sqrt(u_trim*u_trim + w_trim*w_trim);      
 
-    Lp = gamma_1*q_trim + ((rho*Va_trim*S*b*b)/4)*C_pp;
-    Lr = -gamma_2*q_trim + ((rho*Va_trim*S*b*b)/4)*C_pr;
+    Lp = 205.37;//gamma_1*q_trim + ((rho*Va_trim*S*b*b)/4)*C_pp;
+    Lr = 205.36;//-gamma_2*q_trim + ((rho*Va_trim*S*b*b)/4)*C_pr;
 
     Lda = ((rho*Va_trim*Va_trim*S*b)/2)*C_pda;
     Ldr = ((rho*Va_trim*Va_trim*S*b)/2)*C_pdr;
+
+    cout << "Lv: " << Lv << ", Lp: " << Lp << ", Lr: " << Lr << "\n";
+    cout << "Lda: " << Lda << ", Ldr: " << Ldr << "\n";
+    cout << "C_pp: " << C_pp << ", C_pr: " << C_pr << ", C_pbeta: " << C_pbeta << "\n\n";
 
     Nv = ((rho*S*b*b*v_trim)/(4*Va_trim))*(C_rp*p_trim + C_rr*r_trim) \
        + rho*S*b*v_trim*(C_r0 + C_rbeta*beta_trim \
@@ -161,6 +172,9 @@ int main(){
     Nda = ((rho*Va_trim*Va_trim*S*b)/2)*C_rda;
     Ndr = ((rho*Va_trim*Va_trim*S*b)/2)*C_rdr;
 
+    cout << "Nv: " << Nv << ", Np: " << Np << ", Nr: " << Nr << "\n";
+    cout << "Nda: " << Nda << ", Ndr: " << Ndr << "\n";
+    cout << "C_rda: " << C_rda << ", C_rdr: " << C_rdr << "\n\n";*/
 
 
     //_________________________________________________________________
@@ -208,7 +222,7 @@ int main(){
     //_________________________________________________________________
     /* Position Differential Equations */
 
-    p_N_dot = cos(theta)*cos(psi)*u \
+    /*p_N_dot = cos(theta)*cos(psi)*u \
             + (sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi))*v \
             + (cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi))*w;
 	
@@ -220,16 +234,16 @@ int main(){
 
 
     f << dot(p_N) == p_N_dot;
-    f << dot(p_E) == p_E_dot;
+    f << dot(p_E) == p_E_dot;*/
 
 
     //_________________________________________________________________
     /* Lateral Differential Equations */
 
-    f << dot(v) == Yv*v + Yp*p + Yr*r + g*cos(theta_trim)*cos(phi_trim)*phi \
+    /*f << dot(v) == Yv*v + Yp*p + Yr*r + g*cos(theta_trim)*cos(phi_trim)*phi \
                  + Yda*aileron + Ydr*rudder;
     
-    f << dot(p) == Lv*v + Lp*p + Lr*r + Lda*aileron + Ldr*rudder;
+    f << dot(p) == 0;//Lv*v + Lp*p + Lr*r + Lda*aileron + Ldr*rudder;
 
     f << dot(r) == Nv*v + Np*p + Nr*r + Nda*aileron + Ndr*rudder;
 
@@ -239,7 +253,7 @@ int main(){
 
     f << dot(psi) == cos(phi_trim)*(1/cos(theta_trim))*r \
                    + (p_trim*cos(phi_trim)*(1/cos(theta_trim)) \
-                   -  r_trim*sin(phi_trim)*(1/cos(theta_trim)))*phi;
+                   -  r_trim*sin(phi_trim)*(1/cos(theta_trim)))*phi;*/
 
 
 
@@ -264,8 +278,8 @@ int main(){
     /* Control Differential Equation */
 
     f << dot(elevator) == d_elevator;
-    f << dot(aileron)  == d_aileron;
-    f << dot(rudder)   == d_rudder;
+    //f << dot(aileron)  == d_aileron;
+    //f << dot(rudder)   == d_rudder;
     f << dot(throttle) == d_throttle;
 
 
@@ -273,8 +287,8 @@ int main(){
     //_________________________________________________________________
     /* Calculate Gamma and Chi */
     
-    GAMMA = -atan(p_D_dot/sqrt(p_N_dot*p_N_dot + p_E_dot*p_E_dot + p_D_dot*p_D_dot)); 
-    CHI = asin(p_E_dot/sqrt(p_N_dot*p_N_dot + p_E_dot*p_E_dot + p_D_dot*p_D_dot));
+    //GAMMA = -atan(p_D_dot/sqrt(p_N_dot*p_N_dot + p_E_dot*p_E_dot + p_D_dot*p_D_dot)); 
+    //CHI = asin(p_E_dot/sqrt(p_N_dot*p_N_dot + p_E_dot*p_E_dot + p_D_dot*p_D_dot));
 
 
 
@@ -285,16 +299,20 @@ int main(){
     DMatrix Q(3,3); Q.setIdentity();
     DVector R(3);   R.setAll(0.0);
 
-    cost << GAMMA; Q(0,0) = 1;
+    cost << h; R(0) = 150; Q(0,0) = 100;
+    cost << u; R(1) = 25; Q(1,1) = 10;
+    cost << w;  Q(2,2) = 1;
+
+    /*cost << GAMMA; Q(0,0) = 1;
     cost << CHI;   Q(1,1) = 1;
-    cost << u; R(2) = 35;
+    cost << theta;*/
 
 
     //_________________________________________________________________
     /* Configure OCP */
 
     const double t_start = 0.0;
-    const double t_end   = 10.0;
+    const double t_end   = 20.0;
     const int    samples = 10*(t_end-t_start);
 
     OCP ocp( t_start, t_end, samples );
@@ -308,30 +326,30 @@ int main(){
     //_________________________________________________________________
     /* Start Configuration */
     
-    ocp.subjectTo( AT_START, p_N == 0   );
-    ocp.subjectTo( AT_START, p_E == 0   );
+    //ocp.subjectTo( AT_START, p_N == 0   );
+    //ocp.subjectTo( AT_START, p_E == 0   );
     ocp.subjectTo( AT_START,   h == 150 );
 
     ocp.subjectTo( AT_START, u == 35 );
-    ocp.subjectTo( AT_START, v == 0 );
+    //ocp.subjectTo( AT_START, v == 0 );
     ocp.subjectTo( AT_START, w == 0 );
     
-    ocp.subjectTo( AT_START, phi   == 0     );
+    //ocp.subjectTo( AT_START, phi   == 0     );
     ocp.subjectTo( AT_START, theta == 0.066 );
-    ocp.subjectTo( AT_START, psi   == 0     );
+    //ocp.subjectTo( AT_START, psi   == 0     );
 
-    ocp.subjectTo( AT_START, p == 0 );
+    //ocp.subjectTo( AT_START, p == 0 );
     ocp.subjectTo( AT_START, q == 0 );
-    ocp.subjectTo( AT_START, r == 0 );
+    //ocp.subjectTo( AT_START, r == 0 );
 
     ocp.subjectTo( AT_START, elevator == -0.08 );
-    ocp.subjectTo( AT_START,  aileron == 0     );
-    ocp.subjectTo( AT_START,   rudder == 0     );
+    //ocp.subjectTo( AT_START,  aileron == 0     );
+    //ocp.subjectTo( AT_START,   rudder == 0     );
     ocp.subjectTo( AT_START, throttle == 0.1   );
 
     ocp.subjectTo( AT_START, d_elevator == 0.0 );
-    ocp.subjectTo( AT_START, d_aileron  == 0.0 );
-    ocp.subjectTo( AT_START, d_rudder   == 0.0 );
+    //ocp.subjectTo( AT_START, d_aileron  == 0.0 );
+    //ocp.subjectTo( AT_START, d_rudder   == 0.0 );
     ocp.subjectTo( AT_START, d_throttle == 0.0 );
 
 
@@ -340,12 +358,13 @@ int main(){
     /* Constraints */
 
     ocp.subjectTo( -PI/6 <= elevator <= PI/6 );
-    ocp.subjectTo( -PI/6 <= aileron  <= PI/6 );
-    ocp.subjectTo( -PI/6 <= rudder   <= PI/6 );
+    //ocp.subjectTo( -PI/6 <= aileron  <= PI/6 );
+    //ocp.subjectTo( -PI/6 <= rudder   <= PI/6 );
     ocp.subjectTo(     0 <= throttle <= 1 );
 
     ocp.subjectTo( -0.5 <= d_throttle <= 0.5 );
 
+    //ocp.subjectTo( -0.1 <= p <= 0.1 );
 
     //_________________________________________________________________
     /* Configure Solver Algorithm */
@@ -355,7 +374,7 @@ int main(){
     //algorithm.set( LEVENBERG_MARQUARDT, 100.0 );
     //algorithm.set( KKT_TOLERANCE, 10e-60 );
     algorithm.set( MAX_NUM_ITERATIONS, 10);
-    //algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
+    algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
 
     //_________________________________________________________________
     /* Prepare Solutions */
