@@ -38,6 +38,7 @@ The equations shown in equation \ref{eq:optimization_formulation} is the equatio
 
 The first term of equation \ref{eq:mpc_cost} represents the costs from the states of the model, and the second term represents the cost of the control effort. In the first term $\hat{y}$ is the value of the prediction model, which is compared to the desired trajectory $w$. In the second term the changes in control $\Delta u$ is expressed. The changes in control is used instead of the value of the control signal itself, since the steady state of the control signal may not be zero. $\delta$ and $\lambda$ are weighting variables which offers a way of tuning the MPC. The three different $N$ coefficients defines the horizon over which the states and the control effort should be optimized.
 
+
 \section{Least-Squares Problem}
 
 \begin{equation}
@@ -50,7 +51,13 @@ In many applications the objective functions is formulated as a least-square (LS
 
 \section{Problem Definition}
 
-The linear decoupled 12 DOF UAV model presented by Bear \& McLain \cite{uavBEARD} will be implemented. This model is associated with the following states and control inputs:
+The control problem in this thesis will be solved by using an offline MPC to generate an optimal path that will reduce the image error when using a fixed camera to survey a ground track. An offline MPC means that the initial state of the MPC is not a measurement of the UAV states, but rather the result of a simulation of the UAV. The offline MPC is still similar to the online version as it uses the model of the UAV to predict the future states.
+
+Rawlings \& Mayne \cite{mpcMAYNE} refers to this kind of problem as a \textit{deterministic problem} since there is no uncertainty in the system. Because there is no uncertainty in the problem feedback is not needed as it does not present any new information. They also state that an MPC action from a system like this is the same as the action from a \textit{receding horizon control law} (RHC), which is another kind of predictive control.
+
+Altough the feedback is not needed to give new information, it eases the computational load of the control problem as optimizing the path over a long time horizon leads to a very complicated problem. THIS NEEDS SOURCE AND BETTER WRITING.
+
+The linear decoupled 12 DOF UAV model presented by Beard \& McLain \cite{uavBEARD} will be implemented. This model is associated with the following states and control inputs:
 
 \begin{subequations}
 \begin{equation}
