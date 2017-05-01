@@ -28,6 +28,16 @@ A mathematical formulation of the three elements that make up the optimization p
 	\end{array}
 \end{equation}
 
+The equations shown in equation \ref{eq:optimization_formulation} is the equations needed for any kind of optimization problems, also MPC problems. A MPC problem differs from a general optimization problem in the cost function, where the optimization horizon is expressed \cite{mpcCAMACHO}:
+
+\begin{equation}
+	\label{eq:mpc_cost}
+	f(x) = J(N_1, N_2, N_3) = \sum_{j=N_1}^{N_2} \delta(j)[\hat{y}(t+j|t)-w(t+j)]^2 + 
+	\sum_{j=1}^{N_u}\lambda(j)[\Delta u(t+j-1)]^2.
+\end{equation}
+
+The first term of equation \ref{eq:mpc_cost} represents the costs from the states of the model, and the second term represents the cost of the control effort. In the first term $\hat{y}$ is the value of the prediction model, which is compared to the desired trajectory $w$. In the second term the changes in control $\Delta u$ is expressed. The changes in control is used instead of the value of the control signal itself, since the steady state of the control signal may not be zero. $\delta$ and $\lambda$ are weighting variables which offers a way of tuning the MPC. The three different $N$ coefficients defines the horizon over which the states and the control effort should be optimized.
+
 \section{Least-Squares Problem}
 
 \begin{equation}
