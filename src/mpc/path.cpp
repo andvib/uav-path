@@ -61,13 +61,20 @@ int saveResults(double ** results, int length){
     if(file.is_open()){
         file << "STATES = [";
         for( int i = 0 ; i < length ; i++){
-            file << results[i][0] << ", " << results[i][1] << ";\n";
+            file << results[i][0] << ", " << results[i][1] << ", " << results[i][2] <<
+            ", " << results[i][3] << ", " << results[i][4] << ", " << results[i][5] <<
+            ", " << results[i][6] << ", " << results[i][7] << ", " << results[i][8] <<
+            ", " << results[i][9] << ", " << results[i][10] <<
+            ", " << results[i][11] << ", " << results[i][12] <<
+            ", " << results[i][13] << ", " << results[i][14] <<
+            ", " << results[i][15] << ";\n";
         }
         file << "];\n";
 
         file << "CONTROLS = [";
         for( int i = 0 ; i < length ; i++){
-            file << results[i][2] << ", " << results[i][3] << ";\n";
+            file << results[i][16] << ", " << results[i][17] <<
+            ", " << results[i][18] << ", " << results[i][19] << ";\n";
         }
         file << "];\n";
 
@@ -87,24 +94,21 @@ int saveResults(double ** results, int length){
 
 VariablesGrid generateHorizon(double** path_data, double timestep,
                               int horizon_length, int path_length,
-                              double x_start,  double y_start,
-                              double dx_start, double dy_start){
+                              double x_start,  double y_start){
 
     /* Initalize storage */
     int no_timesteps = horizon_length/timestep;
-    VariablesGrid path(2, 0, horizon_length, no_timesteps+1);
+    VariablesGrid path(4, 0, horizon_length, no_timesteps+1);
 
-    DVector points(2);
+    DVector points(4);
 
 
     /* Initialize variables */
     double  x =  x_start;
     double  y =  y_start;
-    double dx = dx_start;
-    double dy = dy_start;
 
-    double speed = 35.0;
-    double distance = speed*timestep;      // [m]
+    double speed = 25.0;
+    double distance = speed*timestep; // [m]
 
     points(0) = x;
     points(1) = y;
@@ -125,6 +129,8 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
                 //cout << "Found point!: " << radius << "\n";
                 points(0) = path_data[i][0];
                 points(1) = path_data[i][1];
+                points(2) = speed;
+                points(3) = 150.0;
                 path.setVector(step+1, points);
                 point_found = 1;
                 break;
@@ -136,4 +142,26 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
         }
     }
     return path;
+}
+
+
+int findClosestPoint(int x, int y, double** path_data, int length){
+
+    int closest_index = 0;
+    int min_distance  = 10000;
+
+    for( int i = 0 ; i < length ; i++ ){
+        double x_dist = path_data[i][0] - x;
+        double y_dist = path_data[i][1] - y;
+        double distance = sqrt(x_dist*x_dist + y_dist*y_dist);
+
+        if( distance < min_distance){
+            min_distance = distance;
+            closest_index = i;
+        }
+
+    }
+
+    return closest_index;
+
 }

@@ -15,7 +15,7 @@ USING_NAMESPACE_ACADO
 int main(){
 
     /* Read path from file */
-    int path_length = 120001;
+    int path_length = 10001;
     ifstream file("./../pathgen.txt");
     double **path_data;
     
@@ -25,50 +25,88 @@ int main(){
     /* Initialize MPC variables */
     int horizon_length = 15;    // Number of timesteps in the horizon
     int section_length = 10;    // Number of timesteps in the section
-    double timestep    = 0.5;    // Duration of timestep [s]
-    int no_sections    = 100;    // Number of sections to cover path
+    double timestep    = 1;  // Duration of timestep [s]
+    int no_sections    = 3;     // Number of sections to cover path
 
-    double  x = 0.0;
-    double  y = 0.0;
-    double dx = 25.0;
-    double dy = 25.0;
-    
 
+    //_________________________________________________________________
+    /* Start Configuration */
+
+    DVector X0(12);
+    DVector U0(4);
+
+    X0(0)  =  0.0;   // p_N
+    X0(1)  =  0.0;   // p_E
+    X0(2)  =150.0;   // h
+    X0(3)  = 25.0;   // u
+    X0(4)  =  0.0;   // v
+    X0(5)  =  0.0;   // w
+    X0(6)  =  0.0;   // phi
+    X0(7)  =  0.066; // theta
+    X0(8)  =  0.0;   // psi
+    X0(9)  =  0.0;   // p
+    X0(10) =  0.0;   // q
+    X0(11) =  0.0;   // r
+
+    U0(0) = 0.0; // Elevator
+    U0(1) = 0.0; // Aileron
+    U0(2) = 0.0; // Rudder
+    U0(3) = 0.0; // Throttle
+
+
+
+    //_________________________________________________________________
     /* Initialize result storage */
+
     double ** result;
     result = new double*[no_sections*section_length];
     for( int i = 0 ; i < no_sections*section_length ; i++){
-        result[i] = new double[4];
+        result[i] = new double[16];
     }
 
 
+
+    //_________________________________________________________________
     /* For progress indication */
+
     int increment5 = 0.05 * no_sections;
     int countdown = increment5;
     int percent5 = 0;
 
+
+
+    //_________________________________________________________________
     /* MPC Loop */
     cout << "Starting MPC.\n";
     for(int i = 0 ; i < no_sections ; i++){
+        int index = findClosestPoint(X0(0), X0(1), path_data, path_length);
+
+        double closest_x = path_data[index][0];
+        double closest_y = path_data[index][1];
+
         VariablesGrid path = generateHorizon(path_data, timestep,
                                              horizon_length, path_length,
-                                             x, y, dx, dy);
+                                             closest_x, closest_y);
         //path.print();
 
-        DMatrix states = optimize_path(path, x, y, dx, dy);
+        DMatrix states = optimize_path(path, X0, U0);
 
-        x =  states(section_length-1, 0);
-        y =  states(section_length-1, 1);
-        dx = states(section_length-1, 2);
-        dy = states(section_length-1, 3);
+        for(int l = 0 ; l < 12 ; l++){
+            X0(l)  =  states(section_length-1, l);
+        }
+        U0(0)  =  states(section_length-1, 12);
+        U0(1)  =  states(section_length-1, 13);
+        U0(2)  =  states(section_length-1, 14);
+        U0(3)  =  states(section_length-1, 15);
+
+
 
         for(int j = 0 ; j < section_length ; j++){
             int idx = i*section_length + j;
             
-            result[idx][0] = states(j, 0);
-            result[idx][1] = states(j, 1);
-            result[idx][2] = states(j, 2);
-            result[idx][3] = states(j, 3);
+            for(int k = 0 ; k < 20 ; k++){
+                result[idx][k]  = states(j, k);
+            }
         }
 
         clearAllStaticCounters();
@@ -88,6 +126,8 @@ int main(){
     saveResults(result, no_sections*section_length);
 
 
+
+    //_________________________________________________________________
     /* Delete path array */
     for( int i = 0 ; i < path_length ; i++){
         delete [] path_data[i];
