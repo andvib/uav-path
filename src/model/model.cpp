@@ -43,6 +43,7 @@ int main(){
     double Xu, Xw, Xq, Xde, Xdt;
     double Zu, Zw, Zq, Zde;
     double Mu, Mw, Mq, Mde;
+    double C_L, C_D;
     double C_X0, C_Xalp, C_Xde, C_Xq;
     double C_Z0, C_Zalp, C_Zde, C_Zq;
 
@@ -50,38 +51,39 @@ int main(){
     const double g = 9.81;
     const double PI = 3.14;
 
-    //Va = sqrt(u*u + v*v + w*w);
-    //alpha = atan(w/u);
-    //beta = asin(v/Va);
+    Va = sqrt(u*u + v*v + w*w);
+    alpha = atan(w/u);
+    beta = asin(v/Va);
 
 
 
     //_________________________________________________________________
     /* Trimmed State Variables */
 
-    const double u_trim = 35.0;
+    const double u_trim = 25.0;
     const double v_trim =  0.0;
     const double w_trim =  0.0;
 
     const double phi_trim   = 0.0;
-    const double theta_trim = 0.066;
+    const double theta_trim = -0.12;
     const double psi_trim   = 0.0;
 
     const double p_trim = 0.0;
     const double q_trim = 0.0;
     const double r_trim = 0.0;
 
-    const double elevator_trim = -0.05;
+    const double elevator_trim = 0.0594;
     const double aileron_trim  = 0.0;
     const double rudder_trim   = 0.0;
-    const double throttle_trim = 0.0978;
+    const double throttle_trim = 0.9;
 
-    const double Va_trim    = 35.0;
+    const double Va_trim    = 25.0;
     const double beta_trim  =  0.0;
     const double alpha_trim =  0.0;
 
 
-//_________________________________________________________________
+
+    //_________________________________________________________________
 
     double gamma = J_x*J_z - J_xz*J_xz;
     double gamma_1 = J_xz*(J_x-J_y+J_z)/gamma;
@@ -111,17 +113,31 @@ int main(){
     //_________________________________________________________________
     /* Force Coefficients: X and Z */
 
-    C_X0   = -C_D0;
+    C_L = C_L0 + C_Lalp*alpha_trim;
+    C_D = C_D0 + C_Dalp*alpha_trim;
+
+    C_X0 = 0;
+    C_Xalp = -C_D*cos(alpha_trim) + C_L*sin(alpha_trim);
+    C_Xde = -C_Dde*cos(alpha_trim) + C_Lde*sin(alpha_trim);
+    C_Xq = -C_Dq*cos(alpha_trim) + C_Lq*sin(alpha_trim);
+
+    C_Z0 = 0;
+    C_Zalp = -C_D*sin(alpha_trim) - C_L*cos(alpha_trim);
+    C_Zde = -C_Dde*sin(alpha_trim) - C_Lde*cos(alpha_trim);
+    C_Zq = -C_Dq*sin(alpha_trim) - C_Lq*cos(alpha_trim);
+    
+
+
+    /*C_X0   = -C_D0;
     C_Xalp = -C_D0*(1-(alpha_trim*alpha_trim/2))  + C_L0*alpha_trim;
     C_Xde  = -C_Dde*(1-(alpha_trim*alpha_trim/2)) + C_Lde*alpha_trim;
     C_Xq   = -C_Dq*(1-(alpha_trim*alpha_trim/2))  + C_Lq*alpha_trim;
 
 
-
     C_Z0   = -C_L0;
     C_Zalp = -C_D0*alpha_trim  - C_L0*(1-(alpha_trim*alpha_trim/2));
     C_Zde  = -C_Dde*alpha_trim - C_Lde*(1-(alpha_trim*alpha_trim/2));
-    C_Zq   = -C_Dq*alpha_trim  - C_Lq*(1-(alpha_trim*alpha_trim/2));
+    C_Zq   = -C_Dq*alpha_trim  - C_Lq*(1-(alpha_trim*alpha_trim/2));*/
 
 
 
@@ -281,14 +297,57 @@ int main(){
     //_________________________________________________________________
     /* Least Squares Function */
 
-    Function cost;
-    DMatrix Q(3,3); Q.setIdentity();
-    DVector R(3);   R.setAll(0.0);
+    Function cost; const int no = 7;
+    DMatrix Q(no,no); Q.setIdentity();
+    DVector R(no);   R.setAll(0.0);
 
-    cost << GAMMA; Q(0,0) = 1;
-    cost << CHI;   Q(1,1) = 1;
-    cost << u; R(2) = 35;
+    cost << d_elevator;
+    cost << d_aileron;
+    cost << d_rudder;
+    cost << d_throttle;
 
+    cost << u; R(4) = 25;  Q(4,4) = 1;
+    cost << h; R(5) = 150; Q(5,5) = 1;
+    //cost << psi; R(6) = 0.0;
+
+
+
+    //_________________________________________________________________
+    /* Path */
+
+    VariablesGrid path;
+    path.read( "./../path.txt" );
+    cout << "Path to follow: \n";
+    path.print();
+
+    cout << "\n";
+
+    Function trajectory;
+
+    trajectory << p_N;
+    trajectory << p_E;
+    trajectory << h;
+    trajectory << u;
+
+    DMatrix Q2(4,4); Q2.setIdentity();
+
+    Q(2,2) = 100;
+
+
+
+    Function end;
+
+    end << p_N;
+    end << p_E;
+    end << h;
+    end << u;
+
+    DMatrix QEnd(4,4); QEnd.setIdentity();
+    DVector REnd(4);
+    REnd(0) = 187.5;
+    REnd(1) = 62.5;
+    REnd(2) = 150.0;
+    REnd(3) = 25.0;
 
     //_________________________________________________________________
     /* Configure OCP */
@@ -297,10 +356,13 @@ int main(){
     const double t_end   = 10.0;
     const int    samples = 10*(t_end-t_start);
 
-    OCP ocp( t_start, t_end, samples );
+    OCP ocp( path.getTimePoints() );//t_start, t_end, samples );
+    
+    //ocp.minimizeLSQ( Q, cost, R );
+    //ocp.minimizeLSQEndTerm( QEnd, end, REnd );
 
-    ocp.minimizeLSQ( Q, cost, R );
-    ocp.minimizeLSQEndTerm( Q, cost, R );
+    ocp.minimizeLSQ( Q2, trajectory, path );
+
     ocp.subjectTo( f );
 
 
@@ -312,22 +374,22 @@ int main(){
     ocp.subjectTo( AT_START, p_E == 0   );
     ocp.subjectTo( AT_START,   h == 150 );
 
-    ocp.subjectTo( AT_START, u == 35 );
-    ocp.subjectTo( AT_START, v == 0 );
-    ocp.subjectTo( AT_START, w == 0 );
+    ocp.subjectTo( AT_START, u == 25.0 );
+    ocp.subjectTo( AT_START, v == 0.0 );
+    ocp.subjectTo( AT_START, w == 0.0 );
     
-    ocp.subjectTo( AT_START, phi   == 0     );
+    ocp.subjectTo( AT_START, phi   == 0.0   );
     ocp.subjectTo( AT_START, theta == 0.066 );
-    ocp.subjectTo( AT_START, psi   == 0     );
+    ocp.subjectTo( AT_START, psi   == 0.0   );
 
     ocp.subjectTo( AT_START, p == 0 );
     ocp.subjectTo( AT_START, q == 0 );
     ocp.subjectTo( AT_START, r == 0 );
 
-    ocp.subjectTo( AT_START, elevator == -0.08 );
-    ocp.subjectTo( AT_START,  aileron == 0     );
-    ocp.subjectTo( AT_START,   rudder == 0     );
-    ocp.subjectTo( AT_START, throttle == 0.1   );
+    /*ocp.subjectTo( AT_START, elevator == 0.0594 );
+    ocp.subjectTo( AT_START,  aileron == 0.0 );
+    ocp.subjectTo( AT_START,   rudder == 0.0 );
+    ocp.subjectTo( AT_START, throttle == 0.0978  );*/
 
     ocp.subjectTo( AT_START, d_elevator == 0.0 );
     ocp.subjectTo( AT_START, d_aileron  == 0.0 );
@@ -339,12 +401,16 @@ int main(){
     //_________________________________________________________________
     /* Constraints */
 
+    ocp.subjectTo( -PI/2 <= theta <= PI/2 );
+    ocp.subjectTo( -PI/2 <= phi <= PI/2 );
+
     ocp.subjectTo( -PI/6 <= elevator <= PI/6 );
     ocp.subjectTo( -PI/6 <= aileron  <= PI/6 );
     ocp.subjectTo( -PI/6 <= rudder   <= PI/6 );
     ocp.subjectTo(     0 <= throttle <= 1 );
 
     ocp.subjectTo( -0.5 <= d_throttle <= 0.5 );
+    //ocp.subjectTo( -1 <= d_elevator <= 1 );
 
 
     //_________________________________________________________________
@@ -353,9 +419,9 @@ int main(){
     OptimizationAlgorithm algorithm(ocp);
 
     //algorithm.set( LEVENBERG_MARQUARDT, 100.0 );
-    //algorithm.set( KKT_TOLERANCE, 10e-60 );
-    algorithm.set( MAX_NUM_ITERATIONS, 10);
-    //algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
+    //algorithm.set( KKT_TOLERANCE, 10e-10 );
+    //algorithm.set( MAX_NUM_ITERATIONS, 100);
+    algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
 
     //_________________________________________________________________
     /* Prepare Solutions */

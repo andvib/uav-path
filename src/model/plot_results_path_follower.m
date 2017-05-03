@@ -73,11 +73,11 @@ run results/output.m;
 
 
 %% ENTIRE MODEL
-%figure(1);
-%grid on;
-%hold on;
-%plot(STATES(:,3), STATES(:,2));
-%title("POSITION");
+figure(1);
+grid on;
+hold on;
+plot(STATES(:,3), STATES(:,2));
+title("POSITION");
 
 figure(2);
 grid on;
