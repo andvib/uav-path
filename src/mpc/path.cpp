@@ -67,7 +67,7 @@ int saveResults(double ** results, int length){
             ", " << results[i][9] << ", " << results[i][10] <<
             ", " << results[i][11] << ", " << results[i][12] <<
             ", " << results[i][13] << ", " << results[i][14] <<
-            ", " << results[i][15] << ";\n";
+            ", " << results[i][15] << ", " << results[i][16] << ";\n";
         }
         file << "];\n";
 
@@ -98,9 +98,9 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
 
     /* Initalize storage */
     int no_timesteps = horizon_length/timestep;
-    VariablesGrid path(4, 0, horizon_length, no_timesteps+1);
+    VariablesGrid path(8, 0, horizon_length, no_timesteps+1);
 
-    DVector points(4);
+    DVector points(8);
 
 
     /* Initialize variables */
@@ -110,8 +110,14 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
     double speed = 25.0;
     double distance = speed*timestep; // [m]
 
-    points(0) = x;
-    points(1) = y;
+    points(0) = x;    // p_N
+    points(1) = y;    // p_E
+    points(2) = speed;// Speed (u)
+    points(3) = 150.0;// h
+    points(4) = 0.0;  // d_elevator
+    points(5) = 0.0;  // d_aileron
+    points(6) = 0.0;  // d_rudder
+    points(7) = 0.0;  // d_throttle
     path.setVector(0, points);
 
     int point_found = 0;
@@ -129,8 +135,8 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
                 //cout << "Found point!: " << radius << "\n";
                 points(0) = path_data[i][0];
                 points(1) = path_data[i][1];
-                points(2) = speed;
-                points(3) = 150.0;
+                //points(2) = speed;
+                //points(3) = 150.0;
                 path.setVector(step+1, points);
                 point_found = 1;
                 break;

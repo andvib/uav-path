@@ -15,18 +15,18 @@ USING_NAMESPACE_ACADO
 int main(){
 
     /* Read path from file */
-    int path_length = 10001;
-    ifstream file("./../pathgen.txt");
+    int path_length = 120001;
+    ifstream file("./../path_curved2.txt");
     double **path_data;
     
     path_data = readPathFile(file, path_length);
 
 
     /* Initialize MPC variables */
-    int horizon_length = 15;    // Number of timesteps in the horizon
-    int section_length = 10;    // Number of timesteps in the section
-    double timestep    = 1;  // Duration of timestep [s]
-    int no_sections    = 3;     // Number of sections to cover path
+    int horizon_length = 10;    // Number of timesteps in the horizon
+    int section_length = 8;    // Number of timesteps in the section
+    double timestep    = 0.2;  // Duration of timestep [s]
+    int no_sections    = 40;     // Number of sections to cover path
 
 
     //_________________________________________________________________
@@ -48,10 +48,10 @@ int main(){
     X0(10) =  0.0;   // q
     X0(11) =  0.0;   // r
 
-    U0(0) = 0.0; // Elevator
+    U0(0) = -0.15; // Elevator
     U0(1) = 0.0; // Aileron
     U0(2) = 0.0; // Rudder
-    U0(3) = 0.0; // Throttle
+    U0(3) = 0.15; // Throttle
 
 
 
@@ -61,9 +61,17 @@ int main(){
     double ** result;
     result = new double*[no_sections*section_length];
     for( int i = 0 ; i < no_sections*section_length ; i++){
-        result[i] = new double[16];
+        result[i] = new double[17];
     }
 
+    result[0][0] = 0.0;
+    for(int k = 1 ; k < 13 ; k++){
+        result[0][k] = X0(k-1);
+    }
+    result[0][13] = U0(0);
+    result[0][14] = U0(1);
+    result[0][15] = U0(2);
+    result[0][16] = U0(3);
 
 
     //_________________________________________________________________
@@ -103,14 +111,18 @@ int main(){
 
         for(int j = 0 ; j < section_length ; j++){
             int idx = i*section_length + j;
+            result[idx][0] = idx*timestep;
             
-            for(int k = 0 ; k < 20 ; k++){
-                result[idx][k]  = states(j, k);
+            for(int k = 1 ; k < 17 ; k++){
+                result[idx][k]  = states(j, k-1);
             }
         }
 
         clearAllStaticCounters();
-        //cout << "New position: " << x << ", " << y << "\n";
+
+
+        //cout << "New Position: " << X0(0) << ", " << X0(1) << "\n";
+        //cout << "Section no.: " << i << "\n";
 
 
         /* Progress bar */

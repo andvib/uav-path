@@ -289,16 +289,30 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     trajectory << u;
     trajectory << h;
 
-    DMatrix Q(4,4); Q.setIdentity();
-    
+    trajectory << d_elevator;
+    trajectory << d_aileron;
+    trajectory << d_rudder;
+    trajectory << d_throttle;
 
+
+    DMatrix Q(8,8); Q.setIdentity();
+    
+    Q(0,0) = 1;  // p_N
+    Q(1,1) = 1;  // p_E
+    Q(2,2) = 10; // u
+    Q(3,3) = 1;  // h
+    
+    Q(4,4) = 10;   // d_elevator
+    Q(5,5) = 100; // d_aileron
+    Q(6,6) = 1;   // d_rudder
+    Q(7,7) = 10;   // d_throttle
 
     //_________________________________________________________________
     /* Initialize Optimal Control Problem */
     OCP ocp( path.getTimePoints() );
 
     ocp.subjectTo( f );
-
+    
     ocp.minimizeLSQ( Q, trajectory, path );
 
 
@@ -337,6 +351,8 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     //_________________________________________________________________
     /* Constraints */
 
+    ocp.subjectTo( 0 <= u );
+
     ocp.subjectTo( -PI/2 <= theta <= PI/2 );
     ocp.subjectTo( -PI/2 <= phi <= PI/2 );
 
@@ -345,7 +361,10 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     ocp.subjectTo( -PI/6 <= rudder   <= PI/6 );
     ocp.subjectTo(     0 <= throttle <= 1 );
 
-    ocp.subjectTo( -0.5 <= d_throttle <= 0.5 );
+    ocp.subjectTo( -0.2 <= d_elevator <= 0.2 );
+    ocp.subjectTo( -0.2 <= d_aileron  <= 0.2 );
+    ocp.subjectTo( -0.2 <= d_rudder   <= 0.2 );
+    ocp.subjectTo( -0.2 <= d_throttle <= 0.2 );
 
 
 
@@ -360,7 +379,7 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
 
     algorithm.set(PRINT_COPYRIGHT, BT_FALSE);
-    //algorithm.set(PRINTLEVEL, NONE);
+    algorithm.set(PRINTLEVEL, NONE);
 
     algorithm.solve();
 
