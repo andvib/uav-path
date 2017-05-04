@@ -15,7 +15,7 @@ USING_NAMESPACE_ACADO
 int main(){
 
     /* Read path from file */
-    int path_length = 120001;
+    int path_length = 10001;
     ifstream file("./../path_curved2.txt");
     double **path_data;
     
@@ -23,10 +23,10 @@ int main(){
 
 
     /* Initialize MPC variables */
-    int horizon_length = 10;    // Number of timesteps in the horizon
-    int section_length = 8;    // Number of timesteps in the section
-    double timestep    = 0.2;  // Duration of timestep [s]
-    int no_sections    = 40;     // Number of sections to cover path
+    int horizon_length = 8;    // Number of timesteps in the horizon
+    int section_length = 5;    // Number of timesteps in the section
+    double timestep    = 0.3;  // Duration of timestep [s]
+    int no_sections    = 15;     // Number of sections to cover path
 
 
     //_________________________________________________________________
@@ -42,7 +42,7 @@ int main(){
     X0(4)  =  0.0;   // v
     X0(5)  =  0.0;   // w
     X0(6)  =  0.0;   // phi
-    X0(7)  =  0.066; // theta
+    X0(7)  =  0.1; // theta
     X0(8)  =  0.0;   // psi
     X0(9)  =  0.0;   // p
     X0(10) =  0.0;   // q
@@ -51,7 +51,7 @@ int main(){
     U0(0) = -0.15; // Elevator
     U0(1) = 0.0; // Aileron
     U0(2) = 0.0; // Rudder
-    U0(3) = 0.15; // Throttle
+    U0(3) = 0.1; // Throttle
 
 
 

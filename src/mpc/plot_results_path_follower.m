@@ -4,11 +4,25 @@ clear all;
 run results/results.m;
 
 
+%% Calculate camera position
+
+for i = (1:length(STATES(:,1)))
+    [x_temp, y_temp] = camera_pos([STATES(i,8), STATES(i,9), STATES(i,10)],...
+                                  [STATES(i,2), STATES(i,3), STATES(i,4)],...
+                                  0.331612558);
+    c_n_1(:,i) = x_temp;
+    c_n_2(:,i) = y_temp;
+end
+    
+
+
 %% ENTIRE MODEL
 figure(1);
 grid on;
 hold on;
 plot(STATES(:,3), STATES(:,2));
+plot(c_n_1(2,:), c_n_1(1,:), 'k');
+plot(c_n_2(2,:), c_n_2(1,:), 'k');
 title("POSITION");
 
 figure(2);

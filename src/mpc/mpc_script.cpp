@@ -29,6 +29,7 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     IntermediateState p_N_dot, p_E_dot, p_D_dot;
     IntermediateState Va, alpha, beta;
     IntermediateState GAMMA, CHI;
+    IntermediateState cx, cy;
 
     DifferentialEquation f;
 
@@ -280,12 +281,19 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
 
 
     //_________________________________________________________________
+    /* Calculate Camera Position */
+
+    cx = p_N + h*tan(theta)*cos(psi) - h*tan(phi)*sin(psi);
+    cy = p_E + h*tan(theta)*sin(psi) + h*tan(phi)*cos(psi);
+
+
+    //_________________________________________________________________
     /* Least Squares Problem */
 
     Function trajectory;
 
-    trajectory << p_N;
-    trajectory << p_E;
+    trajectory << cx;
+    trajectory << cy;
     trajectory << u;
     trajectory << h;
 
@@ -299,11 +307,11 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     
     Q(0,0) = 1;  // p_N
     Q(1,1) = 1;  // p_E
-    Q(2,2) = 10; // u
-    Q(3,3) = 1;  // h
+    Q(2,2) = 1000;  // u
+    Q(3,3) = 100;  // h
     
     Q(4,4) = 10;   // d_elevator
-    Q(5,5) = 100; // d_aileron
+    Q(5,5) = 1; // d_aileron
     Q(6,6) = 1;   // d_rudder
     Q(7,7) = 10;   // d_throttle
 
@@ -365,7 +373,7 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     ocp.subjectTo( -0.2 <= d_aileron  <= 0.2 );
     ocp.subjectTo( -0.2 <= d_rudder   <= 0.2 );
     ocp.subjectTo( -0.2 <= d_throttle <= 0.2 );
-
+    
 
 
     //_________________________________________________________________
@@ -376,10 +384,10 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     //algorithm.set( LEVENBERG_MARQUARDT, 100.0 );
     algorithm.set( KKT_TOLERANCE, 1e-5 );
     //algorithm.set( MAX_NUM_ITERATIONS, 100);
-    algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
+    //algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
 
     algorithm.set(PRINT_COPYRIGHT, BT_FALSE);
-    algorithm.set(PRINTLEVEL, NONE);
+    //algorithm.set(PRINTLEVEL, NONE);
 
     algorithm.solve();
 
