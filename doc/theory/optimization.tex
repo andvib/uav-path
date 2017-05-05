@@ -16,7 +16,7 @@ The MPC strategy can be broken down into three tasks \cite{mpcCAMACHO}:
 
 In short MPC problems are made up of three elements \cite{mpcCAMACHO}: Prediction model, objective function and the control law. The prediction model represents the model of the process that is to be controlled, and will in this case consist of the differential equations for the states of the UAV. The objective function is the function that is to be minimized by the optimization algorithm, in this case this will be the distance from the camera centre point to the desired ground path together with some of the UAV states that will give a stable flight. The objective function represents the reference trajectory that the UAV is to follow. The control law introduces constraints on the problem, reducing the number of feasible solutions. These constraints can be put on either the states or the control inputs for the UAV.
 
-A mathematical formulation of the three elements that make up the optimization problem is shown in \ref{eq:optimization_formulation} \cite{nocedalOPTIMIZATION}. $f(x)$ represents the objective function that is subject to equality and inequality constraints respectively. The equality constraints are used to represent the UAV model, while the inequality constraints represent the constraints used for the control law. The control law may also consist of equality constraints.
+A common mathematical formulation of the three elements that make up the optimization problem is shown in \ref{eq:optimization_formulation} \cite{nocedalOPTIMIZATION}. $f(x)$ represents the objective function that is subject to equality and inequality constraints respectively. The equality constraints are used to represent the UAV model, while the inequality constraints represent the constraints used for the control law. A MPC differ from other optimization problems mostly in the objective function, which will be described in detail chapter \ref{ch:objective_function}.
 
 \begin{equation}
 	\label{eq:optimization_formulation}
@@ -28,28 +28,18 @@ A mathematical formulation of the three elements that make up the optimization p
 	\end{array}
 \end{equation}
 
-The equations shown in equation \ref{eq:optimization_formulation} is the equations needed for any kind of optimization problems, also MPC problems. A MPC problem differs from a general optimization problem in the cost function, where the optimization horizon is expressed \cite{mpcCAMACHO}:
-
-\begin{equation}
-	\label{eq:mpc_cost}
-	f(x) = J(N_1, N_2, N_3) = \sum_{j=N_1}^{N_2} \delta(j)[\hat{y}(t+j|t)-w(t+j)]^2 + 
-	\sum_{j=1}^{N_u}\lambda(j)[\Delta u(t+j-1)]^2.
-\end{equation}
-
-The first term of equation \ref{eq:mpc_cost} represents the costs from the states of the model, and the second term represents the cost of the control effort. In the first term $\hat{y}$ is the value of the prediction model, which is compared to the desired trajectory $w$. In the second term the changes in control $\Delta u$ is expressed. The changes in control is used instead of the value of the control signal itself, since the steady state of the control signal may not be zero. $\delta$ and $\lambda$ are weighting variables which offers a way of tuning the MPC. The three different $N$ coefficients defines the horizon over which the states and the control effort should be optimized.
-
 
 \section{Offline Intervalwise MPC}
 
 The control problem in this thesis will be solved by using an offline intervalwise MPC to generate an optimal path that will reduce the image error when using a fixed camera to survey a ground track. The generated path is intended to be tracked by the autopilot on the actual UAV that will perform the survey, with th eintention of optimally surveying the ground path.
 
-\subsubsection{Offline MPC} 
+\subsection{Offline MPC} 
 
 An \textit{offline MPC} means that the initial state of the MPC is not a measurement of the UAV states, but rather the result of a simulation of the UAV. This means that the result from the prediction model used in the MPC will act as the physical system, and the outputs of the model will be fed back as inputs to the MPC for every iteration. The equations of the offline MPC are the same as the ones for the online version.
 
 Rawlings \& Mayne \cite{mpcMAYNE} refers to this kind of problem as a \textit{deterministic problem} since there is no uncertainty in the system. A feedback loop in this kind of system is also not needed in principle, since it does not present any new information. They also state that an MPC action for a deterministic system is the same as the action from a \textit{receding horizon control law} (RHC), which is another kind of predictive control.
 
-\subsubsection{Intervalwise MPC}
+\subsection{Intervalwise MPC}
 
 Altough the feedback is not needed to give new information, it eases the computational load of the control problem as optimizing the path over a long time horizon leads to a very complicated problem. For this reason a \textit{intervalwise MPC} will be used. The term intervalwise has been introduced by Kwon \& Han \cite{rhcKWON} to describe a type of receding horizon controller that uses the same strategy.
 
@@ -64,14 +54,34 @@ The principle is the same for an intervalwise MPC. However, instead of only retu
 \end{figure}
 
 
-\section{Least-Squares Problem}
+\section{Objective Function}
+\label{ch:objective_function}
+
+The main objective of the MPC developed in this thesis is to minimize the cross track error between the centre point of the camera footpring and the ground path that is to be observed. This, together with other objectives, will be defined in the objective function of the optimization problem. In this section a way of formulating the objective function, least-squares, will be described, and how it can expressed to function as a MPC.
+
+
+\subsection{Least-Squares Problem}
+
+In many applications the objective function is formulated as a least-square (LSQ) problem. LSQ is a form of regression where the distance from a certain point to a known model is measured [source]. In this case the known model is the reference signals and the distance between the current states and the reference signal is calculated by the LSQ. The general mathematical formulation for LSQ is \cite{nocedalOPTIMIZATION}:
 
 \begin{equation}
 	\label{eq:lsq}
-	f(x) = \frac{1}{2} \sum_{j=1}^m r_j^2(x)
+	f(x) = \frac{1}{2} \sum_{j=1}^m r_j^2(x).
 \end{equation}
 
-In many applications the objective functions is formulated as a least-square (LSQ) problem and the general form of an LSQ is shown in equation \ref{eq:lsq} \cite{nocedalOPTIMIZATION} where $r_j$ is referred to as the residual function, and it is the function that we seek to minimize. This method is often used when problem involves measurements that is expected to follow a model that is known in advance. By formulating this as a LSQ problem and minmizing the resulting optimization problem, it is possible to find parameters that minimizes the difference between the model and the measurements. 
+In equation \ref{eq:lsq} $r_j$ is called the residual function, the distance between the point and the model. In relation to the MPC, the residual function is what the MPC seeks to minimize. The residual function is minimized by finding the parameters $x$ that minmize the residual function $r$.
+
+\subsection{MPC Objective Function}
+
+The equations shown in equation \ref{eq:optimization_formulation} is the equations needed for any kind of optimization problems, also MPC problems. A MPC problem differs from a general optimization problem in the cost function, where the optimization horizon is expressed \cite{mpcCAMACHO}:
+
+\begin{equation}
+	\label{eq:mpc_cost}
+	J(N_1, N_2, N_3) = \sum_{j=N_1}^{N_2} \delta(j)[\hat{y}(t+j|t)-w(t+j)]^2 + 
+	\sum_{j=1}^{N_u}\lambda(j)[\Delta u(t+j-1)]^2.
+\end{equation}
+
+The first term of equation \ref{eq:mpc_cost} represents the costs from the states of the model, and the second term represents the cost of the control effort. In the first term $\hat{y}$ is the value of the prediction model, which is compared to the desired trajectory $w$. In the second term the changes in control $\Delta u$ is expressed. The changes in control is used instead of the value of the control signal itself, since the steady state of the control signal may not be zero. $\delta$ and $\lambda$ are weighting variables which offers a way of tuning the MPC. The three different $N$ coefficients defines the horizon over which the states and the control effort should be optimized.
 
 
 \section{Problem Definition}
