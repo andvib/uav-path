@@ -73,7 +73,7 @@ In equation \ref{eq:lsq} $r_j$ is called the residual function, the distance bet
 
 \subsection{MPC Objective Function}
 
-The equations shown in equation \ref{eq:optimization_formulation} is the equations needed for any kind of optimization problems, also MPC problems. A MPC problem differs from a general optimization problem in the cost function, where the optimization horizon is expressed \cite{mpcCAMACHO}:
+The objective function is where the goal of the optimization is expressed, together with the optimization horizon of the problem. Typical goals of the optimization is to follow a predefined trajectory or reference signal while reducing the control inputs used. This can be expressed as follows \cite{mpcCAMACHO}:
 
 \begin{equation}
 	\label{eq:mpc_cost}
@@ -81,10 +81,20 @@ The equations shown in equation \ref{eq:optimization_formulation} is the equatio
 	\sum_{j=1}^{N_u}\lambda(j)[\Delta u(t+j-1)]^2.
 \end{equation}
 
-The first term of equation \ref{eq:mpc_cost} represents the costs from the states of the model, and the second term represents the cost of the control effort. In the first term $\hat{y}$ is the value of the prediction model, which is compared to the desired trajectory $w$. In the second term the changes in control $\Delta u$ is expressed. The changes in control is used instead of the value of the control signal itself, since the steady state of the control signal may not be zero. $\delta$ and $\lambda$ are weighting variables which offers a way of tuning the MPC. The three different $N$ coefficients defines the horizon over which the states and the control effort should be optimized.
+The first term of equation \ref{eq:mpc_cost} represents the costs from the states of the model, and the second term represents the cost of the control effort. In the first term $\hat{y}$ is the value of the prediction model, which is compared to the desired trajectory $w$. In the second term the changes in control $\Delta u$ is expressed. The changes in control is used instead of the value of the control signal itself, since the steady state of the control signal may not be zero. $\delta$ and $\lambda$ are weighting variables which offers a way of tuning the MPC. The three different $N$ coefficients defines the horizon over which the states and the control effort should be optimized. The optimization horizon for states and control effort can be different, but they will stay the same for this problem.
 
 
 \section{Problem Definition}
+
+\begin{equation}
+	\begin{array}{rrclcl}
+		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{\mathbf{J}_k = \frac{1}{2} \sum_{i=k}^{k+L} [\mathbf{e}(\mathbf{z}_i)^\intercal \mathbf{Q}\mathbf{e}(\mathbf{z}_i)] + \frac{1}{2}\sum_{i=k}^{k=L}[\mathbf{u}_i^\intercal \mathbf{R}\mathbf{u}_i]}\\
+		\textrm{s.t}
+		& \mathbf{x}^{low} \leq & \mathbf{x}_i & \leq \mathbf{x}^{high} \\
+		& \mathbf{u}^{low} \leq & \mathbf{u}_i & \leq \mathbf{u}^{high} \\
+		& \displaystyle \mathbf{\dot{x}} & = & f(\mathbf{x},\mathbf{u})
+	\end{array}
+\end{equation}
 
 The linear decoupled 12 DOF UAV model presented by Beard \& McLain \cite{uavBEARD} will be implemented. This model is associated with the following states and control inputs:
 
