@@ -56,7 +56,7 @@ double** readPathFile(ifstream& file, int path_length){
 }
 
 
-int saveResults(double ** results, int length){
+int saveResults(double ** results, int length, double** path_data, int path_length){
     ofstream file("./../results/results.m");
     if(file.is_open()){
         file << "STATES = [";
@@ -75,6 +75,12 @@ int saveResults(double ** results, int length){
         for( int i = 0 ; i < length ; i++){
             file << results[i][16] << ", " << results[i][17] <<
             ", " << results[i][18] << ", " << results[i][19] << ";\n";
+        }
+        file << "];\n";
+
+        file << "PATH = [";
+        for( int i = 0 ; i < path_length ; i++){
+            file << path_data[i][0] << ", " << path_data[i][1] << ";\n";
         }
         file << "];\n";
 
@@ -98,9 +104,9 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
 
     /* Initalize storage */
     int no_timesteps = horizon_length/timestep;
-    VariablesGrid path(8, 0, horizon_length, no_timesteps+1);
+    VariablesGrid path(9, 0, horizon_length, no_timesteps+1);
 
-    DVector points(8);
+    DVector points(9);
 
 
     /* Initialize variables */
@@ -114,10 +120,12 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
     points(1) = y;    // p_E
     points(2) = speed;// Speed (u)
     points(3) = 150.0;// h
-    points(4) = 0.0;  // d_elevator
-    points(5) = 0.0;  // d_aileron
-    points(6) = 0.0;  // d_rudder
-    points(7) = 0.0;  // d_throttle
+    //points(4) = 0.0;  // psi
+    points(4) = 0.0;  // v
+    points(5) = 0.0;  // d_elevator
+    points(6) = 0.0;  // d_aileron
+    points(7) = 0.0;  // d_rudder
+    points(8) = 0.0;  // d_throttle
     path.setVector(0, points);
 
     int point_found = 0;
@@ -135,6 +143,9 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
                 //cout << "Found point!: " << radius << "\n";
                 points(0) = path_data[i][0];
                 points(1) = path_data[i][1];
+                double dx = path_data[i+200][0]-path_data[i][0];
+                double dy = path_data[i+200][0]-path_data[i][0];                
+                points(4) = atan2(dy, dx);
                 //points(2) = speed;
                 //points(3) = 150.0;
                 path.setVector(step+1, points);

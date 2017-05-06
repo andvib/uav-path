@@ -15,7 +15,7 @@ USING_NAMESPACE_ACADO
 int main(){
 
     /* Read path from file */
-    int path_length = 10001;
+    int path_length = 120001;
     ifstream file("./../path_curved2.txt");
     double **path_data;
     
@@ -23,9 +23,9 @@ int main(){
 
 
     /* Initialize MPC variables */
-    int horizon_length = 8;    // Number of timesteps in the horizon
-    int section_length = 5;    // Number of timesteps in the section
-    double timestep    = 0.3;  // Duration of timestep [s]
+    int horizon_length = 22;    // Number of timesteps in the horizon
+    int section_length = 12;    // Number of timesteps in the section
+    double timestep    = 0.2;  // Duration of timestep [s]
     int no_sections    = 15;     // Number of sections to cover path
 
 
@@ -122,20 +122,20 @@ int main(){
 
 
         //cout << "New Position: " << X0(0) << ", " << X0(1) << "\n";
-        //cout << "Section no.: " << i << "\n";
-
+        cout << "Section no.: " << i << "/" << no_sections << "\n";
+        saveResults(result, (i+1)*section_length, path_data, path_length);
 
         /* Progress bar */
-        if( --countdown == 0){
+        /*if( --countdown == 0){
             percent5++;
             cout << "\rOptimization progress: " << string(percent5, '|')
                                                 << percent5*5 << "%";
             countdown = increment5;
             cout.flush();
-        }
+        }*/
     }
     cout << "\n";
-    saveResults(result, no_sections*section_length);
+    saveResults(result, no_sections*section_length, path_data, path_length);
 
 
 

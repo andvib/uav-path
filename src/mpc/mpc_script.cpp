@@ -283,8 +283,8 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     //_________________________________________________________________
     /* Calculate Camera Position */
 
-    cx = p_N + h*tan(theta)*cos(psi) - h*tan(phi)*sin(psi);
-    cy = p_E + h*tan(theta)*sin(psi) + h*tan(phi)*cos(psi);
+    cx = p_N + h*tan(theta)*cos(psi) - h*tan(-phi)*sin(psi);
+    cy = p_E + h*tan(theta)*sin(psi) + h*tan(-phi)*cos(psi);
 
 
     //_________________________________________________________________
@@ -296,6 +296,8 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     trajectory << cy;
     trajectory << u;
     trajectory << h;
+    //trajectory << psi;
+    trajectory << v;
 
     trajectory << d_elevator;
     trajectory << d_aileron;
@@ -303,17 +305,19 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     trajectory << d_throttle;
 
 
-    DMatrix Q(8,8); Q.setIdentity();
+    DMatrix Q(9,9); Q.setIdentity();
     
-    Q(0,0) = 1;  // p_N
-    Q(1,1) = 1;  // p_E
-    Q(2,2) = 1000;  // u
-    Q(3,3) = 100;  // h
-    
-    Q(4,4) = 10;   // d_elevator
-    Q(5,5) = 1; // d_aileron
-    Q(6,6) = 1;   // d_rudder
-    Q(7,7) = 10;   // d_throttle
+    Q(0,0) = 1e-1;   // p_N
+    Q(1,1) = 1e-1;   // p_E
+    Q(2,2) = 1e1;   // u
+    Q(3,3) = 1e1;   // h
+    //Q(4,4) = 1e0;   // psi    
+    Q(4,4) = 1e0;   // v
+
+    Q(5,5) = 1e0;   // d_elevator
+    Q(6,6) = 1e0;   // d_aileron
+    Q(7,7) = 1e5;   // d_rudder
+    Q(8,8) = 1e0;   // d_throttle
 
     //_________________________________________________________________
     /* Initialize Optimal Control Problem */
@@ -382,12 +386,12 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     OptimizationAlgorithm algorithm( ocp );
 
     //algorithm.set( LEVENBERG_MARQUARDT, 100.0 );
-    algorithm.set( KKT_TOLERANCE, 1e-5 );
+    algorithm.set( KKT_TOLERANCE, 1e-4 );
     //algorithm.set( MAX_NUM_ITERATIONS, 100);
-    //algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
+    algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
 
     algorithm.set(PRINT_COPYRIGHT, BT_FALSE);
-    //algorithm.set(PRINTLEVEL, NONE);
+    algorithm.set(PRINTLEVEL, NONE);
 
     algorithm.solve();
 

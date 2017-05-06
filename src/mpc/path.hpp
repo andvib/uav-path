@@ -8,7 +8,7 @@ using namespace std;
 
 double** readPathFile(ifstream& file, int path_length);
 
-int saveResults(double ** results, int length);
+int saveResults(double ** results, int length, double** path_data, int path_length);
 
 ACADO::VariablesGrid generateHorizon(double** path_data, double timestep,
                                      int horizon_length, int path_length,
