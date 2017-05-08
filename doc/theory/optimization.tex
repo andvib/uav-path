@@ -41,7 +41,7 @@ Rawlings \& Mayne \cite{mpcMAYNE} refers to this kind of problem as a \textit{de
 
 \subsection{Intervalwise MPC}
 
-Altough the feedback is not needed to give new information, it eases the computational load of the control problem as optimizing the path over a long time horizon leads to a very complicated problem. For this reason a \textit{intervalwise MPC} will be used. The term intervalwise has been introduced by Kwon \& Han \cite{rhcKWON} to describe a type of receding horizon controller that uses the same strategy.
+Altough the feedback is not needed to give new information, it eases the computational load of the control problem as optimizing the path over a long time horizon leads to a very complicated problem. For this reason a \textit{intervalwise MPC} will be used. The term intervalwise has been introduced by Kwon \& Han \cite{rhcKWON} to describe a type of receding horizon controller that implements the same strategy.
 
 Commonly a MPC is used to optimize the model over a given \textit{horizon}, where the initial states are given. After the optimization has finished the first timestep of the optimization is returned and applied to the system, before a measurement of the system is performed. The new measurements are given as initial states for the next horizon, and so on.
 
@@ -87,14 +87,57 @@ The first term of equation \ref{eq:mpc_cost} represents the costs from the state
 \section{Problem Definition}
 
 \begin{equation}
+\label{eq:opt}
 	\begin{array}{rrclcl}
-		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{\mathbf{J}_k = \frac{1}{2} \sum_{i=k}^{k+L} [\mathbf{e}(\mathbf{z}_i)^\intercal \mathbf{Q}\mathbf{e}(\mathbf{z}_i)] + \frac{1}{2}\sum_{i=k}^{k=L}[\mathbf{u}_i^\intercal \mathbf{R}\mathbf{u}_i]}\\
+		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{\mathbf{J}_k = \frac{1}{2} \sum_{i=k}^{k+L} [\mathbf{h}(\mathbf{z}_i)^\intercal \mathbf{Q}\mathbf{h}(\mathbf{z}_i)] + \frac{1}{2}\sum_{i=k}^{k=L}[\mathbf{u}_i^\intercal \mathbf{R}\mathbf{u}_i]}\\
 		\textrm{s.t}
 		& \mathbf{x}^{low} \leq & \mathbf{x}_i & \leq \mathbf{x}^{high} \\
 		& \mathbf{u}^{low} \leq & \mathbf{u}_i & \leq \mathbf{u}^{high} \\
 		& \displaystyle \mathbf{\dot{x}} & = & f(\mathbf{x},\mathbf{u})
 	\end{array}
 \end{equation}
+
+The equations for the full optimization problem is shown in equation \ref{eq:opt}. The objective function uses the same setup as shown in equation \ref{eq:mpc_cost}, but on matrix form. Each of the three components of the problem definition will be described in detail in the following sections.
+
+
+\subsection{Objective Function}
+
+\begin{equation}
+	\mathbf{J}_k = \frac{1}{2} \sum_{i=k}^{k+L} [\mathbf{h}(\mathbf{z}_i)^\intercal \mathbf{Q}\mathbf{h}(\mathbf{z}_i)] + \frac{1}{2}\sum_{i=k}^{k=L}[\mathbf{u}_i^\intercal \mathbf{R}\mathbf{u}_i]
+\end{equation}
+
+The first term of the objective function calculates the distance between the UAV states and the reference trajectory. The vector $\mathbf{z}$ is the optimization vector that contains the UAV states that will be included in the optimization problem and $\mathbf{Q}$ is the weighting matrix. The states included in the optimization vector are
+
+\begin{equation}
+	\mathbf{z} =
+	\begin{bmatrix}
+		p_N \hspace{5pt} p_E \hspace{5pt} h \hspace{5pt} u
+	\end{bmatrix} ^\intercal .
+\end{equation}
+
+The function $\mathbf{h}$ is where the distance between the reference signal and the UAV states is calculated. For the the north-east position of the camera centre point is compared to the observation path, while the height $h$ and speed $u$ is compared to a constant reference signal $h_d$ and $u_d$ respectively:
+
+\begin{equation}
+	\mathbf{h} =
+	\begin{bmatrix}
+		p_N - {p_N}_d \\
+		p_E - {p_E}_d \\
+		h - h_d \\
+		u - u_d
+	\end{bmatrix}.
+\end{equation}
+
+In order to reduce the control effort for the optimization problem the rate of change of the control inputs $d\mathbf{u}$ will be minimized. Since all the control rates is to be compared to zero no function is needed. The matrix $\mathbf{R}$ is the weighting matrix. The vector $u$ contains of the four control rates:
+
+\begin{equation}
+	\mathbf{u} = 
+	\begin{bmatrix}
+		d\delta_e \hspace{5pt} d\delta_a \hspace{5pt} d\delta_r \hspace{5pt} d\delta_t
+	\end{bmatrix} ^\intercal .
+\end{equation}
+
+
+\subsection{Prediction Model}
 
 The linear decoupled 12 DOF UAV model presented by Beard \& McLain \cite{uavBEARD} will be implemented. This model is associated with the following states and control inputs:
 
@@ -116,33 +159,7 @@ The linear decoupled 12 DOF UAV model presented by Beard \& McLain \cite{uavBEAR
 \end{equation}
 \end{subequations}
 
-
-\subsection{Prediction Model}
-
 The prediction model relates to the equality constraints of equation \ref{eq:optimization_formulation} in the form of differential equations. Based on the control inputs and current states, $\mathbf{\dot{x}}$ is calculated by the differential equation. The attitude angles will be expressed in Euler angles. Even though quaternions offer more efficient computations and no gimbal lock \cite{uavBEARD}, this optimization will be run on an offboard computer/offline so that computation capacity is not a big issue and the UAV is not going to undergo any extreme maneuvers so that a gimbal lock should never occur.
-
-
-\subsection{Objective Function}
-
-The parametrized path that the camera is to observe will be given as a function $P(k)$ where $k$ is the path paramter, and P is a $2xn$ matrix where the elements represent the position in $p_E$ and $p_N$
-
-\begin{equation}
-	\mathbf{P}(k) = 
-	\begin{bmatrix}
-		\mathbf{p}_E(k) \\ \mathbf{p}_N(k)
-	\end{bmatrix}
-	=
-	\begin{bmatrix}
-		x_0 & x_1 & x_2 & \hdots & x_n \\
-		y_0 & y_1 & y_2 & \hdots & y_n
-	\end{bmatrix}.
-\end{equation}
-
-The residual function $r$ will be defined as the difference between the observation path and the camera centre point $\mathbf{c}^n$ from equation \ref{eq:camera_position_ned}:
-
-\begin{equation}
-	r_j(x) = ||\mathbf{P}(k) - \mathbf{c}^n(x)||.
-\end{equation} 
 
 
 \subsection{Control Law}
