@@ -1,6 +1,27 @@
-\chapter{Optimization Implementation}
+\chapter{MPC Implementation}
 
-The optimization problem presented in chapter \ref{ch:optimization} will be solved using the ACADO toolkit \cite{acadoHOUSKA}. It is written in C++ and allows for programming the continuous time optimization definition using symbolic expressions. In this chapter the implementation in ACADO will be presented, as well as some of the algorithms it uses to solve the optimization problem.
+The offline intervalwise MPC presented in chapter \ref{ch:optimization} will be implemented using C++. It will consist of two main parts: the MPC algorithm and the optimization solver. The optimization solver will be implemented using the ACADO Toolkit \cite{acadoHOUSKA}.
+
+
+\section{MPC}
+
+The task of the MPC part of the implementation is to supply the ACADO implementation with the information needed to perform the optimization, and also control the optimization algorithm so that the correct horizon is calculated, as well as storing the results in the correct order. The algorithm is shown below.
+
+\begin{algorithm}
+\caption{MPC Algorithm}
+\begin{algorithmic}[1]
+\Procedure{MPC}{}
+	\State $\textit{path} \gets \text{path from file}$
+	\State $\textit{pathlen} \gets \text{length of } \textit{path}$
+	\State $\textit{timestep} \gets \text{duration of timestep}$
+	\State $\textit{horizonlen} \gets \text{number of } \textit{timestep} \text{ in horizon}$
+	\State $\textit{intervallen} \gets \text{number of } \textit{timestep} \text{ in interval}$
+	\State $\textit{no sections} \gets \text{number of } \textit{interval} \text{ to cover } \textit{path}$
+	\State $\textit{x0} \gets \text{initial values of model states}$
+	\State $\textit{u0} \gets \text{initial values of control states}$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
 
 
 \section{ACADO toolkit}
@@ -10,12 +31,9 @@ The ACADO Toolkit is an open-source toolkit that supports several different meth
 To solve the optimization problems the toolkit uses many different algorithms. It also has its own Runge-Kutta and BDF integrators to simulate both ODE's (Ordinary Differential Equation) and DAE's (Differential Algebraic Equation). A MATLAB interface is also supplied by the toolkit, but this will not be used for this thesis.
 
 
-\section{Algorithms}
+\subsection{Algorithms}
 
 In this chapter the most important algorithms that are used by the ACADO Toolkit to solve the optimization problem will be briefly presented.
 
 
 \subsection{Runge-Kutta Integrator}
-
-
-\subsection{Solving the LSQ}
