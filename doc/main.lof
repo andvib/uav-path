@@ -1,0 +1,11 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces An illustration showing a UAV that uses a camera fixed to its body to observe a ground path, and how the position of the camera footprint relates to the UAV attitude.}}{2}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Illustration of how the aircraft attitude influence the camera position.}}{7}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Illustration of how the field of view for a pushbroom sensor is calculated.}}{9}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces The figure shows how the path is divided into sections and horizons when using the intervalwise MPC.}}{12}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

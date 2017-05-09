@@ -1,3 +1,21 @@
 \chapter{Optimization Implementation}
 
+The optimization problem presented in chapter \ref{ch:optimization} will be solved using the ACADO toolkit \cite{acadoHOUSKA}. It is written in C++ and allows for programming the continuous time optimization definition using symbolic expressions. In this chapter the implementation in ACADO will be presented, as well as some of the algorithms it uses to solve the optimization problem.
+
+
 \section{ACADO toolkit}
+
+The ACADO Toolkit is an open-source toolkit that supports several different methods for solving optimization problems. The toolkit provides four problem classes that is can solve: Optimal control problems, multi-objective optimization and optimal control problems, parameter and state estimation problems, and model predictive control. Even though this thesis is to solve an MPC problem, the optimal control problem class will be used. This is because the reference trajectory have to be calculated between each step of the MPC, which is easier done outside of the ACADO toolkit.
+
+To solve the optimization problems the toolkit uses many different algorithms. It also has its own Runge-Kutta and BDF integrators to simulate both ODE's (Ordinary Differential Equation) and DAE's (Differential Algebraic Equation). A MATLAB interface is also supplied by the toolkit, but this will not be used for this thesis.
+
+
+\section{Algorithms}
+
+In this chapter the most important algorithms that are used by the ACADO Toolkit to solve the optimization problem will be briefly presented.
+
+
+\subsection{Runge-Kutta Integrator}
+
+
+\subsection{Solving the LSQ}
