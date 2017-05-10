@@ -7,6 +7,7 @@ What is captured by the camera, the camera footprint, when the camera is fixed t
 \section{Linear UAV Model}
 
 
+
 \section{UAV States}
 
 The position of the UAV will be given using the North East Down (NED) coordinate frame, denoted $\{n\}$:
@@ -50,44 +51,44 @@ with corresponding angular velocities:
 \end{equation}
 
 
-\section{Wind and Airspeed}
-Wind will be introduced to the vehicle in order to test how the system withstands disturbances. Since the camera footprint is dependent only on the attitude angles of the aircraft and not the course of the aircraft, the wind will only affect the navigation of the UAV. Wind speed is given in the $\{n\}$ frame as \cite{uavBEARD}
+%\section{Wind and Airspeed}
+%Wind will be introduced to the vehicle in order to test how the system withstands disturbances. Since the camera footprint is dependent only on the attitude angles of the aircraft and not the course of the aircraft, the wind will only affect the navigation of the UAV. Wind speed is given in the $\{n\}$ frame as \cite{uavBEARD}
 
-\begin{equation}
-	\mathbf{V}^n_w =
-	\begin{bmatrix}
-		w_n \\ w_e \\ w_d
-	\end{bmatrix},
-\end{equation}
+%\begin{equation}
+%	\mathbf{V}^n_w =
+%	\begin{bmatrix}
+%		w_n \\ w_e \\ w_d
+%	\end{bmatrix},
+%\end{equation}
 
-and the air speed $\mathbf{V}_a$ of the aircraft is given by the wind speed $\mathbf{V}_w$ and ground speed $\mathbf{V}_g$ as
+%and the air speed $\mathbf{V}_a$ of the aircraft is given by the wind speed $\mathbf{V}_w$ and ground speed $\mathbf{V}_g$ as
 
-\begin{equation}
-\begin{split}
-	\mathbf{V}_a & = \mathbf{V}_g - \mathbf{V}_w\\
-	\begin{bmatrix}
-		u_r \\ v_r \\ w_r
-	\end{bmatrix}
-	& =
-	\begin{bmatrix}
-		u \\ v \\ w
-	\end{bmatrix}
-	- \mathbf{R}_n^b
-	\begin{bmatrix}
-		w_n \\ w_e \\ w_d
-	\end{bmatrix}
-\end{split}
-\end{equation}
+%\begin{equation}
+%\begin{split}
+%	\mathbf{V}_a & = \mathbf{V}_g - \mathbf{V}_w\\
+%	\begin{bmatrix}
+%		u_r \\ v_r \\ w_r
+%	\end{bmatrix}
+%	& =
+%	\begin{bmatrix}
+%		u \\ v \\ w
+%	\end{bmatrix}
+%	- \mathbf{R}_n^b
+%	\begin{bmatrix}
+%		w_n \\ w_e \\ w_d
+%	\end{bmatrix}
+%\end{split}
+%\end{equation}
 
-where $\mathbf{R}_n^b$ is the rotation matrix between the NED frame $\{n\}$ and the body frame $\{b\}$. 
+%where $\mathbf{R}_n^b$ is the rotation matrix between the NED frame $\{n\}$ and the body frame $\{b\}$. 
 
 %% Is the last part really needed?
 
-When in the presence of wind, the heading of the UAV isn't necessarily the direction that the UAV is moving. Wind will introduce a crab angle $\chi_c$ that together with the heading $\psi$ gives the course angle $\chi$:
-
-\begin{equation}
-	\chi = \psi + \chi_c.
-\end{equation}
+%When in the presence of wind, the heading of the UAV isn't necessarily the direction that the UAV is moving. Wind will introduce a crab angle $\chi_c$ that together with the heading $\psi$ gives the course angle $\chi$:
+%
+%\begin{equation}
+%	\chi = \psi + \chi_c.
+%\end{equation}
 
 
 \section{Camera Footprint}
