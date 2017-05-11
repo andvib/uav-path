@@ -1,0 +1,111 @@
+\section{Problem Definition}
+
+\begin{equation}
+\label{eq:opt}
+	\begin{array}{rrclcl}
+		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{\mathbf{J}_k = \frac{1}{2} \sum_{i=k}^{k+L} [\mathbf{h}(\mathbf{z}_i)^\intercal \mathbf{Q}\mathbf{h}(\mathbf{z}_i)] + \frac{1}{2}\sum_{i=k}^{k=L}[\mathbf{u}_i^\intercal \mathbf{R}\mathbf{u}_i]}\\
+		\textrm{s.t}
+		& \mathbf{x}^{low} \leq & \mathbf{x}_i & \leq \mathbf{x}^{high} \\
+		& \mathbf{u}^{low} \leq & \mathbf{u}_i & \leq \mathbf{u}^{high} \\
+		& \displaystyle \mathbf{\dot{x}} & = & f(\mathbf{x},\mathbf{u})
+	\end{array}
+\end{equation}
+
+The equations for the full optimization problem is shown in equation \ref{eq:opt}. The objective function uses the same setup as shown in equation \ref{eq:mpc_cost}, but on matrix form. Each of the three components of the problem definition will be described in detail in the following sections.
+
+
+\subsection{Objective Function}
+
+\begin{equation}
+	\label{eq:objective_function}
+	\mathbf{J}_k = \frac{1}{2} \sum_{i=k}^{k+L} [\mathbf{h}(\mathbf{z}_i)^\intercal \mathbf{Q}\mathbf{h}(\mathbf{z}_i)] + \frac{1}{2}\sum_{i=k}^{k=L}[\Delta\mathbf{u}_i^\intercal \mathbf{R}\Delta\mathbf{u}_i]
+\end{equation}
+
+The first term of the objective function calculates the distance between the UAV states and the reference trajectory. The vector $\mathbf{z}$ is the optimization vector that contains the UAV states that will be included in the optimization problem and $\mathbf{Q}$ is the weighting matrix. The states included in the optimization vector are
+
+\begin{equation}
+	\mathbf{z} =
+	\begin{bmatrix}
+		p_N \hspace{5pt} p_E \hspace{5pt} h \hspace{5pt} u
+	\end{bmatrix} ^\intercal .
+\end{equation}
+
+The function $\mathbf{h}$ is where the distance between the reference signal and the UAV states is calculated. For the the north-east position of the camera centre point is compared to the observation path, while the height $h$ and speed $u$ is compared to a constant reference signal $h_d$ and $u_d$ respectively:
+
+\begin{equation}
+	\mathbf{h} =
+	\begin{bmatrix}
+		p_N - {p_N}_d \\
+		p_E - {p_E}_d \\
+		h - h_d \\
+		u - u_d
+	\end{bmatrix}.
+\end{equation}
+
+In order to reduce the control effort for the optimization problem the rate of change of the control inputs $d\mathbf{u}$ will be minimized. Since all the control rates is to be compared to zero no function is needed. The matrix $\mathbf{R}$ is the weighting matrix. The vector $u$ contains of the four control rates:
+
+\begin{equation}
+	\label{eq:control_rates}
+	\Delta\mathbf{u} = 
+	\begin{bmatrix}
+		\Delta\delta_e \hspace{5pt} \Delta\delta_a \hspace{5pt} \Delta\delta_r \hspace{5pt} \Delta\delta_t
+	\end{bmatrix} ^\intercal .
+\end{equation}
+
+
+\subsection{Prediction Model}
+
+The linear decoupled 6 DOF UAV model presented in chapter \ref{ch:kinematics} will be used as the prediction model for the MPC. The model is associated with the following states and control inputs:
+
+\begin{subequations}
+\begin{equation}
+	\label{eq:uav_states}
+	\mathbf{x} =
+	\begin{bmatrix}
+		p_N \hspace{5pt} p_E \hspace{5pt} h \hspace{5pt}
+		u \hspace{5pt} v \hspace{5pt} w \hspace{5pt}
+		\phi \hspace{5pt} \theta \hspace{5pt} \psi \hspace{5pt}
+		p \hspace{5pt} q \hspace{5pt} r
+	\end{bmatrix}^\intercal
+\end{equation}
+\begin{equation}
+	\mathbf{u} =
+	\begin{bmatrix}
+		\delta_e \hspace{5pt} \delta_a \hspace{5pt} \delta_r \hspace{5pt} \delta_t
+	\end{bmatrix}^\intercal.
+\end{equation}
+\end{subequations}
+
+The prediction model relates to the equality constraints of equation \ref{eq:optimization_formulation} in the form of differential equations. As explained in the previous chapter the control rates $\Delta\mathbf{u}$ shown in equation \ref{eq:control_rates}, which means that by the optimization solver $\Delta\mathbf{u}$ will be handled as the control input. The control surfaces $\mathbf{u}$ are calculated from the rates $\Delta\mathbf{u}$ through integration:
+
+\begin{equation}
+	\mathbf{\dot{u}} = \Delta\mathbf{u}.
+\end{equation}
+
+As shown in equation \ref{eq:uav_states}, the attitude angles of the UAV will be given by the Euler angles $\phi$, $\theta$ and $\psi$. Even though quaternions offer more efficient computations and no gimbal lock \cite{uavBEARD}, this optimization will be run offline before the flight takes place so that computation capacity is not a big issue. In addition the UAV will not by performing any high-angle maneuvers so that a gimabl lock should never occur.
+
+
+\subsection{Control Law}
+
+\begin{subequations}
+\begin{equation}
+	\label{eq:state_constraints}
+	\mathbf{x}^{\text{low}} \leq \mathbf{x} \leq \mathbf{x}^{\text{high}}
+\end{equation}
+\begin{equation}
+	\label{eq:control_constraint}
+	\mathbf{u}^{\text{low}} \leq \mathbf{u} \leq \mathbf{u}^{\text{high}}
+\end{equation}
+\begin{equation}
+	\label{eq:control_rate_constraint}
+	\Delta\mathbf{u}^{\text{low}} \leq \Delta\mathbf{u} \leq \Delta\mathbf{u}^{\text{high}}
+\end{equation}
+\end{subequations}
+
+The control law for the optimization problem consists of inequality constraints put on the UAV states and on the control signals. When constraints are put on the optimization problem the number of feasible solutions is reduced, so if too many constraints are put on the problem it will make the problem more difficult than necessary.
+
+In an attempt to reduce the complexity of the optimization problem, the constraints put on UAV states shown in equation \ref{eq:state_constraints} will not be included to begin with. This is because it is assumed that the "easiest" way to fly the aircraft is the "correct" way. However, if this proves wrong during testing, constraints on some or all of the states may be included.
+
+The control states, shown in equation \ref{eq:control_constraint}, are restricted by the physical maximum value of deflection. Since these constraints directly relates to physical values they are needed in order to get a meaningful optimization of the aircraft.
+
+The constraints put on the control rates of the control surfaces and throttle shown in equation \ref{eq:control_rate_constraint} also relate to a physical value, and are therefore needed to get a meaningful simulation as well. It is worth noting that $\Delta\mathbf{u}$ is also present in the objective function shown in equation \ref{eq:objective_function}, with a reference signal of zero. This means that the problem already seeks to minimize the values of $\Delta\mathbf{u}$ so that the constraints may be unnecessary.

@@ -5,6 +5,7 @@
 *.toc
 *.blg
 *eps-converted-to.pdf
+*.lof
 
 ## Matlab
 *.asv
