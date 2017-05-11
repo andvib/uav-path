@@ -141,10 +141,11 @@ In order to reduce the control effort for the optimization problem the rate of c
 
 \subsection{Prediction Model}
 
-The linear decoupled 12 DOF UAV model presented in chapter \ref{ch:kinematics} will be used as the prediction model for the MPC. The model is associated with the following states and control inputs:
+The linear decoupled 6 DOF UAV model presented in chapter \ref{ch:kinematics} will be used as the prediction model for the MPC. The model is associated with the following states and control inputs:
 
 \begin{subequations}
 \begin{equation}
+	\label{eq:uav_states}
 	\mathbf{x} =
 	\begin{bmatrix}
 		p_N \hspace{5pt} p_E \hspace{5pt} h \hspace{5pt}
@@ -167,7 +168,7 @@ The prediction model relates to the equality constraints of equation \ref{eq:opt
 	\mathbf{\dot{u}} = \Delta\mathbf{u}.
 \end{equation}
 
-Based on the control inputs and current states, $\mathbf{\dot{x}}$ is calculated by the differential equation. The attitude angles will be expressed in Euler angles. Even though quaternions offer more efficient computations and no gimbal lock \cite{uavBEARD}, this optimization will be run on an offboard computer/offline so that computation capacity is not a big issue and the UAV is not going to undergo any extreme maneuvers so that a gimbal lock should never occur.
+As shown in equation \ref{eq:uav_states}, the attitude angles of the UAV will be given by the Euler angles $\phi$, $\theta$ and $\psi$. Even though quaternions offer more efficient computations and no gimbal lock \cite{uavBEARD}, this optimization will be run offline before the flight takes place so that computation capacity is not a big issue. In addition the UAV will not by performing any high-angle maneuvers so that a gimabl lock should never occur.
 
 
 \subsection{Control Law}
