@@ -35,8 +35,21 @@ The task of the MPC part of the implementation is to supply the ACADO implementa
 	\State $\textit{no timesteps} \gets \textit{horizonlen}/\textit{timestep}$
 	\State $\textit{distance} \gets \textit{speed} * \textit{timestep}$
 	\For{each \textit{no timesteps}}
-		Find point on \textit{path} with the given \textit{distance} away from current \textit{$x_{pos}$} and \textit{$y_{pos}$}
+		\State Find point on \textit{path} with the given \textit{distance} away from current \textit{$x_{pos}$} and \textit{$y_{pos}$}
 	\EndFor
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+
+
+\subsection{Path (Working Title)}
+
+The ground path that is to observed is assumed to be \textit{time independent}, meaning that it does not matter when a section of the path is captured by the sensor. However, the function that minimizes a least-squares objective function that is provided with the ACADO toolkit requires that the path is given as values with associated time points.
+
+In order to meet this requirement a time dependent path will be generated at the beginning of every iteration of the MPC. This will be done by making the assumption that the UAV will maintain its reference speed throghout the horizon. With this assumption it is simple to calculate the distance the UAV will travel between every timestep, and based on this distance the desired position for the UAV at the next timestep may be calculated. Since the horizon is in the order of a few seconds and the predicted path is updated every iteration, this assumption will not lead to big errors. The principle behind the calculation is shown in figure \ref{fig:predict_path}.
+
+\begin{figure}
+	\import{/}{predict_path_fig.tex}
+	\caption{CAPTION}
+	\label{fig:predict_path}
+\end{figure}
