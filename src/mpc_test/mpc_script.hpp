@@ -1,3 +1,6 @@
 #include <acado_optimal_control.hpp>
 
-ACADO::DMatrix optimize_path(ACADO::VariablesGrid path, double xstart, double ystart, double dxstart, double dystart);
+ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
+                             ACADO::DVector X0,
+                             ACADO::DVector U0,
+                             ACADO::DVector DU0);

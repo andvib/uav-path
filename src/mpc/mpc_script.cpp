@@ -7,7 +7,8 @@
 
 ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
                              ACADO::DVector X0,
-                             ACADO::DVector U0){
+                             ACADO::DVector U0,
+                             ACADO::DVector DU0){
 
     USING_NAMESPACE_ACADO
 
@@ -64,23 +65,23 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     const double w_trim =  0.0;
 
     const double phi_trim   = 0.0;
-    const double theta_trim = -0.12;
+    const double theta_trim = 0.066;
     const double psi_trim   = 0.0;
 
     const double p_trim = 0.0;
     const double q_trim = 0.0;
     const double r_trim = 0.0;
 
-    const double elevator_trim = 0.0594;
+    const double elevator_trim = -0.15;
     const double aileron_trim  = 0.0;
     const double rudder_trim   = 0.0;
-    const double throttle_trim = 0.9;
+    const double throttle_trim = 0.1;
 
     const double Va_trim    = 25.0;
     const double beta_trim  =  0.0;
     const double alpha_trim =  0.0;
 
-
+    const double h_trim = 150.0;
 
     //_________________________________________________________________
 
@@ -210,13 +211,17 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     //_________________________________________________________________
     /* Position Differential Equations */
 
-    p_N_dot = cos(theta)*cos(psi)*u \
-            + (sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi))*v \
-            + (cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi))*w;
+    p_N_dot = cos(theta+theta_trim)*cos(psi+psi_trim)*(u+u_trim) \
+            + (sin(phi+phi_trim)*sin(theta+theta_trim)*cos(psi+psi_trim) \
+            - cos(phi+phi_trim)*sin(psi+psi_trim))*(v+v_trim) \
+            + (cos(phi+phi_trim)*sin(theta+theta_trim)*cos(psi+psi_trim) \
+            + sin(phi+phi_trim)*sin(psi+psi_trim))*(w+w_trim);
 	
-    p_E_dot = cos(theta)*sin(psi)*u \
-            + (sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi))*v \
-            + (cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi))*w;
+    p_E_dot = cos(theta+theta_trim)*sin(psi+psi_trim)*(u+u_trim) \
+            + (sin(phi+phi_trim)*sin(theta+theta_trim)*sin(psi+psi_trim) \
+            + cos(phi+phi_trim)*cos(psi+psi_trim))*(v+v_trim) \
+            + (cos(phi+phi_trim)*sin(theta+theta_trim)*sin(psi+psi_trim) \
+            - sin(phi+phi_trim)*cos(psi+psi_trim))*(w+w_trim);
 
     p_D_dot = -sin(theta)*u + sin(phi)*cos(theta)*v + cos(phi)*cos(theta)*w;
 
@@ -283,8 +288,10 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     //_________________________________________________________________
     /* Calculate Camera Position */
 
-    cx = p_N + h*tan(theta)*cos(psi) - h*tan(-phi)*sin(psi);
-    cy = p_E + h*tan(theta)*sin(psi) + h*tan(-phi)*cos(psi);
+    cx = p_N + (h+h_trim)*tan(theta+theta_trim)*cos(psi+psi_trim)
+             - (h+h_trim)*tan(-phi+phi_trim)*sin(psi+psi_trim);
+    cy = p_E + (h+h_trim)*tan(theta+theta_trim)*sin(psi+psi_trim)
+             + (h+h_trim)*tan(-phi+phi_trim)*cos(psi+psi_trim);
 
 
     //_________________________________________________________________
@@ -296,8 +303,6 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     trajectory << cy;
     trajectory << u;
     trajectory << h;
-    //trajectory << psi;
-    trajectory << v;
 
     trajectory << d_elevator;
     trajectory << d_aileron;
@@ -305,19 +310,18 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     trajectory << d_throttle;
 
 
-    DMatrix Q(9,9); Q.setIdentity();
+    DMatrix Q(8,8); Q.setIdentity();
     
     Q(0,0) = 1e-1;   // p_N
     Q(1,1) = 1e-1;   // p_E
     Q(2,2) = 1e1;   // u
     Q(3,3) = 1e1;   // h
-    //Q(4,4) = 1e0;   // psi    
-    Q(4,4) = 1e0;   // v
 
-    Q(5,5) = 1e0;   // d_elevator
-    Q(6,6) = 1e0;   // d_aileron
-    Q(7,7) = 1e5;   // d_rudder
-    Q(8,8) = 1e0;   // d_throttle
+    Q(4,4) = 1e0;   // d_elevator
+    Q(5,5) = 1e-2;   // d_aileron
+    Q(6,6) = 1e6;   // d_rudder
+    Q(7,7) = 1e0;   // d_throttle
+
 
     //_________________________________________________________________
     /* Initialize Optimal Control Problem */
@@ -353,17 +357,15 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     ocp.subjectTo( AT_START,   rudder == U0(2) );
     ocp.subjectTo( AT_START, throttle == U0(3)  );
 
-    ocp.subjectTo( AT_START, d_elevator == 0.0 );
-    ocp.subjectTo( AT_START, d_aileron  == 0.0 );
-    ocp.subjectTo( AT_START, d_rudder   == 0.0 );
-    ocp.subjectTo( AT_START, d_throttle == 0.0 );
+    ocp.subjectTo( AT_START, d_elevator == DU0(0) );
+    ocp.subjectTo( AT_START, d_aileron  == DU0(1) );
+    ocp.subjectTo( AT_START, d_rudder   == DU0(2) );
+    ocp.subjectTo( AT_START, d_throttle == DU0(3) );
 
 
 
     //_________________________________________________________________
     /* Constraints */
-
-    ocp.subjectTo( 0 <= u );
 
     ocp.subjectTo( -PI/2 <= theta <= PI/2 );
     ocp.subjectTo( -PI/2 <= phi <= PI/2 );
@@ -387,11 +389,16 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
 
     //algorithm.set( LEVENBERG_MARQUARDT, 100.0 );
     algorithm.set( KKT_TOLERANCE, 1e-4 );
-    //algorithm.set( MAX_NUM_ITERATIONS, 100);
+    algorithm.set( MAX_NUM_ITERATIONS, 300);
     algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
 
+    //algorithm.set( LEVENBERG_MARQUARDT, 100.0 );
+    //algorithm.set( HESSIAN_APPROXIMATION, EXACT_HESSIAN );
+    //algorithm.set( HESSIAN_PROJECTION_FACTOR, 100.0 );
+    //algorithm.set( DYNAMIC_HESSIAN_APPROXIMATION, GAUSS_NEWTON );
+
     algorithm.set(PRINT_COPYRIGHT, BT_FALSE);
-    algorithm.set(PRINTLEVEL, NONE);
+    //algorithm.set(PRINTLEVEL, NONE);
 
     algorithm.solve();
 

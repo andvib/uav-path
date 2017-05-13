@@ -2,4 +2,5 @@
 
 ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
                              ACADO::DVector X0,
-                             ACADO::DVector U0);
+                             ACADO::DVector U0,
+                             ACADO::DVector DU0);

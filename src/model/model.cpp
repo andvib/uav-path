@@ -72,7 +72,7 @@ int main(){
     const double q_trim = 0.0;
     const double r_trim = 0.0;
 
-    const double elevator_trim = 0.0594;
+    const double elevator_trim = -0.0594;
     const double aileron_trim  = 0.0;
     const double rudder_trim   = 0.0;
     const double throttle_trim = 0.9;
@@ -224,13 +224,17 @@ int main(){
     //_________________________________________________________________
     /* Position Differential Equations */
 
-    p_N_dot = cos(theta)*cos(psi)*u \
-            + (sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi))*v \
-            + (cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi))*w;
+    p_N_dot = cos(theta+theta_trim)*cos(psi+psi_trim)*(u+u_trim) \
+            + (sin(phi+phi_trim)*sin(theta+theta_trim)*cos(psi+psi_trim) \
+            - cos(phi+phi_trim)*sin(psi+psi_trim))*(v+v_trim) \
+            + (cos(phi+phi_trim)*sin(theta+theta_trim)*cos(psi+psi_trim) \
+            + sin(phi+phi_trim)*sin(psi+psi_trim))*(w+w_trim);
 	
-    p_E_dot = cos(theta)*sin(psi)*u \
-            + (sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi))*v \
-            + (cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi))*w;
+    p_E_dot = cos(theta+theta_trim)*sin(psi+psi_trim)*(u+u_trim) \
+            + (sin(phi+phi_trim)*sin(theta+theta_trim)*sin(psi+psi_trim) \
+            + cos(phi+phi_trim)*cos(psi+psi_trim))*(v+v_trim) \
+            + (cos(phi+phi_trim)*sin(theta+theta_trim)*sin(psi+psi_trim) \
+            - sin(phi+phi_trim)*cos(psi+psi_trim))*(w+w_trim);
 
     p_D_dot = -sin(theta)*u + sin(phi)*cos(theta)*v + cos(phi)*cos(theta)*w;
 
@@ -297,7 +301,7 @@ int main(){
     //_________________________________________________________________
     /* Least Squares Function */
 
-    Function cost; const int no = 7;
+    Function cost; const int no = 6;
     DMatrix Q(no,no); Q.setIdentity();
     DVector R(no);   R.setAll(0.0);
 
@@ -306,8 +310,8 @@ int main(){
     cost << d_rudder;
     cost << d_throttle;
 
-    cost << u; R(4) = 25;  Q(4,4) = 1;
-    cost << h; R(5) = 150; Q(5,5) = 1;
+    cost << u; R(4) = 0.0;  Q(4,4) = 1;
+    cost << h; R(5) = 0.0; Q(5,5) = 1;
     //cost << psi; R(6) = 0.0;
 
 
@@ -315,7 +319,7 @@ int main(){
     //_________________________________________________________________
     /* Path */
 
-    VariablesGrid path;
+    /*VariablesGrid path;
     path.read( "./../path.txt" );
     cout << "Path to follow: \n";
     path.print();
@@ -347,7 +351,7 @@ int main(){
     REnd(0) = 187.5;
     REnd(1) = 62.5;
     REnd(2) = 150.0;
-    REnd(3) = 25.0;
+    REnd(3) = 25.0;*/
 
     //_________________________________________________________________
     /* Configure OCP */
@@ -356,12 +360,12 @@ int main(){
     const double t_end   = 10.0;
     const int    samples = 10*(t_end-t_start);
 
-    OCP ocp( path.getTimePoints() );//t_start, t_end, samples );
+    OCP ocp( t_start, t_end, samples );//t_start, t_end, samples );
     
-    //ocp.minimizeLSQ( Q, cost, R );
+    ocp.minimizeLSQ( Q, cost, R );
     //ocp.minimizeLSQEndTerm( QEnd, end, REnd );
 
-    ocp.minimizeLSQ( Q2, trajectory, path );
+    //ocp.minimizeLSQ( Q2, trajectory, path );
 
     ocp.subjectTo( f );
 
@@ -372,14 +376,14 @@ int main(){
     
     ocp.subjectTo( AT_START, p_N == 0   );
     ocp.subjectTo( AT_START, p_E == 0   );
-    ocp.subjectTo( AT_START,   h == 150 );
+    ocp.subjectTo( AT_START,   h == 0.0 );
 
-    ocp.subjectTo( AT_START, u == 25.0 );
+    ocp.subjectTo( AT_START, u == 0.0 );
     ocp.subjectTo( AT_START, v == 0.0 );
     ocp.subjectTo( AT_START, w == 0.0 );
     
     ocp.subjectTo( AT_START, phi   == 0.0   );
-    ocp.subjectTo( AT_START, theta == 0.066 );
+    //ocp.subjectTo( AT_START, theta == 0.066 );
     ocp.subjectTo( AT_START, psi   == 0.0   );
 
     ocp.subjectTo( AT_START, p == 0 );

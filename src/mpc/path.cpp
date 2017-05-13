@@ -1,5 +1,12 @@
 #include <acado_optimal_control.hpp>
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cmath>
+
+#include <stdio.h>
+
 using namespace std;
 USING_NAMESPACE_ACADO
 
@@ -33,7 +40,6 @@ double** readPathFile(ifstream& file, int path_length){
                         " the x-value in the path file!\n";            
             break;
         }
-        //cout << "X: " << x_value << "\n";
         
         stringstream x_convertor(x_value);
         x_convertor >> path_data[row][0];
@@ -45,8 +51,6 @@ double** readPathFile(ifstream& file, int path_length){
                         " the y-value in the path file!\n";            
             break;
         }*/
-
-        //cout << "y: " << y_value << "\n";
 
         stringstream y_convertor(y_value);
         y_convertor >> path_data[row][1];
@@ -73,8 +77,8 @@ int saveResults(double ** results, int length, double** path_data, int path_leng
 
         file << "CONTROLS = [";
         for( int i = 0 ; i < length ; i++){
-            file << results[i][16] << ", " << results[i][17] <<
-            ", " << results[i][18] << ", " << results[i][19] << ";\n";
+            file << results[i][17] << ", " << results[i][18] <<
+            ", " << results[i][19] << ", " << results[i][20] << ";\n";
         }
         file << "];\n";
 
@@ -104,10 +108,10 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
 
     /* Initalize storage */
     int no_timesteps = horizon_length/timestep;
-    VariablesGrid path(9, 0, horizon_length, no_timesteps+1);
-
-    DVector points(9);
-
+    VariablesGrid path(8, 0, horizon_length, no_timesteps+1);
+    
+    DVector points(8);
+    cout << "Grids initalized\n";
 
     /* Initialize variables */
     double  x =  x_start;
@@ -118,36 +122,31 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
 
     points(0) = x;    // p_N
     points(1) = y;    // p_E
-    points(2) = speed;// Speed (u)
-    points(3) = 150.0;// h
-    //points(4) = 0.0;  // psi
-    points(4) = 0.0;  // v
-    points(5) = 0.0;  // d_elevator
-    points(6) = 0.0;  // d_aileron
-    points(7) = 0.0;  // d_rudder
-    points(8) = 0.0;  // d_throttle
+    points(2) = 0.0;  // Speed (u)
+    points(3) = 0.0;  // h
+    points(4) = 0.0;  // d_elevator
+    points(5) = 0.0;  // d_aileron
+    points(6) = 0.0;  // d_rudder
+    points(7) = 0.0;  // d_throttle
     path.setVector(0, points);
 
     int point_found = 0;
-
+    cout << "Starting for loop\n";
     /* Generate path */
     for( int step = 0 ; step < no_timesteps ; step++ ){
         for( int i = path_length-1 ; i >= 0 ; --i ){            
             double x_dist = path_data[i][0] - x;
             double y_dist = path_data[i][1] - y;
             double radius = sqrt(x_dist*x_dist + y_dist*y_dist);
-            //cout << "Radius: " << radius << "\n";
+            
             if( (radius > distance-0.08) && (radius < distance+0.08)){
+
                 x = path_data[i][0];
                 y = path_data[i][1];
-                //cout << "Found point!: " << radius << "\n";
+                
                 points(0) = path_data[i][0];
                 points(1) = path_data[i][1];
-                double dx = path_data[i+200][0]-path_data[i][0];
-                double dy = path_data[i+200][0]-path_data[i][0];                
-                points(4) = atan2(dy, dx);
-                //points(2) = speed;
-                //points(3) = 150.0;
+                
                 path.setVector(step+1, points);
                 point_found = 1;
                 break;
@@ -162,14 +161,19 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
 }
 
 
-int findClosestPoint(int x, int y, double** path_data, int length){
+int findClosestPoint(double x, double y, double h,
+                     double phi, double theta, double psi,
+                     double** path_data, int length){
 
     int closest_index = 0;
     int min_distance  = 10000;
 
+    double x_pos = x + h*tan(theta)*cos(phi) - h*tan(-phi)*sin(psi);
+    double y_pos = y + h*tan(theta)*sin(psi) + h*tan(-phi)*cos(psi);
+
     for( int i = 0 ; i < length ; i++ ){
-        double x_dist = path_data[i][0] - x;
-        double y_dist = path_data[i][1] - y;
+        double x_dist = path_data[i][0] - x_pos;
+        double y_dist = path_data[i][1] - y_pos;
         double distance = sqrt(x_dist*x_dist + y_dist*y_dist);
 
         if( distance < min_distance){

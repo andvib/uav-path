@@ -26,14 +26,14 @@ plot(c_n_1(2,:), c_n_1(1,:), 'k');
 plot(c_n_2(2,:), c_n_2(1,:), 'k');
 plot(PATH(:,2), PATH(:,1));
 title("POSITION");
-xlim([-100 500]);
-ylim([0 600]);
+xlim([-100 800]);
+ylim([0 900]);
 
-figure(2);
-grid on;
-hold on;
-plot(STATES(:,1),STATES(:,4));
-title("HEIGHT");
+%figure(2);
+%grid on;
+%hold on;
+%plot(STATES(:,1),STATES(:,4));
+%title("HEIGHT");
 
 %figure(3);
 %grid on;
@@ -69,7 +69,6 @@ legend("\delta_e", "\delta_a", "\delta_r", "\delta_t");
 %plot(STATES(:,1), CONTROLS(:,1:4));
 %title("CONTROL");
 %legend("d\delta_e", "d\delta_a", "d\delta_r", "d\delta_t");
-%ylim([-10 10]);
 
 %j = 1;
 %for i = (1:100:length(PATH(:,1))-100)
