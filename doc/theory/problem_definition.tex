@@ -3,54 +3,18 @@
 \begin{equation}
 \label{eq:opt}
 	\begin{array}{rrclcl}
-		\displaystyle \min_{\mathbf{z}} & \multicolumn{3}{l}{\mathbf{J}_k = \frac{1}{2} \sum_{i=k}^{k+L} [\mathbf{h}(\mathbf{z}_i)^\intercal \mathbf{Q}\mathbf{h}(\mathbf{z}_i)] + \frac{1}{2}\sum_{i=k}^{k=L}[\mathbf{u}_i^\intercal \mathbf{R}\mathbf{u}_i]}\\
+		\displaystyle \min_{\mathbf{x}, \mathbf{u}} & \multicolumn{3}{l}{\mathbf{J}_{i+k} = \frac{1}{2} \sum_{j=i}^{j+L} [(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j})^\intercal \mathbf{Q}(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j}) + (\Delta\mathbf{u}_j)^\intercal \mathbf{R}(\Delta\mathbf{u}_j)]}\\
 		\textrm{s.t}
-		& \mathbf{x}^{low} \leq & \mathbf{x}_i & \leq \mathbf{x}^{high} \\
-		& \mathbf{u}^{low} \leq & \mathbf{u}_i & \leq \mathbf{u}^{high} \\
-		& \displaystyle \mathbf{\dot{x}} & = & f(\mathbf{x},\mathbf{u})
+		& \mathbf{x}^{low} \leq & \mathbf{x}_j & \leq \mathbf{x}^{high} \\
+		& \mathbf{u}^{low} \leq & \mathbf{u}_j & \leq \mathbf{u}^{high} \\
+		& \Delta\mathbf{u}^{low} \leq & \Delta\mathbf{u}_j & \leq \Delta\mathbf{u}^{high} \\
+		&  \mathbf{\dot{x}}_{j+1} &= & f(\mathbf{x}_j,\mathbf{u}_j) 
 	\end{array}
 \end{equation}
 
 The equations for the full optimization problem is shown in equation \ref{eq:opt}. The objective function uses the same setup as shown in equation \ref{eq:mpc_cost}, but on matrix form. Each of the three components of the problem definition will be described in detail in the following sections.
 
-
-\subsection{Objective Function}
-
-\begin{equation}
-	\label{eq:objective_function}
-	\mathbf{J}_k = \frac{1}{2} \sum_{i=k}^{k+L} [\mathbf{h}(\mathbf{z}_i)^\intercal \mathbf{Q}\mathbf{h}(\mathbf{z}_i)] + \frac{1}{2}\sum_{i=k}^{k=L}[\Delta\mathbf{u}_i^\intercal \mathbf{R}\Delta\mathbf{u}_i]
-\end{equation}
-
-The first term of the objective function calculates the distance between the UAV states and the reference trajectory. The vector $\mathbf{z}$ is the optimization vector that contains the UAV states that will be included in the optimization problem and $\mathbf{Q}$ is the weighting matrix. The states included in the optimization vector are
-
-\begin{equation}
-	\mathbf{z} =
-	\begin{bmatrix}
-		p_N \hspace{5pt} p_E \hspace{5pt} h \hspace{5pt} u
-	\end{bmatrix} ^\intercal .
-\end{equation}
-
-The function $\mathbf{h}$ is where the distance between the reference signal and the UAV states is calculated. For the the north-east position of the camera centre point is compared to the observation path, while the height $h$ and speed $u$ is compared to a constant reference signal $h_d$ and $u_d$ respectively:
-
-\begin{equation}
-	\mathbf{h} =
-	\begin{bmatrix}
-		p_N - {p_N}_d \\
-		p_E - {p_E}_d \\
-		h - h_d \\
-		u - u_d
-	\end{bmatrix}.
-\end{equation}
-
-In order to reduce the control effort for the optimization problem the rate of change of the control inputs $d\mathbf{u}$ will be minimized. Since all the control rates is to be compared to zero no function is needed. The matrix $\mathbf{R}$ is the weighting matrix. The vector $u$ contains of the four control rates:
-
-\begin{equation}
-	\label{eq:control_rates}
-	\Delta\mathbf{u} = 
-	\begin{bmatrix}
-		\Delta\delta_e \hspace{5pt} \Delta\delta_a \hspace{5pt} \Delta\delta_r \hspace{5pt} \Delta\delta_t
-	\end{bmatrix} ^\intercal .
-\end{equation}
+The objective function $\mathbf{J}$ will be minimized over the entire optimization horizon, which consists of $L$ timesteps. The current timestep is denoted $i$. Since this is an intervalwise MPC, as described in section \ref{sec:offline_intervalwise}, all states within in the interval, denoted $k$, will be stored. The number of intervals for the entire optimization problem is denoted $n$, which means that for the entire problem there will be a total of $nk$ timesteps to store. 
 
 
 \subsection{Prediction Model}
@@ -84,6 +48,47 @@ The prediction model relates to the equality constraints of equation \ref{eq:opt
 
 As shown in equation \ref{eq:uav_states}, the attitude angles of the UAV will be given by the Euler angles $\phi$, $\theta$ and $\psi$. Even though quaternions offer more efficient computations and no gimbal lock \cite{uavBEARD}, this optimization will be run offline before the flight takes place so that computation capacity is not a big issue. In addition the UAV will not by performing any high-angle maneuvers so that a gimabl lock should never occur.
 
+
+
+\subsection{Objective Function}
+
+\begin{equation}
+	\label{eq:objective_function}
+	\mathbf{J} = \frac{1}{2} \sum_{i=0}^{L} [(\mathbf{y(\mathbf{x}}_i)-\mathbf{y}_{d,i})^\intercal \mathbf{Q}(\mathbf{y(\mathbf{x}}_i)-\mathbf{y}_{d,i})] + \frac{1}{2}\sum_{i=0}^{L}[(\Delta\mathbf{u}_i)^\intercal \mathbf{R}(\Delta\mathbf{u}_i)]
+\end{equation}
+
+The first term of the objective function calculates the distance between the UAV states and the reference trajectory. The vector $\mathbf{y}_d$ is the \textit{measurement vector} which is the references for the states:
+	
+\begin{equation}
+	\mathbf{y}_d =
+	\begin{bmatrix}
+		{c_x}_d \hspace{5pt} {c_y}_d \hspace{5pt} h_d \hspace{5pt} u_d
+	\end{bmatrix}^\intercal .
+\end{equation}
+
+The function $\mathbf{y}(\mathbf{x})$ holds the current values for the optimization problem. While the height $h$ and velocity $u$ can be used as-is, the camera centre point $\mathbf{x}^n$ needs to be calculated using equation \ref{eq:camera_position_ned}:
+
+\begin{equation}
+	\mathbf{y}(\mathbf{x}) =
+	\begin{bmatrix}
+		p_N + h\text{cos}(\psi)\text{tan}(\theta) - h\text{sin}(\psi)\text{tan}(\phi)\\
+		p_E + h\text{sin}(\psi)\text{tan}(\theta) + h\text{cos}(\psi)\text{tan}(\phi)\\
+		h \\
+		u
+	\end{bmatrix}.
+\end{equation}
+
+In order to reduce the control effort for the optimization problem the rate of change of the control inputs $\Delta\mathbf{u}$ will be minimized. Since all the control rates is to be compared to zero no function is needed. The vector $u$ contains of the four control rates:
+
+\begin{equation}
+	\label{eq:control_rates}
+	\Delta\mathbf{u} = 
+	\begin{bmatrix}
+		\Delta\delta_e \hspace{5pt} \Delta\delta_a \hspace{5pt} \Delta\delta_r \hspace{5pt} \Delta\delta_t
+	\end{bmatrix} ^\intercal .
+\end{equation}
+
+The matrices $\mathbf{Q}$ and $\mathbf{R}$ are the weighting matrices. They are diagonal matrices where each row represent one state or control rate. The higher the value in the row, the more value is given to the difference between the corresponding state or control rate and reference.
 
 \subsection{Control Law}
 
