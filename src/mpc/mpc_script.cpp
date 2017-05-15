@@ -376,8 +376,8 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
 
     OptimizationAlgorithm algorithm( ocp );
 
-    algorithm.set( KKT_TOLERANCE,      1e-      );
-    algorithm.set( MAX_NUM_ITERATIONS, 300      );
+    algorithm.set( KKT_TOLERANCE,          1e-4 );
+    algorithm.set( MAX_NUM_ITERATIONS,      300 );
     algorithm.set( INTEGRATOR_TYPE,    INT_RK78 );
 
     algorithm.set(PRINT_COPYRIGHT, BT_FALSE);
