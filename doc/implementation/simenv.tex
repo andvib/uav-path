@@ -1,1 +1,8 @@
 \chapter{Simulation Environment}
+
+
+\section{Finding Trim Conditions}
+
+The trim conditions, as described in section \ref{sec:model}, play an important role when using a linear model as this model is linearized about these points. Since the trim conditions also represent a straight level flight they are good initial states and controls for the simulation and are feasible points optimization. In order to find the trim conditions a built-in Matlab function together wtih a Simulink model will be used and the procedure that is used, which will be summarized in this section, is described by Beard \& McLain \cite{uavBEARD}.
+
+Matlab features a built-in function \texttt{trim} that calculates the trim conditions of a given Simulink model. The Simulink model must be set up with the four control signals as inputs, and the output of the model is the airspeed $V_a$, the angle of attack $\alpha$ and the sideslip $\beta$. The out states are chosen as they easily expresses a trimmed stable flight. The airspeed is set to the desired cruise speed, while the angle of attack and sideslip is set to zero for a straight level flight. The function uses initial guesses of the states and inputs, also the derivatives, and what the desired output is. The Simulink model used for this thesis was developed by Gryte for his master thesis \cite{GRYTE}.
