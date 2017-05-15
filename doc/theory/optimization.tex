@@ -1,7 +1,10 @@
-\section{Optimization}
+\chapter{Model Predictive Control}
+\label{ch:optimization}
 
-%Optimization techniques is a common way to control UAVs, both as online and offline systems. An online optimization system can measure the current states of the aircraft, and based on that calculate the optimal input depending on the final state. An offline system, which will be developed in this paper, calculates the states and inputs before the flight has actually taken place. An offline solution is often simpler as an optimization system tends to require a great deal of computing power.
+Model Predictive Control (MPC) is a term used to describe control methods that uses knowledge about the process to calculate the future control inputs to the system in order to follow a reference trajectory \cite{mpcCAMACHO}. In this chapter the equations for an \textit{offline intervalwise MPC} that seeks to minimize the distance between the camera centre point and the ground path that is to be observed will be given. A linear state space-model for the UAV will be used to predict the future states and control inputs.
 
-\subsection{MPC Method}
 
-\subsection{Problem Definition}
+\import{./}{mpc_method.tex}
+\import{./}{offline_intervalwise.tex}
+\import{./}{objective_function.tex}
+\import{./}{problem_definition.tex}

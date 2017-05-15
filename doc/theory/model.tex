@@ -1,0 +1,116 @@
+\section{UAV Model}
+\label{sec:model}
+
+In this thesis two different UAV models will be used, both of them are 6 DOF models presented by Beard \& McLain \cite{uavBEARD}. For simulations of the UAV the nonlinear model will be used, while a linearized version of this model will be used as the prediction model in the MPC that will be presented in chapter \ref{ch:optimization}. In this section the UAV states described by this model will be presented, as well as the linearization method. The linearization method will be the one described by Beard \& McLain \cite{uavBEARD}.
+
+\subsection{UAV States}
+
+The position of the UAV will be given using the North East Down (NED) coordinate frame denoted $\{n\}$:
+
+\begin{equation}
+	\mathbf{p}_{b/n}^n =
+	\begin{bmatrix}
+		N \\ E \\ D
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		x_n \\ y_n \\ z_n
+	\end{bmatrix}.
+\end{equation}
+
+Following the notation used in \cite{uavBEARD}, the velocities of the UAV will be given in the body frame denoted $\{b\}$:
+
+\begin{equation}
+	\mathbf{V}^b_g =
+	\begin{bmatrix}
+		u \\ v \\ w
+	\end{bmatrix}.
+\end{equation}
+
+The attitude $\bm{\Theta}_{nb}$ of the UAV will be given as Euler-angles, with the corresponding angular velocities $\bm{\dot{\Theta}}_{nb}$:
+
+\begin{equation}
+	\bm{\Theta}_{nb} =
+	\begin{bmatrix}
+		\phi \\ \theta \\ \psi
+	\end{bmatrix},
+	\hspace{5pt}
+	\dot{\bm{\Theta}}_{nb} =
+	\begin{bmatrix}
+		p \\ q \\ r
+	\end{bmatrix}.
+\end{equation}
+
+
+\subsection{Linearizing the Model}
+
+The UAV model is given on state space form with 12 states $\mathbf{x}$ and four control inputs $\mathbf{u}$. The nonlinear model is linearized about the \textit{trim state} $\mathbf{x}^*$ of the UAV, the state where the UAV maintains a straight level flight without any changes in the control inputs. The trimmed states satisifies the following equation \cite{uavBEARD}:
+
+\begin{equation}
+	\mathbf{\dot{x}} = f(\mathbf{x}^*, \mathbf{u}^*) = 0.
+\end{equation}
+
+When linearizing the model, the difference between the nonlinear states $\mathbf{x}$ and the linearized states $\mathbf{\bar{x}}$ is calculated. The relationship between these two are defined as $\mathbf{\bar{x}} = \mathbf{x} - \mathbf{x}^*$. By calculating the derivative of this relationship, the linearized dynamics of the model is found.
+
+In addition to being linear, the linearized model is decoupled into lateral and longitudinal models. The lateral and longitudinal states are given as:
+
+\begin{equation}
+\begin{split}
+	&\mathbf{\dot{x}}_{lat} = 
+	\begin{bmatrix}
+		v \hspace{5pt} p \hspace{5pt} r \hspace{5pt} \phi \hspace{5pt} \psi
+	\end{bmatrix} ^\intercal
+	, \mathbf{u}_{lat} =
+	\begin{bmatrix}
+		\delta_a \hspace{5pt} \delta_r
+	\end{bmatrix}^\intercal \\
+	&\mathbf{\dot{x}}_{lon} =
+	\begin{bmatrix}
+		u \hspace{5pt} w \hspace{5pt} q \hspace{5pt} \theta \hspace{5pt} h
+	\end{bmatrix}^\intercal
+	, \mathbf{u}_{lon} =
+	\begin{bmatrix}
+		\delta_e \hspace{5pt} \delta_t
+	\end{bmatrix}^\intercal.
+\end{split}
+\end{equation}
+
+
+%\section{Wind and Airspeed}
+%Wind will be introduced to the vehicle in order to test how the system withstands disturbances. Since the camera footprint is dependent only on the attitude angles of the aircraft and not the course of the aircraft, the wind will only affect the navigation of the UAV. Wind speed is given in the $\{n\}$ frame as \cite{uavBEARD}
+
+%\begin{equation}
+%	\mathbf{V}^n_w =
+%	\begin{bmatrix}
+%		w_n \\ w_e \\ w_d
+%	\end{bmatrix},
+%\end{equation}
+
+%and the air speed $\mathbf{V}_a$ of the aircraft is given by the wind speed $\mathbf{V}_w$ and ground speed $\mathbf{V}_g$ as
+
+%\begin{equation}
+%\begin{split}
+%	\mathbf{V}_a & = \mathbf{V}_g - \mathbf{V}_w\\
+%	\begin{bmatrix}
+%		u_r \\ v_r \\ w_r
+%	\end{bmatrix}
+%	& =
+%	\begin{bmatrix}
+%		u \\ v \\ w
+%	\end{bmatrix}
+%	- \mathbf{R}_n^b
+%	\begin{bmatrix}
+%		w_n \\ w_e \\ w_d
+%	\end{bmatrix}
+%\end{split}
+%\end{equation}
+
+%where $\mathbf{R}_n^b$ is the rotation matrix between the NED frame $\{n\}$ and the body frame $\{b\}$. 
+
+%% Is the last part really needed?
+
+%When in the presence of wind, the heading of the UAV isn't necessarily the direction that the UAV is moving. Wind will introduce a crab angle $\chi_c$ that together with the heading $\psi$ gives the course angle $\chi$:
+%
+%\begin{equation}
+%	\chi = \psi + \chi_c.
+%\end{equation}

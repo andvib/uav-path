@@ -1,0 +1,23 @@
+\section{MPC Method}
+
+The MPC strategy can be broken down into three tasks \cite{mpcCAMACHO}:
+
+\begin{enumerate}
+	\item Predict the future outputs of the process for the given prediction horizon using past inputs to the process and the past measured states of the process, and by using the future control signals.
+	\item Optimize an objective function in order to determine the future control signals that follows a given reference trajectory as closely as possible.
+	\item Apply the optimal control signals to the process, and measure the resulting output so that it may be used to calculate the next prediction horizon in the first task.
+\end{enumerate}
+
+In short MPC problems are made up of three elements \cite{mpcCAMACHO}: Prediction model, objective function and the control law. The prediction model represents the model of the process that is to be controlled, and will in this case consist of the differential equations for the states of the UAV. The objective function is the function that is to be minimized by the optimization algorithm, in this case this will be the distance from the camera centre point to the desired ground path together with some of the UAV states that will give a stable flight. The objective function represents the reference trajectory that the UAV is to follow. The control law introduces constraints on the problem, reducing the number of feasible solutions. These constraints can be put on either the states or the control inputs for the UAV.
+
+A common mathematical formulation of the three elements that make up the optimization problem is shown in \ref{eq:optimization_formulation} \cite{nocedalOPTIMIZATION}. $f(x)$ represents the objective function that is subject to equality and inequality constraints respectively. The equality constraints are used to represent the UAV model, while the inequality constraints represent the constraints used for the control law. A MPC differ from other optimization problems mostly in the objective function, which will be described in detail chapter \ref{ch:objective_function}.
+
+\begin{equation}
+	\label{eq:optimization_formulation}
+	\begin{array}{rrclcl}
+		\displaystyle \min_{x \in R^n} & \multicolumn{3}{l}{f(x)} \\
+		\textrm{s.t}
+		& c_i(x) = 0, i \in \epsilon, \\
+		& c_i(x) \geq 0, i \in I.
+	\end{array}
+\end{equation}

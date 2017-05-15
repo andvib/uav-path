@@ -1,5 +1,6 @@
-\documentclass{report}
-\usepackage[utf8]{inputenc}
+\documentclass[]{report}
+\usepackage[]{inputenc}
+\usepackage[Lenny]{fncychap}
 \usepackage{mathptmx}
 \usepackage{parskip}
 \usepackage{import}
@@ -10,29 +11,61 @@
 \usepackage{fancyhdr}
 \usepackage{cite}
 \usepackage{tikz, tikz-3dplot}
-
+\usetikzlibrary{backgrounds, decorations.pathreplacing, patterns}
+\usepackage[toc,page]{appendix}
+\usepackage{upgreek}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 
 %\renewcommand{\baselinestretch}{1.5}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \newdateformat{monthyear}{\monthname[\THEMONTH], \THEYEAR}
 
-\numberwithin{equation}{section}
+\numberwithin{equation}{chapter}
 
 
 \begin{document}
 
 
-\import{./}{front_page.tex}
+%\import{./}{front_page.tex}
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+%\import{introduction/}{abstract.tex}
+%\addcontentsline{toc}{chapter}{Abstract}
+%\import{introduction/}{preface.tex}
+%\addcontentsline{toc}{chapter}{Preface}
 
 \tableofcontents
+\addcontentsline{toc}{chapter}{Table of Contents}
 \newpage
 
+\listoffigures									
+\addcontentsline{toc}{chapter}{List of Figures}
+\clearpage
+
 \pagenumbering{arabic}
+\setcounter{page}{1}
 \pagestyle{fancy}
 
 \import{introduction/}{introduction.tex}
+
 \import{theory/}{theory.tex}
+
+\import{implementation/}{implementation.tex}
+\import{implementation/}{simenv.tex}
+
+\import{results/}{optimized_paths.tex}
+\import{results/}{simulation.tex}
+\import{results/}{conclusion.tex}
+
+\begin{appendices}
+\import{implementation/}{acado_code.tex}
+\import{implementation/}{mpc_code.tex}
+\end{appendices}
+
 
 \newpage
 

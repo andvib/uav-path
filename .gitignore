@@ -14,11 +14,14 @@
 *.toc
 *.blg
 *eps-converted-to.pdf
+*.lof
 
 ## Matlab
 *.asv
 *.autosave
-
+*_RUN.mexw64
+*_RUN.m
+*_acadodata_*
 
 ## C++
 build/

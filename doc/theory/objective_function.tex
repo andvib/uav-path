@@ -1,0 +1,28 @@
+\section{Objective Function}
+\label{ch:objective_function}
+
+The main objective of the MPC developed in this thesis is to minimize the cross track error between the centre point of the camera footpring and the ground path that is to be observed. This, together with other objectives, will be defined in the objective function of the optimization problem. In this section a way of formulating the objective function, least-squares, will be described, and how it can expressed to function as a MPC.
+
+
+\subsection{Least-Squares Problem}
+
+In many applications the objective function is formulated as a least-square (LSQ) problem. LSQ is a form of regression where the distance from a certain point to a known model is measured [source]. In this case the known model is the reference signals and the distance between the current states and the reference signal is calculated by the LSQ. The general mathematical formulation for LSQ is \cite{nocedalOPTIMIZATION}:
+
+\begin{equation}
+	\label{eq:lsq}
+	f(x) = \frac{1}{2} \sum_{j=1}^m r_j^2(x).
+\end{equation}
+
+In equation \ref{eq:lsq} $r_j$ is called the residual function, the distance between the point and the model. In relation to the MPC, the residual function is what the MPC seeks to minimize. The residual function is minimized by finding the parameters $x$ that minmize the residual function $r$.
+
+\subsection{MPC Objective Function}
+
+The objective function is where the goal of the optimization is expressed, together with the optimization horizon of the problem. Typical goals of the optimization is to follow a predefined trajectory or reference signal while reducing the control inputs used. This can be expressed as follows \cite{mpcCAMACHO}:
+
+\begin{equation}
+	\label{eq:mpc_cost}
+	J(N_1, N_2, N_3) = \sum_{j=N_1}^{N_2} \delta(j)[\hat{y}(t+j|t)-w(t+j)]^2 + 
+	\sum_{j=1}^{N_u}\lambda(j)[\Delta u(t+j-1)]^2.
+\end{equation}
+
+The first term of equation \ref{eq:mpc_cost} represents the costs from the states of the model, and the second term represents the cost of the control effort. In the first term $\hat{y}$ is the value of the prediction model, which is compared to the desired trajectory $w$. In the second term the changes in control $\Delta u$ is expressed. The change in control is used instead of the value of the control signal itself, since the steady state of the control signal may not be zero. $\delta$ and $\lambda$ are weighting variables which offers a way of tuning the MPC. The three different $N$ coefficients defines the horizon over which the states and the control effort should be optimized. The optimization horizon for states and control effort can be different, but they will stay the same for this problem.
