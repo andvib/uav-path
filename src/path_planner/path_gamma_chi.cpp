@@ -247,8 +247,7 @@ int main(){
     GnuplotWindow windowStates;
     windowStates.addSubplot(u, "u");
     //windowStates.addSubplot(v, "v");	
-    //windowStates.addSubplot(w, "W")
-;
+    //windowStates.addSubplot(w, "W");
     windowStates.addSubplot(p_D, "DOWN");
 
     windowStates.addSubplot(elevator, "ELEVATOR");

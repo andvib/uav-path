@@ -26,8 +26,8 @@ plot(c_n_1(2,:), c_n_1(1,:), 'k');
 plot(c_n_2(2,:), c_n_2(1,:), 'k');
 plot(PATH(:,2), PATH(:,1));
 title("POSITION");
-xlim([-100 800]);
-ylim([0 900]);
+%xlim([-100 800]);
+%ylim([0 900]);
 
 %figure(2);
 %grid on;

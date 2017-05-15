@@ -28,8 +28,6 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     Control d_throttle;
 
     IntermediateState p_N_dot, p_E_dot, p_D_dot;
-    IntermediateState Va, alpha, beta;
-    IntermediateState GAMMA, CHI;
     IntermediateState cx, cy;
 
     DifferentialEquation f;
@@ -50,10 +48,6 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     // Misc
     const double g = 9.81;
     const double PI = 3.14;
-
-    Va = sqrt(u*u + v*v + w*w);
-    alpha = atan(w/u);
-    beta = asin(v/Va);
 
 
 
@@ -84,8 +78,9 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     const double h_trim = 150.0;
 
     //_________________________________________________________________
+    /* Inertia Parameters */
 
-    double gamma = J_x*J_z - J_xz*J_xz;
+    double gamma   = J_x*J_z - J_xz*J_xz;
     double gamma_1 = J_xz*(J_x-J_y+J_z)/gamma;
     double gamma_2 = (J_z*(J_z-J_y)+J_xz*J_xz)/gamma;
     double gamma_3 = J_z/gamma;
@@ -95,18 +90,18 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     double gamma_7 = ((J_x-J_y)*J_x+J_xz*J_xz)/gamma;
     double gamma_8 = J_x/gamma;
 
-    double C_p0 = gamma_3*C_l0    + gamma_4*C_n0;
+    double C_p0    = gamma_3*C_l0    + gamma_4*C_n0;
     double C_pbeta = gamma_3*C_lbeta + gamma_4*C_nbeta;
-    double C_pp = gamma_3*C_lp    + gamma_4*C_np;
-    double C_pr = gamma_3*C_lr    + gamma_4*C_nr;
-    double C_pda = gamma_3*C_lda   + gamma_4*C_nda;
-    double C_pdr = gamma_3*C_ldr   + gamma_4*C_ndr;
-    double C_r0 = gamma_4*C_l0    + gamma_8*C_n0;
+    double C_pp    = gamma_3*C_lp    + gamma_4*C_np;
+    double C_pr    = gamma_3*C_lr    + gamma_4*C_nr;
+    double C_pda   = gamma_3*C_lda   + gamma_4*C_nda;
+    double C_pdr   = gamma_3*C_ldr   + gamma_4*C_ndr;
+    double C_r0    = gamma_4*C_l0    + gamma_8*C_n0;
     double C_rbeta = gamma_4*C_lbeta + gamma_8*C_nbeta;
-    double C_rp = gamma_4*C_lp    + gamma_8*C_np;
-    double C_rr = gamma_4*C_lr    + gamma_8*C_nr;
-    double C_rda = gamma_4*C_lda   + gamma_8*C_nda;
-    double C_rdr = gamma_4*C_ldr   + gamma_8*C_ndr;
+    double C_rp    = gamma_4*C_lp    + gamma_8*C_np;
+    double C_rr    = gamma_4*C_lr    + gamma_8*C_nr;
+    double C_rda   = gamma_4*C_lda   + gamma_8*C_nda;
+    double C_rdr   = gamma_4*C_ldr   + gamma_8*C_ndr;
 
 
 
@@ -116,24 +111,24 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     C_L = C_L0 + C_Lalp*alpha_trim;
     C_D = C_D0 + C_Dalp*alpha_trim;
 
-    C_X0 = 0;
-    C_Xalp = -C_D*cos(alpha_trim) + C_L*sin(alpha_trim);
-    C_Xde = -C_Dde*cos(alpha_trim) + C_Lde*sin(alpha_trim);
-    C_Xq = -C_Dq*cos(alpha_trim) + C_Lq*sin(alpha_trim);
+    C_X0   = 0;
+    C_Xalp = -C_D*cos(alpha_trim)   + C_L*sin(alpha_trim);
+    C_Xde  = -C_Dde*cos(alpha_trim) + C_Lde*sin(alpha_trim);
+    C_Xq   = -C_Dq*cos(alpha_trim)  + C_Lq*sin(alpha_trim);
 
-    C_Z0 = 0;
-    C_Zalp = -C_D*sin(alpha_trim) - C_L*cos(alpha_trim);
-    C_Zde = -C_Dde*sin(alpha_trim) - C_Lde*cos(alpha_trim);
-    C_Zq = -C_Dq*sin(alpha_trim) - C_Lq*cos(alpha_trim);
+    C_Z0   = 0;
+    C_Zalp = -C_D*sin(alpha_trim)   - C_L*cos(alpha_trim);
+    C_Zde  = -C_Dde*sin(alpha_trim) - C_Lde*cos(alpha_trim);
+    C_Zq   = -C_Dq*sin(alpha_trim)  - C_Lq*cos(alpha_trim);
 
 
 
     //_________________________________________________________________
     /* Lateral State-Space model coefficients */
 
-    Yv = ((rho*S*b*v_trim)/(4*mass*Va_trim))*(C_Yp*p_trim + C_Yr*r_trim) \
-       + ((rho*S*v_trim)/mass)*(C_Y0 + C_Ybeta*beta_trim \
-                                 + C_Yda*aileron_trim + C_Ydr*rudder_trim) \
+    Yv = ((rho*S*b*v_trim)/(4*mass*Va_trim))*(C_Yp*p_trim + C_Yr*r_trim)
+       + ((rho*S*v_trim)/mass)*(C_Y0 + C_Ybeta*beta_trim
+       + C_Yda*aileron_trim + C_Ydr*rudder_trim)
        + ((rho*S*C_Ybeta)/(2*mass))*sqrt(u_trim*u_trim + w_trim*w_trim);
 
     Yp =  w_trim + ((rho*Va_trim*S*b)/(4*mass))*C_Yp;
@@ -142,20 +137,20 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     Yda = ((rho*Va_trim*Va_trim*S)/(2*mass))*C_Yda;
     Ydr = ((rho*Va_trim*Va_trim*S)/(2*mass))*C_Ydr;
     
-    Lv = ((rho*S*b*b*v_trim)/(4*Va_trim))*(C_pp*p_trim + C_pr*r_trim) \
-       + rho*S*b*v_trim*(C_p0 + C_pbeta*beta_trim \
-                            + C_pda*aileron_trim + C_pdr*rudder_trim) \
+    Lv = ((rho*S*b*b*v_trim)/(4*Va_trim))*(C_pp*p_trim + C_pr*r_trim)
+       + rho*S*b*v_trim*(C_p0 + C_pbeta*beta_trim
+                            + C_pda*aileron_trim + C_pdr*rudder_trim)
        + ((rho*S*b*C_pbeta)/2)*sqrt(u_trim*u_trim + w_trim*w_trim);      
 
-    Lp = gamma_1*q_trim + ((rho*Va_trim*S*b*b)/4)*C_pp;
+    Lp =  gamma_1*q_trim + ((rho*Va_trim*S*b*b)/4)*C_pp;
     Lr = -gamma_2*q_trim + ((rho*Va_trim*S*b*b)/4)*C_pr;
 
     Lda = ((rho*Va_trim*Va_trim*S*b)/2)*C_pda;
     Ldr = ((rho*Va_trim*Va_trim*S*b)/2)*C_pdr;
 
-    Nv = ((rho*S*b*b*v_trim)/(4*Va_trim))*(C_rp*p_trim + C_rr*r_trim) \
-       + rho*S*b*v_trim*(C_r0 + C_rbeta*beta_trim \
-                            + C_rda*aileron_trim + C_rdr*rudder_trim) \
+    Nv = ((rho*S*b*b*v_trim)/(4*Va_trim))*(C_rp*p_trim + C_rr*r_trim)
+       + rho*S*b*v_trim*(C_r0 + C_rbeta*beta_trim
+       + C_rda*aileron_trim + C_rdr*rudder_trim)
        + ((rho*S*b*C_rbeta)/2)*sqrt(u_trim*u_trim + w_trim*w_trim);
 
     Np =  gamma_7*q_trim + ((rho*Va_trim*S*b*b)/4)*C_rp;
@@ -169,13 +164,13 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     //_________________________________________________________________
     /* Longitudinal State-Space Model Coefficients */
 
-    Xu = ((u_trim*rho*S)/mass)*(C_X0 + C_Xalp*alpha_trim + C_Xde*elevator_trim)\
-       - ((rho*S*w_trim*C_Xalp)/(2*mass)) \
-       + ((rho*S*c*C_Xq*u_trim*q_trim)/(4*mass*Va_trim)) \
+    Xu = ((u_trim*rho*S)/mass)*(C_X0 + C_Xalp*alpha_trim + C_Xde*elevator_trim)
+       - ((rho*S*w_trim*C_Xalp)/(2*mass))
+       + ((rho*S*c*C_Xq*u_trim*q_trim)/(4*mass*Va_trim))
        - ((rho*S_prop*C_prop*u_trim)/mass);
 
-    Xw = -q_trim+((w_trim*rho*S)/mass)*(C_X0 + C_Xalp*alpha_trim + C_Xde*elevator_trim)\
-       + ((rho*S*c*C_Xq*w_trim*q_trim)/(4*mass*Va_trim)) \
+    Xw = -q_trim+((w_trim*rho*S)/mass)*(C_X0 + C_Xalp*alpha_trim + C_Xde*elevator_trim)
+       + ((rho*S*c*C_Xq*w_trim*q_trim)/(4*mass*Va_trim))
        + ((rho*S*C_Xalp*u_trim)/(2*mass)) - ((rho*S_prop*C_prop*w_trim)/mass);
 
     Xq  = -w_trim + ((rho*Va_trim*S*C_Xq*c)/(4*mass));
@@ -183,27 +178,27 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     Xdt = ((rho*S_prop*C_prop*k_motor*k_motor*throttle_trim)/mass);
 
     
-    Zu = q_trim+ ((u_trim*rho*S)/mass)*(C_Z0 + C_Zalp*alpha_trim + C_Zde*elevator_trim)\
-       - ((rho*S*C_Zalp*w_trim)/(2*mass)) \
+    Zu = q_trim+ ((u_trim*rho*S)/mass)*(C_Z0 + C_Zalp*alpha_trim + C_Zde*elevator_trim)
+       - ((rho*S*C_Zalp*w_trim)/(2*mass))
        + ((u_trim*rho*S*C_Zq*c*q_trim)/(4*mass*Va_trim));
     
-    Zw = ((w_trim*rho*S)/mass)*(C_Z0 + C_Zalp*alpha_trim + C_Zde*elevator_trim)\
-       + ((rho*S*C_Zalp*u_trim)/(2*mass)) \
+    Zw = ((w_trim*rho*S)/mass)*(C_Z0 + C_Zalp*alpha_trim + C_Zde*elevator_trim)
+       + ((rho*S*C_Zalp*u_trim)/(2*mass))
        + ((rho*w_trim*S*c*C_Zq*q_trim)/(4*mass*Va_trim));
 
-    Zq = u_trim + ((rho*Va_trim*S*C_Zq*c)/(4*mass));
+    Zq  = u_trim + ((rho*Va_trim*S*C_Zq*c)/(4*mass));
     Zde = ((rho*Va_trim*Va_trim*S*C_Zde)/(2*mass));
 
 
-    Mu = ((u_trim*rho*S*c)/J_y)*(C_m0 + C_malp*alpha_trim + C_mde*elevator_trim)\
-       - ((rho*S*c*C_malp*w_trim)/(2*J_y)) \
+    Mu = ((u_trim*rho*S*c)/J_y)*(C_m0 + C_malp*alpha_trim + C_mde*elevator_trim)
+       - ((rho*S*c*C_malp*w_trim)/(2*J_y))
        + ((rho*S*c*c*C_mq*q_trim*u_trim)/(4*J_y*Va_trim));
 
-    Mw = ((w_trim*rho*S*c)/J_y)*(C_m0 + C_malp*alpha_trim + C_mde*elevator_trim) \
-       + ((rho*S*c*C_malp*u_trim)/(2*J_y)) \
+    Mw = ((w_trim*rho*S*c)/J_y)*(C_m0 + C_malp*alpha_trim + C_mde*elevator_trim)
+       + ((rho*S*c*C_malp*u_trim)/(2*J_y))
        + ((rho*S*c*c*C_mq*q_trim*w_trim)/(4*J_y*Va_trim));
 
-    Mq = ((rho*Va_trim*S*c*c*C_mq)/(4*J_y));
+    Mq  = ((rho*Va_trim*S*c*c*C_mq)/(4*J_y));
     Mde = ((rho*Va_trim*Va_trim*S*c*C_mde)/(2*J_y));
 
 
@@ -211,16 +206,16 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     //_________________________________________________________________
     /* Position Differential Equations */
 
-    p_N_dot = cos(theta+theta_trim)*cos(psi+psi_trim)*(u+u_trim) \
-            + (sin(phi+phi_trim)*sin(theta+theta_trim)*cos(psi+psi_trim) \
-            - cos(phi+phi_trim)*sin(psi+psi_trim))*(v+v_trim) \
-            + (cos(phi+phi_trim)*sin(theta+theta_trim)*cos(psi+psi_trim) \
+    p_N_dot = cos(theta+theta_trim)*cos(psi+psi_trim)*(u+u_trim)
+            + (sin(phi+phi_trim)*sin(theta+theta_trim)*cos(psi+psi_trim)
+            - cos(phi+phi_trim)*sin(psi+psi_trim))*(v+v_trim)
+            + (cos(phi+phi_trim)*sin(theta+theta_trim)*cos(psi+psi_trim)
             + sin(phi+phi_trim)*sin(psi+psi_trim))*(w+w_trim);
 	
-    p_E_dot = cos(theta+theta_trim)*sin(psi+psi_trim)*(u+u_trim) \
-            + (sin(phi+phi_trim)*sin(theta+theta_trim)*sin(psi+psi_trim) \
-            + cos(phi+phi_trim)*cos(psi+psi_trim))*(v+v_trim) \
-            + (cos(phi+phi_trim)*sin(theta+theta_trim)*sin(psi+psi_trim) \
+    p_E_dot = cos(theta+theta_trim)*sin(psi+psi_trim)*(u+u_trim)
+            + (sin(phi+phi_trim)*sin(theta+theta_trim)*sin(psi+psi_trim)
+            + cos(phi+phi_trim)*cos(psi+psi_trim))*(v+v_trim)
+            + (cos(phi+phi_trim)*sin(theta+theta_trim)*sin(psi+psi_trim)
             - sin(phi+phi_trim)*cos(psi+psi_trim))*(w+w_trim);
 
     p_D_dot = -sin(theta)*u + sin(phi)*cos(theta)*v + cos(phi)*cos(theta)*w;
@@ -233,19 +228,19 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     //_________________________________________________________________
     /* Lateral Differential Equations */
 
-    f << dot(v) == Yv*v + Yp*p + Yr*r + g*cos(theta_trim)*cos(phi_trim)*phi \
-                 + Yda*aileron + Ydr*rudder;
+    f << dot(v) == Yv*v + Yp*p + Yr*r + g*cos(theta_trim)*cos(phi_trim)*phi
+                                      + Yda*aileron + Ydr*rudder;
     
     f << dot(p) == Lv*v + Lp*p + Lr*r + Lda*aileron + Ldr*rudder;
 
     f << dot(r) == Nv*v + Np*p + Nr*r + Nda*aileron + Ndr*rudder;
 
-    f << dot(phi) == p + cos(phi_trim)*tan(theta_trim)*r   \
-                   + (q_trim*cos(phi_trim)*tan(theta_trim) \
+    f << dot(phi) == p + cos(phi_trim)*tan(theta_trim)*r
+                   + (q_trim*cos(phi_trim)*tan(theta_trim)
                    - r_trim*sin(phi_trim)*tan(theta_trim))*phi;
 
-    f << dot(psi) == cos(phi_trim)*(1/cos(theta_trim))*r \
-                   + (p_trim*cos(phi_trim)*(1/cos(theta_trim)) \
+    f << dot(psi) == cos(phi_trim)*(1/cos(theta_trim))*r
+                   + (p_trim*cos(phi_trim)*(1/cos(theta_trim))
                    -  r_trim*sin(phi_trim)*(1/cos(theta_trim)))*phi;
 
 
@@ -253,7 +248,7 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     //_________________________________________________________________
     /* Longitudinal Differential Equations */
 
-    f << dot(u) == Xu*u + Xw*w + Xq*q - g*cos(theta_trim)*theta \
+    f << dot(u) == Xu*u + Xw*w + Xq*q - g*cos(theta_trim)*theta
                                         + Xde*elevator + Xdt*throttle;
 
     f << dot(w) == Zu*u + Zw*w + Zq*q - g*sin(theta_trim)*theta + Zde*elevator;
@@ -262,8 +257,8 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
 
     f << dot(theta) == q;
 
-    f << dot(h) == sin(theta_trim)*u - cos(theta_trim)*w \
-                    + (u_trim*cos(theta_trim)+w_trim*sin(theta_trim))*theta;
+    f << dot(h) == sin(theta_trim)*u - cos(theta_trim)*w
+                 + (u_trim*cos(theta_trim)+w_trim*sin(theta_trim))*theta;
 
 
 
@@ -274,14 +269,6 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     f << dot(aileron)  == d_aileron;
     f << dot(rudder)   == d_rudder;
     f << dot(throttle) == d_throttle;
-
-
-
-    //_________________________________________________________________
-    /* Calculate Gamma and Chi */
-    
-    GAMMA = -atan(p_D_dot/sqrt(p_N_dot*p_N_dot + p_E_dot*p_E_dot + p_D_dot*p_D_dot)); 
-    CHI = asin(p_E_dot/sqrt(p_N_dot*p_N_dot + p_E_dot*p_E_dot + p_D_dot*p_D_dot));
 
 
 
@@ -312,19 +299,21 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
 
     DMatrix Q(8,8); Q.setIdentity();
     
-    Q(0,0) = 1e-1;   // p_N
-    Q(1,1) = 1e-1;   // p_E
+    Q(0,0) = 1e1;   // p_N
+    Q(1,1) = 1e1;   // p_E
     Q(2,2) = 1e1;   // u
     Q(3,3) = 1e1;   // h
 
     Q(4,4) = 1e0;   // d_elevator
-    Q(5,5) = 1e-2;   // d_aileron
+    Q(5,5) = 1e-2;  // d_aileron
     Q(6,6) = 1e6;   // d_rudder
     Q(7,7) = 1e0;   // d_throttle
 
 
+
     //_________________________________________________________________
     /* Initialize Optimal Control Problem */
+
     OCP ocp( path.getTimePoints() );
 
     ocp.subjectTo( f );
@@ -368,12 +357,12 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     /* Constraints */
 
     ocp.subjectTo( -PI/2 <= theta <= PI/2 );
-    ocp.subjectTo( -PI/2 <= phi <= PI/2 );
+    ocp.subjectTo( -PI/2 <=  phi  <= PI/2 );
 
     ocp.subjectTo( -PI/6 <= elevator <= PI/6 );
     ocp.subjectTo( -PI/6 <= aileron  <= PI/6 );
     ocp.subjectTo( -PI/6 <= rudder   <= PI/6 );
-    ocp.subjectTo(     0 <= throttle <= 1 );
+    ocp.subjectTo(     0 <= throttle <= 1    );
 
     ocp.subjectTo( -0.2 <= d_elevator <= 0.2 );
     ocp.subjectTo( -0.2 <= d_aileron  <= 0.2 );
@@ -387,18 +376,12 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
 
     OptimizationAlgorithm algorithm( ocp );
 
-    //algorithm.set( LEVENBERG_MARQUARDT, 100.0 );
-    algorithm.set( KKT_TOLERANCE, 1e-4 );
-    algorithm.set( MAX_NUM_ITERATIONS, 300);
-    algorithm.set( INTEGRATOR_TYPE, INT_RK78 );
-
-    //algorithm.set( LEVENBERG_MARQUARDT, 100.0 );
-    //algorithm.set( HESSIAN_APPROXIMATION, EXACT_HESSIAN );
-    //algorithm.set( HESSIAN_PROJECTION_FACTOR, 100.0 );
-    //algorithm.set( DYNAMIC_HESSIAN_APPROXIMATION, GAUSS_NEWTON );
+    algorithm.set( KKT_TOLERANCE,      1e-      );
+    algorithm.set( MAX_NUM_ITERATIONS, 300      );
+    algorithm.set( INTEGRATOR_TYPE,    INT_RK78 );
 
     algorithm.set(PRINT_COPYRIGHT, BT_FALSE);
-    //algorithm.set(PRINTLEVEL, NONE);
+    algorithm.set(PRINTLEVEL, NONE);
 
     algorithm.solve();
 
@@ -411,9 +394,9 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     algorithm.getDifferentialStates(states);
     algorithm.getControls(controls);
 
-    DMatrix ret_values(path.getLastTime(), 20);
-
-    for(int i = 0 ; i < path.getLastTime() ; i++){
+    DMatrix ret_values(path.getNumRows(), 20);
+    
+    for(int i = 0 ; i < path.getNumRows() ; i++){
         for(int j = 0 ; j < 16 ; j++){
             ret_values(i, j) = states(i+1, j);
         }

@@ -1,14 +1,13 @@
 #include <acado_optimal_control.hpp>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <cmath>
-
-#include <stdio.h>
+#include <cstdio>
 
 using namespace std;
 USING_NAMESPACE_ACADO
+
 
 double** readPathFile(ifstream& file, int path_length){
 
@@ -46,11 +45,6 @@ double** readPathFile(ifstream& file, int path_length){
 
         string y_value;
         getline(iss, y_value, '\n');
-        /*if( !iss.good() ){
-            cout << "readPathFile: Something went wrong when reading" \
-                        " the y-value in the path file!\n";            
-            break;
-        }*/
 
         stringstream y_convertor(y_value);
         y_convertor >> path_data[row][1];
@@ -88,11 +82,6 @@ int saveResults(double ** results, int length, double** path_data, int path_leng
         }
         file << "];\n";
 
-        /*file << "PATH = [";
-        for( int i = 0 ; i < path_length ; i++){
-            file << path[i][2] << ", " << path[i][3] << ";\n";
-        }
-        file << "];\n";*/
         cout << "Saving results to file.\n";
         return 0;
     }else{
@@ -107,11 +96,8 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
                               double x_start,  double y_start){
 
     /* Initalize storage */
-    int no_timesteps = horizon_length/timestep;
-    VariablesGrid path(8, 0, horizon_length, no_timesteps+1);
-    
+    VariablesGrid path(8, 0, horizon_length*timestep, horizon_length+1);
     DVector points(8);
-    cout << "Grids initalized\n";
 
     /* Initialize variables */
     double  x =  x_start;
@@ -130,10 +116,9 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
     points(7) = 0.0;  // d_throttle
     path.setVector(0, points);
 
-    int point_found = 0;
-    cout << "Starting for loop\n";
     /* Generate path */
-    for( int step = 0 ; step < no_timesteps ; step++ ){
+    int point_found = 0;
+    for( int step = 0 ; step < horizon_length ; step++ ){
         for( int i = path_length-1 ; i >= 0 ; --i ){            
             double x_dist = path_data[i][0] - x;
             double y_dist = path_data[i][1] - y;
