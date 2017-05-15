@@ -1,13 +1,31 @@
 \section{ACADO toolkit}
 
-The ACADO Toolkit \cite{acadoHOUSKA} is an open-source toolkit that supports several different methods for solving optimization problems. The toolkit provides methods to solve four different classes of optimization problem: Optimal control problems, multi-objective optimization and optimal control problems, parameter and state estimation problems, and model predictive control. Even though the toolkit will be used to create an MPC in this case, the optimal control problems (OCP) class will be used instead. This is because between each iteration of the MPC algorithm a new trajectory must be generated, and the MPC problem class does not have the functionality needed to do this. How the trajectory is calculated and how it is passed to the toolkit will be explained later in this chapter.
+The ACADO Toolkit \cite{acadoHOUSKA} is an open-source toolkit that supports several different methods for solving optimization problems. The toolkit provides methods to solve four different classes of optimization problem: Optimal control problems, multi-objective optimization and optimal control problems, parameter and state estimation problems, and model predictive control. Even though the toolkit will be used to create an MPC in this case, the optimal control problems (OCP) class will be used instead. The reason for this is that between each iteration of the MPC algorithm a new trajectory must be generated, and the MPC problem class does not have the functionality needed to do this. How the trajectory is calculated and how it is passed to the toolkit will be explained later in this chapter.
 
 %To solve the optimization problems the toolkit uses many different algorithms. It also has its own Runge-Kutta and BDF integrators to simulate both ODE's (Ordinary Differential Equation) and DAE's (Differential Algebraic Equation). A MATLAB interface is also supplied by the toolkit, but this will not be used for this thesis.
 
 
-%\subsection{Algorithms}
+\subsection{Discretization (Workin' Title)}
 
-%In this chapter the most important algorithms that are used by the ACADO Toolkit to solve the optimization problem will be briefly presented.
+The model and optimization problem will be written on continuous time form, which means that it has to be discretized in order to be solved. ACADO solves this by using a method called multiple-shooting discretization.
 
 
-%\subsection{Runge-Kutta Integrator}
+\subsection{Runge-Kutta Integrator}
+
+In order to integrate the model ACADO uses the Runge-Kutta integrator.
+
+
+\subsection{Solver}
+
+In order to solve the optimization problem, ACADO uses some kind of solver.
+
+\subsubsection{KKT-Tolerance}
+
+In order to rate the "goodness" of a solution, ACADO uses some kind of KKT-Tolerance.
+
+
+\subsection{Nonlinear Model (Working Title)}
+
+Initially, effort was made to implement the nonlinear model presented by Beard \& McLain \cite{uavBEARD} as the prediction model in the optimization problem. This would have given more precise results as the nonlinear model is a closer representation of the real UAV, and since the nonlinear model also includes wind the path could be optimized with the knowledge about the wind conditions as well. The level of calculation needed for the nonlinear model is significantly higher; however, since this implementation is intended to run offline before the flight occurs, computation time is not a critical concern.
+
+Achieving stable flight within in the optimization problem with the nonlinear model on the other hand, turned out to be a difficult task that was far from trivial. This is somewhat due to the nonlinearity, but also the high coupling between states in the model. The coupling causes changes in one state to affect many other states which results in a much more complex problem. Several different algorithm and solver settings was tried, as well as different objective functions and weighting of these functions. After many attempts the decision to use the linear model instead was made, largely due to this being a project with limited time available.

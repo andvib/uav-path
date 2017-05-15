@@ -33,7 +33,13 @@
 \pagenumbering{roman}
 \setcounter{page}{1}
 
+%\import{introduction/}{abstract.tex}
+%\addcontentsline{toc}{chapter}{Abstract}
+%\import{introduction/}{preface.tex}
+%\addcontentsline{toc}{chapter}{Preface}
+
 \tableofcontents
+\addcontentsline{toc}{chapter}{Table of Contents}
 \newpage
 
 \listoffigures									
@@ -45,10 +51,15 @@
 \pagestyle{fancy}
 
 \import{introduction/}{introduction.tex}
-\import{theory/}{theory.tex}
-\import{implementation/}{implementation.tex}
-\import{simulation/}{simulation.tex}
 
+\import{theory/}{theory.tex}
+
+\import{implementation/}{implementation.tex}
+\import{implementation/}{simenv.tex}
+
+\import{results/}{optimized_paths.tex}
+\import{results/}{simulation.tex}
+\import{results/}{conclusion.tex}
 
 \begin{appendices}
 \import{implementation/}{acado_code.tex}
