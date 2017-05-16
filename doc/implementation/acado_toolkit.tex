@@ -10,10 +10,22 @@ The ACADO Toolkit \cite{acadoHOUSKA} is an open-source toolkit that supports sev
 The model and optimization problem will be written on continuous time form, which means that it has to be discretized in order to be solved. ACADO solves this by using a method called multiple-shooting discretization.
 
 
-\subsection{Runge-Kutta Integrator}
+\subsection{Runge-Kutta Method}
 
-In order to integrate the model ACADO uses the Runge-Kutta integrator.
+The Runge-Kutta method is a form of \textit{numerical integrator} that can be used to solve differential equations, and is used by the ACADO toolkit to integrate the prediction model. The method is based on the Euler method, which is a very simple method for numerical integration.
 
+The ACADO toolkit provides algorithms for \textit{explicit} Runge-Kutta methods \cite{acadoHOUSKA}, where explicit means that the method calculates the state of the system at a later time based on the current state (THIS NEEDS SOURCE). The Runge-Kutta method calculates the later state of the system by calculating several approximations of the derivative of the system. The current state of the system together with a linear combination of the approximated derivatives gives the next state of the system \cite{modsimEGELAND}. For a system on the form $\mathbf{\dot{y}} = \mathbf{f}(\mathbf{y},t)$, the Runge-Kutta method can be mathematically expressed as:
+
+\begin{subequations}
+\begin{equation}
+	\mathbf{k}_i = \mathbf{f}(\mathbf{y}_n + h \sum_{j=1}^{i-1} a_{ij}\mathbf{k}_j, t_n + c_ih), i = 1, ..., \sigma
+\end{equation}
+\begin{equation}
+	\mathbf{y}_{n+1} = \mathbf{y}_n + h \sum_{j=1}^\sigma b_j \mathbf{k}_j
+\end{equation}
+\end{subequations}
+
+where $t_n$ is the current time, $\mathbf{y}_n$ is the output of the system at the current time, $h$ is the step size and $\sigma$ is the number of approximations of the derivative that is calculated. $a$, $b$ and $c$ are parameters for the specific Runge-Kutta method used, and $c$ must satisfy $0 < c < 1$.
 
 \subsection{Solver}
 
