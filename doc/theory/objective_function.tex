@@ -6,14 +6,23 @@ The main objective of the MPC developed in this thesis is to minimize the cross 
 
 \subsection{Least-Squares Problem}
 
-In many applications the objective function is formulated as a least-square (LSQ) problem. LSQ is a form of regression where the distance from a certain point to a known model is measured [source]. In this case the known model is the reference signals and the distance between the current states and the reference signal is calculated by the LSQ. The general mathematical formulation for LSQ is \cite{nocedalOPTIMIZATION}:
+In many applications the objective function is formulated as a least-square (LSQ) problem. LSQ is a form of regression where the distance between a measurement and a known model is computed. In this case the known model is the reference signals, and the distance between the current states and the reference signal is calculated by the LSQ. The general mathematical formulation for LSQ is \cite{nocedalOPTIMIZATION}:
 
 \begin{equation}
 	\label{eq:lsq}
-	f(x) = \frac{1}{2} \sum_{j=1}^m r_j^2(x).
+	f(x) = \frac{1}{2} \sum_{j=1}^m r_j^2(x) = \frac{1}{2} \sum_{j=1}^m |\phi(x, t_j) - y_j|.
 \end{equation}
 
-In equation \ref{eq:lsq} $r_j$ is called the residual function, the distance between the point and the model. In relation to the MPC, the residual function is what the MPC seeks to minimize. The residual function is minimized by finding the parameters $x$ that minmize the residual function $r$.
+In equation \ref{eq:lsq} $r_j$ is called the residual function, which represents the distance between the measurement $y_j$ taken at time $t_j$, and the model $\phi$. In the optimization problem the residual function is what the algorithm seeks to minimize by chossing the parameters $x$ that gives the lowest possible value of the residual function $r_j$.
+
+In order to have a reference model that the measurements can be compared to the desired values will be associated with timepoints. This means that the optimization algorithm will at given timepoints compare the current values of $x$ to the value of the reference model at the same time. A visual representation of this is shown in figure \ref{fig:lsq}.
+
+\begin{figure}
+	\import{/}{lsq_fig.tex}
+	\caption{The distance between the measurements, represented by dots, and the model, represented by a line.}
+	\label{fig:lsq}
+\end{figure}
+
 
 \subsection{MPC Objective Function}
 
