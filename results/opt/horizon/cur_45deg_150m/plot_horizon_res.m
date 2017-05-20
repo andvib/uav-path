@@ -8,14 +8,14 @@ figure(1);
 grid on;
 hold on;
 title('POSITION');
-for i = 90:10:120
-    a = sprintf('results_horizon/horizon_lin_%d.m', i);
+for i = 110:10:110
+    a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
     plot(STATES(:,3), STATES(:,2));
 end
 xlim([-300 500]);
-ylim([0 800]);
+ylim([200 1000]);
 
 
 %% PLOT CAMERA CENTRE POINT%%
@@ -24,8 +24,8 @@ figure(2);
 grid on;
 hold on;
 title('CAMERA CENTRE POINT');
-for i = 90:10:120
-    a = sprintf('results_horizon/horizon_lin_%d.m', i);
+for i = 110:10:110
+    a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
     for i = (1:length(STATES(:,1)))
@@ -41,7 +41,7 @@ end
 
 plot(PATH(:,2), PATH(:,1),'k');
 xlim([-300 500]);
-ylim([0 800]);
+ylim([200 1000]);
 
 
 %% PLOT HEIGHT %%
@@ -50,8 +50,8 @@ figure(3);
 grid on;
 hold on;
 title('HEIGHT');
-for i = 90:10:120
-    a = sprintf('results_horizon/horizon_lin_%d.m', i);
+for i = 110:10:110
+    a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
     plot(STATES(:,1), STATES(:,4));
@@ -60,15 +60,15 @@ xlim([0 40]);
 ylim([100 160]);
 
 
-%% PLOT ATTITUDE %%
+%% PLOT HEIGHT %%
 
 figure(4);
 grid on;
 hold on;
 title('ATTITUDE');
 k = 1;
-for i = 90:10:120
-    a = sprintf('results_horizon/horizon_lin_%d.m', i);
+for i = 110:10:110
+    a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
     phi(k,:) = STATES(:,8)';
@@ -91,8 +91,8 @@ grid on;
 hold on;
 title('CONTROl');
 k = 1;
-for i = 90:10:120
-    a = sprintf('results_horizon/horizon_lin_%d.m', i);
+for i = 110:10:110
+    a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
     elevator(k,:) = STATES(:,14)';
@@ -110,6 +110,7 @@ plot(STATES(:,1), rudder);
 subplot(4,1,4);
 plot(STATES(:,1), throttle);
 
+
 %% PLOT DURATION %%
 
 figure(6);
@@ -117,12 +118,12 @@ grid on;
 hold on;
 title('DURATION');
 k = 1;
-for i = 90:10:120
-    a = sprintf('results_horizon/horizon_lin_%d.m', i);
+for i = 110:10:110
+    a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
     dur(k,1) = i;
     dur(k,2) = DURATION;
     k = k+1;
 end
-plot(dur(:,1), dur(:,2),'*')
+plot(dur(:,1), dur(:,2))
