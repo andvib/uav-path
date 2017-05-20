@@ -18,7 +18,7 @@ USING_NAMESPACE_ACADO
 int main(int argc, char **argv){
 
     /* Read path from file */
-    int path_length = 15406;
+    int path_length = 15315;
     char* file_in = argv[1];
     cout << file_in << "\n";
     ifstream file(file_in);
@@ -28,13 +28,14 @@ int main(int argc, char **argv){
 
 
     /* Initialize MPC variables */
-    int horizon_length = atoi(argv[2]);     // Number of timesteps in the horizon
+    int horizon_length = atoi(argv[3]);     // Number of timesteps in the horizon
     int section_length = 5;      // Number of timesteps in the section
     double timestep    = 0.2;    // Duration of timestep [s]
-    int no_sections    = 38;     // Number of sections to cover path
+    int no_sections    = 40;     // Number of sections to cover path
 
 
-    string file_out = "results/horizon_" + to_string(horizon_length) + ".m";
+    string temp = (string) argv[2];
+    string file_out = "results/" + temp + "_" + to_string(horizon_length) + ".m";
     cout << file_out << "\n";
 
     //_________________________________________________________________
