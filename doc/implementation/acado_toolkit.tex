@@ -7,7 +7,7 @@ The ACADO Toolkit \cite{acadoHOUSKA} is an open-source toolkit that supports sev
 
 \subsection{Discretization (Workin' Title)}
 
-The model and optimization problem will be written on continuous time form, which means that it has to be discretized in order to be solved. The method used to discretisize the problem plays a big role in how the problem is solved, and ACADO uses the \textit{direct multiple-shooting} method. Direct discretization methods can be explained as "first discretize, then optimize", which allows for easier treatment of inequality constraints \cite{discDIEHL}.
+The model and optimization problem will be written on continuous time form, which means that it has to be discretized in order to be solved. The method used to discretisize the problem plays a big role in how the problem is solved, and ACADO uses the \textit{direct multiple-shooting} method. Direct discretization methods can be explained as "first discretize, then optimize", which allows for easier treatment of inequality constraints \cite{discDIEHL}. One of the major benefits by using the direct multiple-shooting method is that the method is initialized with the result from the previous iteration \cite{stallMATHISEN}.
 
 In short the direct multiple-shooting method starts by computing a discretized control trajectory for a finite time interval. Independently, the Ordinary Differential Equations (ODE) of the optimization problem is solved one time for every timestep of the discretized control trajectory. Simultaneously as these solutions are computed an integral of a cost function is computed, which is the reason why the direct multiple-shooting method is also called a \textit{simultaneous} method. 
 
@@ -22,7 +22,7 @@ In short the direct multiple-shooting method starts by computing a discretized c
 	\end{array}
 \end{equation}
 
-The direct multiple-shooting method can be described by the nonlinear program (NLP) shown in equation \ref{eq:multiple_shooting} \cite{stallMATHISEN}. In the equation the objective function $F$ is the result of integrating the cost function, and $\mathbf{s}$ and $\mathbf{q}$ are the optimization variables for the states and controls respectively. $\mathbf{s}$ and $\mathbf{q}$ are introduced in order to ensure that the solution for the time interval is tied to the initial values \cite{discDIEHL}. $E$ is the end term of the objective funtion.
+The direct multiple-shooting method can be described by the nonlinear program (NLP) shown in equation \ref{eq:multiple_shooting} \cite{stallMATHISEN}. In the equation the objective function $F$ is the result of integrating the cost function, and $\mathbf{s}$ and $\mathbf{q}$ are the optimization variables for the states and controls respectively. $\mathbf{s}$ and $\mathbf{q}$ are introduced in order to ensure that the solution for the time interval is tied to the initial values. $E$ is the end term of the objective funtion.
 
 
 \subsection{Runge-Kutta Method}

@@ -26,37 +26,28 @@
 	\draw[dashed] (P1) circle[radius=50pt];
 
 	% Draw second point
-	\begin{scope}
-		\coordinate (P2) at (2.4, 4.05);
-		\fill (P2) circle[radius=3pt] node[anchor=west]{$\small P_1$};
-		%\path[clip] (P2) -- (4.0, 8.0) -- (8.0, 4.0);
-		%\draw[dashed] (P2) circle[radius=50pt];
-	\end{scope}
+	\coordinate (P2) at (2.4, 4.05);
+	\fill (P2) circle[radius=3pt] node[anchor=west]{$\small P_1$};
 	
 	% Draw third point
 	\coordinate (P3) at (3.47, 5.43);
 	\fill (P3) circle[radius=3pt] node[anchor=south]{$\small P_2$};
-	%\draw[dashed] (P3) circle[radius=50pt];
 	
 	% Draw fourth point
 	\coordinate (P4) at (4.95, 6.37);
 	\fill (P4) circle[radius=3pt] node[anchor=south]{$\small P_3$};
-	%\draw[dashed] (P4) circle[radius=50pt];
 	
 	% Draw fifth point
 	\coordinate (P5) at (6.56, 6.98);
 	\fill (P5) circle[radius=3pt] node[anchor=south]{$\small P_4$};
-	%\draw[dashed] (P5) circle[radius=50pt];
 	
 	% Draw fifth point
 	\coordinate (P6) at (8.25, 7.5);
 	\fill (P6) circle[radius=3pt] node[anchor=south]{$\small P_5$};
-	%\draw[dashed] (P6) circle[radius=50pt];
 	
 	% Draw seventh point
 	\coordinate (P7) at (9.93, 7.96);
 	\fill (P7) circle[radius=3pt] node[anchor=south east]{$\small P_6$};
-	%\draw[dashed] (P7) circle[radius=50pt];
 	
 	\draw[dashed] (P1) -- (P2) node[midway, below, sloped] {$\small R$};
 	\draw[dashed] (P2) -- (P3) node[midway, below, sloped] {$\small R$};
