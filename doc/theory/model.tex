@@ -5,7 +5,7 @@
 In this thesis two different UAV models will be used, both of them are 6 DOF models presented by Beard \& McLain \cite{uavBEARD}. For simulations of the UAV the nonlinear model will be used, while a linearized version of this model will be used as the prediction model in the MPC that will be presented in chapter \ref{ch:optimization}. In this section the UAV states described by this model will be presented, as well as the linearization method. The linearization method will be the one described by Beard \& McLain \cite{uavBEARD}.
 
 \subsection{UAV States}
-
+% SNAME should probably be mentioned here
 The position of the UAV will be given using the North East Down (NED) coordinate frame denoted $\{n\}$:
 
 \begin{equation}
@@ -16,8 +16,17 @@ The position of the UAV will be given using the North East Down (NED) coordinate
 	=
 	\begin{bmatrix}
 		x_n \\ y_n \\ z_n
-	\end{bmatrix}.
+	\end{bmatrix},
 \end{equation}
+
+while the global location will be given using the Earth Center Earth Fixed (ECEF) frame, denoted $\{e\}$, using longitude and latitude:
+
+\begin{equation}
+	\bm{\Theta}_{en} =
+	\begin{bmatrix}
+		l \\ \mu
+	\end{bmatrix}.
+\end{equation} 
 
 Following the notation used in \cite{uavBEARD}, the velocities of the UAV will be given in the body frame denoted $\{b\}$:
 

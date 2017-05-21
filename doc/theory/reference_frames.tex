@@ -1,0 +1,39 @@
+\section{Reference Frames}
+
+Three different reference frames will be used to describe the kinematics of the UAV: the \textit{body frame}, \textit{North East Down} (NED) frame and \textit{Earth Centered Earth Fixed} (ECEF) frame. 
+
+The body frame, denoted $\{b\}$, is attached to the UAV and is used to describe the attitude and velocity of the aircraft. The NED frame, denoted $\{n\}$, is used to locally describe the position of the UAV using cartesian coordinates. The position of the camera footprint will be given in the NED frame, based on the attitudes in the body frame.
+
+While the body and NED frame are local frames that are useful to describe the UAVs attitude, speed and position, a different frame is needed to express the location of the UAV in a global perspective. For this the ECEF frame, denoted $\{e\}$, is used. In the ECEF frame the position of the UAV is described by longitude and latitude.
+
+
+\subsection{Transformations}
+
+
+\subsubsection{Between NED and Body}
+
+The body frame and the NED frame are related by rotation matrices, one for each of the attitude angles. The transformation from to the NED frame from the body frame is given by the rotation matrix $\mathbf{R}_b^n$ \cite{FOSSEN}:
+
+\begin{equation}
+	\mathbf{R}_b^n(\bm{\Theta}_{nb}) =
+	\begin{bmatrix}
+		c(\psi)c(\theta) & -s(\psi)c(\phi)+c(\psi)s(\theta)s(\phi) & s(\psi)s(\phi)+c(\psi)c(\phi)s(\theta) \\
+		s(\psi)c(\theta) & c(\psi)c(\phi)+s(\phi)s(\theta)s(\psi) & -c(\psi)s(\phi)+s(\theta)s(\psi)c(\phi) \\
+		-s(\theta) & c(\theta)s(\phi) & c(\theta)c(\phi)
+	\end{bmatrix}
+\end{equation}
+
+where $c$ and $s$ are the cosine and sine trigonometric functions respectively. The transformation from the NED frame to the body frame can be found by taking the inverse of the transformation matrix $\mathbf{R}(\bm{\Theta}_{nb})$.
+
+\subsubsection{Between NED and ECEF}
+
+The transformation between ECEF and NED when the position is given using laongitude and latitude coordinates is also given by a rotation matrix $\mathbf{R}_n^e(\bm{\Theta}_{en})$, which is composed by two rotations:
+
+\begin{equation}
+	\mathbf{R}_n^e(\bm{\Theta}_{en}) =
+	\begin{bmatrix}
+		-c(l)s(\mu) & -s(l) & -c(l)c(\mu) \\
+		-s(l)s(\mu) & c(l) & -s(l)c(\mu) \\
+		c(\mu) & 0 & -s(\mu)
+	\end{bmatrix}.
+\end{equation}
