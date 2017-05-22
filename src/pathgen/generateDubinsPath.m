@@ -1,5 +1,5 @@
-function path = generateDubinsPath(waypoints, step)
-    R = 100;
+function path = generateDubinsPath(waypoints, step, R)
+    %R = 100;
     [N, ~] = size(waypoints);
     path = [];
 
@@ -21,7 +21,7 @@ function path = generateDubinsPath(waypoints, step)
         v1 = P1-P0;
         v2 = P2-P0;
         v3 = [0 -1;1 0]*v1;
-        a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi));
+        a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi),1000);
         v = v1*cos(a)+v3*sin(a);
 
         
@@ -31,7 +31,7 @@ function path = generateDubinsPath(waypoints, step)
             path = [path; (v(1,:)+P0(1))' (v(2,:)+P0(2))'];
         end
         
-        path = [path; line_param([z1(2) z1(1)], [z2(2) z2(1)], 0.5)];
+        path = [path; line_param([z1(2) z1(1)], [z2(2) z2(1)], 0.1)];
         
         if lambda_e == -1
             P0 = [c_e(2);c_e(1)];
@@ -46,7 +46,7 @@ function path = generateDubinsPath(waypoints, step)
         v1 = P1-P0;
         v2 = P2-P0;
         v3 = [0 -1;1 0]*v1;
-        a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi));
+        a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi),1000);
         v = v1*cos(a)+v3*sin(a);
 
         if lambda_e == 1
@@ -56,6 +56,8 @@ function path = generateDubinsPath(waypoints, step)
         end
     end
     
+    path = [path(:,2) path(:,1)]; 
+
     x = path(1,1);
     y = path(1,2);
     path_temp = [x y];
@@ -66,10 +68,10 @@ function path = generateDubinsPath(waypoints, step)
             x_dist = x - path(i,1);
             y_dist = y - path(i,2);
             dist = sqrt(x_dist^2 + y_dist^2);
-            if (dist > step-1) && (dist < step+1)
+            if (dist > step-0.05) && (dist < step+0.05)
                 x = path(i,1);
                 y = path(i,2);
-                path_temp = [path_temp ; x y];
+                path_temp = [path_temp ; [x y]];
                 prev_i = i;
                 break;
             end
@@ -78,9 +80,9 @@ function path = generateDubinsPath(waypoints, step)
                 break;
             end
         end
-        
+          
     end
-    
+ 
     path = path_temp;
     
 end

@@ -10,7 +10,7 @@ function [L, c_s, lambda_s, c_e, lambda_e, z1, q1, z2, z3, q3] = dubinsPath(p_s,
     z3 = 0;
     q3 = 0;
 
-    if(sqrt((p_s(1)-p_e(1))^2 + (p_s(2)-p_e(2))^2) <= 3*R)
+    if(sqrt((p_s(1)-p_e(1))^2 + (p_s(2)-p_e(2))^2) < 3*R)
         too_small = 1
     end
     
