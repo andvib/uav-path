@@ -1,8 +1,7 @@
 \section{UAV Model}
 \label{sec:model}
 
-%REWRITE IF NONLINEAR IS NOT USED
-In this thesis two different UAV models will be used, both of them are 6 DOF models presented by Beard \& McLain \cite{uavBEARD}. For simulations of the UAV the nonlinear model will be used, while a linearized version of this model will be used as the prediction model in the MPC that will be presented in chapter \ref{ch:optimization}. In this section the UAV states described by this model will be presented, as well as the linearization method. The linearization method will be the one described by Beard \& McLain \cite{uavBEARD}.
+In this thesis the linearized UAV model presented by Beard \& McLain \cite{uavBEARD} will be used as the prediction model for the path planner that is presented in chapter \ref{ch:optimization}. In this section the UAV states described by this model will be presented, as well as the linearization method.
 
 \subsection{UAV States}
 % SNAME should probably be mentioned here
@@ -19,7 +18,7 @@ The position of the UAV will be given using the North East Down (NED) coordinate
 	\end{bmatrix},
 \end{equation}
 
-while the global location will be given using the Earth Center Earth Fixed (ECEF) frame, denoted $\{e\}$, using longitude and latitude:
+while the global location will be given using the Earth Center Earth Fixed (ECEF) frame, denoted $\{e\}$, represented by longitude and latitude:
 
 \begin{equation}
 	\bm{\Theta}_{en} =
@@ -49,6 +48,15 @@ The attitude $\bm{\Theta}_{nb}$ of the UAV will be given as Euler-angles, with t
 	\begin{bmatrix}
 		p \\ q \\ r
 	\end{bmatrix}.
+\end{equation}
+
+The UAV model has four control inputs, namely the elevator, aileron, rudder, and throttle:
+
+\begin{equation}
+	\mathbf{u} =
+	\begin{bmatrix}
+		\delta_e \hspace{5pt} \delta_a \hspace{5pt} \delta_r \hspace{5pt} \delta_t
+	\end{bmatrix}^\intercal .
 \end{equation}
 
 

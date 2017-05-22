@@ -1,7 +1,7 @@
 \section{Offline Intervalwise MPC}
 \label{sec:offline_intervalwise}
 
-The control problem in this thesis will be solved by using an offline intervalwise MPC to generate an optimal path that will reduce the image error when using a fixed camera to survey a ground track. The generated path is intended to be tracked by the autopilot on the actual UAV that will perform the survey, with th eintention of optimally surveying the ground path.
+The control problem in this thesis will be solved by using an offline intervalwise MPC to generate an optimal path that will reduce the image error when using a fixed camera to survey a ground track. The generated path is intended to be tracked by the autopilot on the actual UAV that will perform the survey, with the intention of optimally surveying the ground path.
 
 \subsection{Offline MPC} 
 
@@ -15,10 +15,10 @@ Altough the feedback is not needed to give new information, it eases the computa
 
 Commonly a MPC is used to optimize the model over a given \textit{horizon}, where the initial states are given. After the optimization has finished the first timestep of the optimization is returned and applied to the system, before a measurement of the system is performed. The new measurements are given as initial states for the next horizon, and so on.
 
-The principle is the same for an intervalwise MPC. However, instead of only returning the first timestep an \textit{interval} of timesteps are returned, and the last timestep of the interval is used as intial states for the next optimization horizon. This way the number of MPC iterations is reduced, and the increased complexity by having long optimization horizons is avoided. Figure \ref{fig:opt_fig} shows how timesteps, intervals and horizons relate to each other.
+The principle is the same for an intervalwise MPC. However, instead of only returning the first timestep an \textit{interval} of timesteps are returned, and the last timestep of the interval is used as intial states for the next optimization horizon. This way the number of MPC iterations is reduced, and the increased complexity by having long optimization horizons is avoided. Figure \ref{fig:opt_fig} shows how timesteps, intervals and horizons relate to each other. Since the MPC developed here is an offline MPC, the timesteps of each interval is stored as the result.
 
 \begin{figure}
 	\import{/}{opt_fig.tex}
-	\caption{The figure shows how the path is divided into sections and horizons when using the intervalwise MPC.}
+	\caption{How intervals and horizons relate in an Intervalwise MPC.}
 	\label{fig:opt_fig}
 \end{figure}

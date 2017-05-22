@@ -19,7 +19,7 @@ The objective function $\mathbf{J}$ will be minimized over the entire optimizati
 
 \subsection{Prediction Model}
 
-The linear decoupled 6 DOF UAV model presented in chapter \ref{ch:kinematics} will be used as the prediction model for the MPC. The model is associated with the following states and control inputs:
+The linear decoupled UAV model presented in chapter \ref{ch:kinematics} will be used as the prediction model for the MPC. The model is associated with the following states and control inputs:
 
 \begin{subequations}
 \begin{equation}
@@ -46,15 +46,14 @@ The prediction model relates to the equality constraints of equation \ref{eq:opt
 	\mathbf{\dot{u}} = \Delta\mathbf{u}.
 \end{equation}
 
-As shown in equation \ref{eq:uav_states}, the attitude angles of the UAV will be given by the Euler angles $\phi$, $\theta$ and $\psi$. Even though quaternions offer more efficient computations and no gimbal lock \cite{uavBEARD}, this optimization will be run offline before the flight takes place so that computation capacity is not a big issue. In addition the UAV will not by performing any high-angle maneuvers so that a gimabl lock should never occur.
-
+As shown in equation \ref{eq:uav_states}, the attitude angles of the UAV will be given by the Euler angles $\phi$, $\theta$ and $\psi$. Even though quaternions offer more efficient computations and do not suffer from gimbal lock \cite{uavBEARD}, this optimization will be run offline before the flight takes place so that computation capacity is not a big issue. In addition the UAV will not by performing any high-angle maneuvers so that a gimbal lock should never occur.
 
 
 \subsection{Objective Function}
 
 \begin{equation}
 	\label{eq:objective_function}
-	\mathbf{J} = \frac{1}{2} \sum_{i=0}^{L} [(\mathbf{y(\mathbf{x}}_i)-\mathbf{y}_{d,i})^\intercal \mathbf{Q}(\mathbf{y(\mathbf{x}}_i)-\mathbf{y}_{d,i})] + \frac{1}{2}\sum_{i=0}^{L}[(\Delta\mathbf{u}_i)^\intercal \mathbf{R}(\Delta\mathbf{u}_i)]
+	\mathbf{J}_{i+k} = \frac{1}{2} \sum_{j=i}^{j+L} [(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j})^\intercal \mathbf{Q}(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j}) + (\Delta\mathbf{u}_j)^\intercal \mathbf{R}(\Delta\mathbf{u}_j)]
 \end{equation}
 
 The first term of the objective function calculates the distance between the UAV states and the reference trajectory. The vector $\mathbf{y}_d$ is the \textit{measurement vector} which is the references for the states:
@@ -66,7 +65,7 @@ The first term of the objective function calculates the distance between the UAV
 	\end{bmatrix}^\intercal .
 \end{equation}
 
-The function $\mathbf{y}(\mathbf{x})$ holds the current values for the optimization problem. While the height $h$ and velocity $u$ can be used as-is, the camera centre point $\mathbf{x}^n$ needs to be calculated using equation \ref{eq:camera_position_ned}:
+The function $\mathbf{y}(\mathbf{x})$ holds the current values for the optimization problem. While the height $h$ and velocity $u$ can be used as-is, the camera centre point $\mathbf{c}^n$ needs to be calculated using equation \ref{eq:camera_position_ned}:
 
 \begin{equation}
 	\mathbf{y}(\mathbf{x}) =
@@ -109,7 +108,7 @@ The matrices $\mathbf{Q}$ and $\mathbf{R}$ are the weighting matrices. They are 
 
 The control law for the optimization problem consists of inequality constraints put on the UAV states and on the control signals. When constraints are put on the optimization problem the number of feasible solutions is reduced, so if too many constraints are put on the problem it will make the problem more difficult than necessary.
 
-In an attempt to reduce the complexity of the optimization problem, the constraints put on UAV states shown in equation \ref{eq:state_constraints} will not be included to begin with. This is because it is assumed that the "easiest" way to fly the aircraft is the "correct" way. However, if this proves wrong during testing, constraints on some or all of the states may be included.
+In an attempt to reduce the complexity of the optimization problem, the constraints put on UAV states shown in equation \ref{eq:state_constraints} will not be included to begin with. This is because it is assumed that the "cheapest" way to fly the aircraft is the "correct" way. However, if this proves wrong during testing, constraints on some or all of the states may be included.
 
 The control states, shown in equation \ref{eq:control_constraint}, are restricted by the physical maximum value of deflection. Since these constraints directly relates to physical values they are needed in order to get a meaningful optimization of the aircraft.
 

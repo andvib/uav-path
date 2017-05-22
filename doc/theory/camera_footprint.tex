@@ -1,6 +1,6 @@
 \section{Camera Footprint}
 
-The camera footprint is coupled with all of the three angles given in $\bm{\Theta}$. The position of the camera footprint will be calculated using forward kinematics, and the situation is shown in figure \ref{fig:footprint_centre}.
+The camera footprint is coupled with the three attitude angles given in $\bm{\Theta}$. The position of the camera footprint will be calculated using forward kinematics and an illustration of how the roll $\phi$ and pitch $\theta$ affects the camera postion is shown in figure \ref{fig:footprint_centre}.
 
 \begin{figure}
 	\import{/}{kinematics_footprint_figure.tex}
@@ -10,7 +10,7 @@ The camera footprint is coupled with all of the three angles given in $\bm{\Thet
 
 \subsection{Centre Position}
 
-The attitude of the UAV is given in the body frame $\{b\}$ and the height $z_n$ is given in the NED frame $\{n\}$, and the model assumes flat earth. The position of the footprint centre point $\mathbf{c}_b^b$ in the body frame $\{b\}$ is expressed as the geometric (???) distance from the UAV position to the footprint centre point:
+The attitude of the UAV is given in the body frame $\{b\}$ and the height $z_n$ is given in the NED frame $\{n\}$, and the model assumes flat earth. The position of the footprint centre point $\mathbf{c}_b^b$ in the body frame $\{b\}$ can be expressed as the distance from the center of the body frame, the UAV, caused by the angles $\phi$ and $\theta$:
 
 \begin{equation}
 	\label{eq:camera_position_body}
@@ -39,7 +39,7 @@ The final expression for the camera footprint centre position $\mathbf{c}^n$ in 
 \begin{equation}
 \label{eq:camera_position_ned}
 \begin{split}
-	\mathbf{c}^n & = \mathbf{p} + \mathbf{R}_{z,\psi} \mathbf{c}_b^b \\
+	\mathbf{c}^n & = \mathbf{p}^n + \mathbf{R}_{z,\psi} \mathbf{c}_b^b \\
 	& =
 	\begin{bmatrix}
 		x_n \\ y_n
@@ -74,8 +74,8 @@ A hyperspectral pushbroom sensor captures images in a line, and the centre point
 	\label{fig:kinematics_edge_points}
 \end{figure}
 
-The steps for writing the edge points $\mathbf{e}$ in the $\{n\}$ is similar as in equation \ref{eq:camera_position_ned}:
+The final expression for the cameras edge points then becomes:
 
 \begin{equation}
-	\mathbf{e}^n = \mathbf{p} + \mathbf{R}_{z,\psi} \mathbf{e}_b^b.
+	\mathbf{e}_i^n = \mathbf{p} + \mathbf{R}_{z,\psi} \mathbf{e}_{i,b}^b.
 \end{equation}

@@ -1,16 +1,16 @@
 \chapter{Introduction}
 
-Unmanned Aerial Vehcles (UAV) are today widely used in ground observation, and by equipping them with different sensors they can be used in different situations. While the use of UAV eases many cases of ground obsercation, there are some difficulties related to the attitude of the aircraft. When the sensor is attached directly to the aircraft the sensor will be coupled with the UAVs states, so that any change in the UAV states will cause a change in what is actually observed by the sensor. An illustration of this is shown in figure \ref{fig:intro_fig}.
+Unmanned Aerial Vehcles (UAV) are today widely used in ground observation, and by equipping them with different sensors they can be used in different situations. While the use of UAV eases many cases of ground observation, there are some difficulties related to the attitude of the aircraft. When the sensor is attached directly to the aircraft the sensor will be coupled with the UAVs states, so that any change in the UAV states will cause a change in what is actually observed by the sensor. An illustration of this is shown in figure \ref{fig:intro_fig}.
 
 \begin{figure}
 	\import{/}{intro_fig.tex}
-	\caption{An illustration showing a UAV that uses a camera fixed to its body to observe a ground path, and how the position of the camera footprint relates to the UAV attitude.}
+	\caption{An illustration of the issues related to UAV operation with fixed sensors.}
 	\label{fig:intro_fig}
 \end{figure}
 
-A common solution to decouple the sensor from the UAV states is to attach the sensor to a gimbal which will countaract most of the movements of the UAV. While this is a good solution for decoupling, it raises some new issues regarding its weight and size. As one of the benefits of UAVs is their small size the gimbal can quickly be too big and heavy for the UAV, and it may give less effective aerodynamics. This may again lead to increased fuel consumption for the UAV.
+A common solution to decouple the sensor from the UAV states is to attach the sensor to a gimbal which will countaract the movements of the UAV. While this is a good solution for decoupling, it raises some new issues regarding its weight and size. As one of the benefits of UAVs is their small size the gimbal can quickly be too big and heavy for the UAV, and it may make the aerodynamics of the aircraft less effective which usually leads to increased fuel consumption.
 
-This paper will investigate methods to reduce image errors caused by the UAVs attitude, while also avoiding the extra costs associated with a gimbal. This will be accomplished by optimizing a pre-defined curved path that is to be observed with a model of the UAV. The control method will be developed with a hyperspectral pushbroom camera that is fixed to the UAV in mind.
+This paper will investigate methods to reduce image errors caused by the UAVs attitude, while also avoiding the extra costs associated with a gimbal. This will be accomplished by optimizing a pre-defined curved or piecewise linear path that is to be observed with a model of the UAV. The optimized path will be calculated by an offline intervalwise Model Predictive Control (MPC) algorithm before the flight is initiated. The control method will be developed with a hyperspectral pushbroom camera that is fixed to the UAV in mind.
 
 
 \import{./}{related.tex}
