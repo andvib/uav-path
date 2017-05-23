@@ -27,7 +27,7 @@ where $c$ and $s$ are the cosine and sine trigonometric functions respectively. 
 
 \subsubsection{Between NED and ECEF}
 
-The transformation between ECEF and NED when the position is given using laongitude and latitude coordinates is also given by a rotation matrix $\mathbf{R}_n^e(\bm{\Theta}_{en})$, however, it is the velocity vectors in each frame that are related by the rotation matrix. The rotation matrix is composed by two rotations about the latitude $l$ and longitude $\mu$:
+The transformation between ECEF and NED when the position is given using longitude and latitude coordinates is also given by a rotation matrix $\mathbf{R}_n^e(\bm{\Theta}_{en})$, however, it is the velocity vectors in each frame that are related by the rotation matrix. The rotation matrix is composed by two rotations about the latitude $l$ and longitude $\mu$:
 
 \begin{equation}
 	\mathbf{R}_n^e(\bm{\Theta}_{en}) =
@@ -47,5 +47,5 @@ The transformation of the velocity vectors in the ECEF and NED frame can be writ
 Since this transformation represent veloctites, a reference position must be known when transforming positions. Since NED is a local frame, the position in NED $\mathbf{p}^n$ will be given as a displacement from the reference ECEF position $\mathbf{p}_0^e$. The relation between position in NED and ECEF can therefore be written as \cite{ROTATION}:
 
 \begin{equation}
-	\mathbf{p}^e - \mathbf{p}_0^e = \mathbf{R}_n^e \mathbf{p}^n.
+	\mathbf{p}^e - \mathbf{p}_0^e = \mathbf{R}_n^e(\bm{\Theta}_{en}) \mathbf{p}^n.
 \end{equation} 

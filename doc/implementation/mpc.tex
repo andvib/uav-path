@@ -1,6 +1,6 @@
 \section{MPC}
 
-The task of the MPC part of the implementation is to supply the ACADO implementation with the information needed to perform the optimization, and also control the optimization algorithm so that the correct horizon is calculated, as well as storing the results in the correct order. The pseudocode for the MPC implementation is shown in algorithm \ref{alg:mpc} and \ref{alg:genHor}.
+The task of the MPC module is to supply the ACADO implementation with the information needed to perform the optimization, and also control the optimization algorithm so that the correct horizon is calculated, as well as storing the results in the correct order. The pseudocode for the MPC implementation is shown in algorithm \ref{alg:mpc} and \ref{alg:genHor}.
 
 \begin{algorithm}
 \caption{Offline Intervalwise MPC Algorithm}
@@ -50,12 +50,12 @@ The task of the MPC part of the implementation is to supply the ACADO implementa
 
 \subsection{Generating the Trajectory}
 
-The ground path that is to observed is assumed to be \textit{time independent}, meaning that it does not matter when a section of the path is captured by the sensor. However, the function that minimizes a least-squares objective function that is provided with the ACADO toolkit requires that the path is given as values with associated time points.
+The ground path that is to observed is assumed to be \textit{time independent}, meaning that it does not matter when a section of the path is captured by the camera. However, the function that minimizes a least-squares objective function that is provided with the ACADO toolkit requires that the path is given as values with associated time points.
 
-In order to meet this requirement a time dependent path will be generated at the beginning of every iteration of the MPC. This will be done by making the assumption that the UAV will maintain its reference speed throghout the horizon. With this assumption it is simple to calculate the distance the UAV will travel between every timestep, and based on this distance the desired position for the UAV at the next timestep may be calculated. Since the horizon is in the order of a few seconds and the predicted path is updated every iteration, this assumption will not lead to big errors. The principle behind the calculation is shown in figure \ref{fig:predict_path}.
+In order to meet this requirement a time dependent path will be generated at the beginning of every iteration of the MPC. This will be done by making the assumption that the UAV will maintain its reference speed throghout the horizon. With this assumption the distance the UAV will travel between every timestep can be calculated, and based on this distance the desired position for the UAV at the next timestep can be found. Since the horizon is in the order of seconds and the predicted path is updated every iteration, this assumption will not lead to big errors. The principle behind the calculation is shown in figure \ref{fig:predict_path}.
 
 \begin{figure}
 	\import{/}{predict_path_fig.tex}
-	\caption{The trajectory is calculated by assuming that the aircraft will travel at a constant speed so that each point can be spaced by the distance the aircraft travels during one timestep.}
+	\caption{Calculating trajectory based on constant speed.}
 	\label{fig:predict_path}
 \end{figure}

@@ -13,7 +13,7 @@ In many applications the objective function is formulated as a least-square (LSQ
 	f(x) = \frac{1}{2} \sum_{j=1}^m r_j^2(x) = \frac{1}{2} \sum_{j=1}^m |\phi(x, t_j) - y_j|.
 \end{equation}
 
-In equation \ref{eq:lsq} $r_j$ is called the residual function, which represents the distance between the measurement $y_j$ taken at time $t_j$, and the model $\phi$. In the optimization problem the residual function is what the algorithm seeks to minimize by chossing the parameters $x$ that gives the lowest possible value of the residual function $r_j$.
+In equation \ref{eq:lsq} $r_j$ is called the residual function, which represents the distance between the measurement $y_j$ taken at time $t_j$, and the model $\phi$. In the optimization problem the residual function is what the algorithm seeks to minimize by selecting the parameters $x$ that gives the lowest possible value of the residual function $r_j$.
 
 In order to have a reference model that the measurements can be compared to the desired values will be associated with timepoints. This means that the optimization algorithm will at given timepoints compare the current values of $x$ to the value of the reference model at the same time. A visual representation of this is shown in figure \ref{fig:lsq}.
 

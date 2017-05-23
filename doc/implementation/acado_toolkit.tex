@@ -1,13 +1,15 @@
 \section{ACADO toolkit}
 
-The ACADO Toolkit \cite{acadoHOUSKA} is an open-source toolkit that supports several different methods for solving optimization problems. The toolkit provides methods to solve four different classes of optimization problem: Optimal control problems, multi-objective optimization and optimal control problems, parameter and state estimation problems, and model predictive control. Even though the toolkit will be used to create an MPC in this case, the optimal control problems (OCP) class will be used instead. The reason for this is that between each iteration of the MPC algorithm a new trajectory must be generated, and the MPC problem class does not have the functionality needed to do this. How the trajectory is calculated and how it is passed to the toolkit will be explained later in this chapter.
+The ACADO Toolkit \cite{acadoHOUSKA} is an open-source toolkit that supports several different methods for solving optimization problems. The toolkit provides methods to solve four different classes of optimization problem: Optimal control problems, multi-objective optimization and optimal control problems, parameter and state estimation problems, and model predictive control.
+
+Even though the toolkit will be used to create an MPC in this case, the optimal control problems (OCP) class will be used to solve the optimization problem. The reason for this is that between each iteration of the MPC algorithm a new trajectory must be generated, and the MPC problem class does not have the functionality needed to do this. How the trajectory is calculated and how it is passed to the toolkit will be explained later in this chapter.
 
 %To solve the optimization problems the toolkit uses many different algorithms. It also has its own Runge-Kutta and BDF integrators to simulate both ODE's (Ordinary Differential Equation) and DAE's (Differential Algebraic Equation). A MATLAB interface is also supplied by the toolkit, but this will not be used for this thesis.
 
 
 \subsection{Discretization (Workin' Title)}
 
-The model and optimization problem will be written on continuous time form, which means that it has to be discretized in order to be solved. The method used to discretisize the problem plays a big role in how the problem is solved, and ACADO uses the \textit{direct multiple-shooting} method. Direct discretization methods can be explained as "first discretize, then optimize", which allows for easier treatment of inequality constraints \cite{discDIEHL}. One of the major benefits by using the direct multiple-shooting method is that the method is initialized with the result from the previous iteration \cite{stallMATHISEN}.
+The model and optimization problem will be written on continuous time form, which means that it has to be discretized in order to be solved. The method used to discretisize the problem plays a big role in how the problem is solved, and in this thesis the built-in ACADO function for the \textit{direct multiple-shooting} method will be used. Direct discretization methods can be explained as "first discretize, then optimize", which allows for easier treatment of inequality constraints \cite{discDIEHL}. One of the major benefits by using the direct multiple-shooting method is that the method is initialized with the result from the previous iteration \cite{stallMATHISEN}.
 
 In short the direct multiple-shooting method starts by computing a discretized control trajectory for a finite time interval. Independently, the Ordinary Differential Equations (ODE) of the optimization problem is solved one time for every timestep of the discretized control trajectory. Simultaneously as these solutions are computed an integral of a cost function is computed, which is the reason why the direct multiple-shooting method is also called a \textit{simultaneous} method. 
 
@@ -29,7 +31,7 @@ The direct multiple-shooting method can be described by the nonlinear program (N
 
 The Runge-Kutta method is a form of \textit{numerical integrator} that can be used to solve differential equations, and is used by the ACADO toolkit to integrate the prediction model. The method is based on the Euler method, which is a very simple method for numerical integration.
 
-The ACADO toolkit provides algorithms for \textit{explicit} Runge-Kutta methods \cite{acadoHOUSKA}, where explicit means that the method calculates the state of the system at a later time based on the current state (THIS NEEDS SOURCE). The Runge-Kutta method calculates the later state of the system by calculating several approximations of the derivative of the system. The current state of the system together with a linear combination of the approximated derivatives gives the next state of the system \cite{modsimEGELAND}. For a system on the form $\mathbf{\dot{y}} = \mathbf{f}(\mathbf{y},t)$, the Runge-Kutta method can be mathematically expressed as:
+The ACADO toolkit provides algorithms for \textit{explicit} Runge-Kutta methods \cite{acadoHOUSKA}, where explicit means that the method calculates the state of the system at a later time based on the current state. The Runge-Kutta method calculates the later state of the system by calculating several approximations of the derivative of the system. The current state of the system, together with a linear combination of the approximated derivatives, gives the next state of the system \cite{modsimEGELAND}. For a system on the form $\mathbf{\dot{y}} = \mathbf{f}(\mathbf{y},t)$, the Runge-Kutta method can be mathematically expressed as:
 
 \begin{subequations}
 \begin{equation}
@@ -42,26 +44,26 @@ The ACADO toolkit provides algorithms for \textit{explicit} Runge-Kutta methods 
 
 where $t_n$ is the current time, $\mathbf{y}_n$ is the output of the system at the current time, $h$ is the step size and $\sigma$ is the number of approximations of the derivative that is calculated. $a$, $b$ and $c$ are parameters for the specific Runge-Kutta method used, and $c$ must satisfy $0 < c < 1$.
 
-\subsection{Solver}
+%\subsection{Solver}
 
-In order to solve the optimization problem, ACADO uses some kind of solver.
+%In order to solve the optimization problem, ACADO uses some kind of solver.
 
-\subsubsection{KKT-Tolerance}
+%\subsubsection{KKT-Tolerance}
 
-In order to rate the "goodness" of a solution, ACADO uses some kind of KKT-Tolerance.
+%In order to rate the "goodness" of a solution, ACADO uses some kind of KKT-Tolerance.
 
 
 \subsection{Implementing the Optimization Problem}
 
-Since ACADO offers a symbolic way of implementing the optimization problem the equations from chapter \ref{ch:optimization} can be implemented as they stand. The 12 UAV states $\mathbf{x}$ are implemented as differential states, as well as the four control surfaces $\mathbf{u}$. The control rate $\mathbf{\dot{u}}$ is defined as the control states, and linked to the control states through equation \ref{eq:control_relation}. The model of the UAV is implemented using the differential equations for each state.
+Since ACADO offers a symbolic way of implementing the optimization problem the equations from chapter \ref{ch:optimization} can be implemented as they stand. The 12 UAV states $\mathbf{x}$ are implemented as differential states, as well as the four control surfaces $\mathbf{u}$. The control rate $\mathbf{\dot{u}}$ is defined as the control states of the problem, and are linked to the control states through equation \ref{eq:control_relation}. The model of the UAV is implemented using the differential equations for each state.
 
-ACADO offers a symbolic way of defining the objective function as an LSQ as well. By defining what states are included in the LSQ and their weights, ACADO automatically minimizes the objective function. The reference model can either be a constant value or a timevarying variable. Since the path for this implementation needs to be timevarying all the variables will be given with related timepoints. For all the variables except the path however, the values will be constant for all timepoints.
+ACADO offers a symbolic way of defining the objective function as an LSQ as well. By defining what states are included in the LSQ and their weights, ACADO automatically minimizes the objective function. The reference model can either be a constant value or a timevarying variable. When a path is to be tracked the path needs to be given with related timepoints.
 
 Lastly, the constraints are also implemented using the symbolic syntax, by simply assigning max-min values for the variables that are subject to constraints. The initial value of the states is also set using the same syntax. 
 
 
 \subsubsection{Nonlinear Prediction Model}
 
-Initially, effort was made to implement the nonlinear model presented by Beard \& McLain \cite{uavBEARD} as the prediction model in the optimization problem. This would have given more precise results as the nonlinear model is a closer representation of the real UAV, and since the nonlinear model also includes wind the path could be optimized with the knowledge about the wind conditions as well. The level of calculation needed for the nonlinear model is significantly higher; however, since this implementation is intended to run offline before the flight occurs, computation time is not a critical concern.
+Initially, effort was made to implement the nonlinear model presented by Beard \& McLain \cite{uavBEARD} as the prediction model in the optimization problem. This would have given more precise results as the nonlinear model is a closer representation of the real UAV. Since the nonlinear model also includes the effect wind has on the aircraft, the path could be optimized with the knowledge about the wind conditions as well. The level of calculation needed for the nonlinear model is significantly higher; however, since this implementation is intended to run offline before the flight occurs, computation time is not a critical concern.
 
-Achieving stable flight within in the optimization problem with the nonlinear model on the other hand, turned out to be a difficult task that was far from trivial. This is somewhat due to the nonlinearity, but also the high coupling between states in the model. The coupling causes changes in one state to affect many other states which results in a much more complex problem. Several different algorithm and solver settings was tried, as well as different objective functions and weighting of these functions. After many attempts the decision to use the linear model instead was made, largely due to this being a project with limited time available.
+Achieving stable flight within in the optimization problem with the nonlinear model on the other hand, turned out to be a difficult task that was far from trivial. This is somewhat due to the nonlinearity, but also to the high coupling between states in the model. The coupling causes changes in one state to affect many other states, which results in a much more complex problem. Several different algorithm and solver settings in ACADO was tested, as well as different objective functions and weighting of these functions. After many attempts the decision to use the linear model instead was made, largely due to this being a project with limited time available.
