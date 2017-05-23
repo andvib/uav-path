@@ -8,7 +8,7 @@ figure(1);
 grid on;
 hold on;
 title('POSITION');
-for i = 110:10:110
+for i = 10:10:140
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -24,7 +24,7 @@ figure(2);
 grid on;
 hold on;
 title('CAMERA CENTRE POINT');
-for i = 110:10:110
+for i = 10:10:140
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -36,7 +36,7 @@ for i = 110:10:110
     end
 
     plot(c_n_1(2,:),c_n_1(1,:));
-    plot(c_n_2(2,:),c_n_2(1,:));
+    %plot(c_n_2(2,:),c_n_2(1,:));
 end
 
 plot(PATH(:,2), PATH(:,1),'k');
@@ -50,7 +50,7 @@ figure(3);
 grid on;
 hold on;
 title('HEIGHT');
-for i = 110:10:110
+for i = 10:10:140
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -67,7 +67,7 @@ grid on;
 hold on;
 title('ATTITUDE');
 k = 1;
-for i = 110:10:110
+for i = 10:10:140
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -91,7 +91,7 @@ grid on;
 hold on;
 title('CONTROl');
 k = 1;
-for i = 110:10:110
+for i = 10:10:140
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -118,7 +118,7 @@ grid on;
 hold on;
 title('DURATION');
 k = 1;
-for i = 110:10:110
+for i = 10:10:140
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     

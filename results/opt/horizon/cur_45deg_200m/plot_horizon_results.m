@@ -8,7 +8,7 @@ figure(1);
 grid on;
 hold on;
 title('POSITION');
-for i = 20:10:120
+for i = 10:10:140
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -24,7 +24,7 @@ figure(2);
 grid on;
 hold on;
 title('CAMERA CENTRE POINT');
-for i = 20:10:120
+for i = 110%20:10:120
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -50,7 +50,7 @@ figure(3);
 grid on;
 hold on;
 title('HEIGHT');
-for i = 20:10:120
+for i = 110%20:10:120
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -67,7 +67,7 @@ grid on;
 hold on;
 title('ATTITUDE');
 k = 1;
-for i = 20:10:120
+for i = 110%20:10:120
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -89,9 +89,9 @@ plot(STATES(:,1), psi);
 figure(5);
 grid on;
 hold on;
-title('CONTROl');
+title('CONTROL');
 k = 1;
-for i = 20:10:120
+for i = 110%20:10:120
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -118,7 +118,7 @@ grid on;
 hold on;
 title('DURATION');
 k = 1;
-for i = 20:10:120
+for i = 110%20:10:120
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
