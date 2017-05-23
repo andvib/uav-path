@@ -43,6 +43,7 @@ The linear decoupled UAV model presented in chapter \ref{ch:kinematics} will be 
 The prediction model relates to the equality constraints of equation \ref{eq:optimization_formulation} in the form of differential equations. As explained in the previous chapter the control rates $\Delta\mathbf{u}$ shown in equation \ref{eq:control_rates}, which means that by the optimization solver $\Delta\mathbf{u}$ will be handled as the control input. The control surfaces $\mathbf{u}$ are calculated from the rates $\Delta\mathbf{u}$ through integration:
 
 \begin{equation}
+	\label{eq:control_relation}
 	\mathbf{\dot{u}} = \Delta\mathbf{u}.
 \end{equation}
 

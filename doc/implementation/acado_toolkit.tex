@@ -51,7 +51,16 @@ In order to solve the optimization problem, ACADO uses some kind of solver.
 In order to rate the "goodness" of a solution, ACADO uses some kind of KKT-Tolerance.
 
 
-\subsection{Nonlinear Model (Working Title)}
+\subsection{Implementing the Optimization Problem}
+
+Since ACADO offers a symbolic way of implementing the optimization problem the equations from chapter \ref{ch:optimization} can be implemented as they stand. The 12 UAV states $\mathbf{x}$ are implemented as differential states, as well as the four control surfaces $\mathbf{u}$. The control rate $\mathbf{\dot{u}}$ is defined as the control states, and linked to the control states through equation \ref{eq:control_relation}. The model of the UAV is implemented using the differential equations for each state.
+
+ACADO offers a symbolic way of defining the objective function as an LSQ as well. By defining what states are included in the LSQ and their weights, ACADO automatically minimizes the objective function. The reference model can either be a constant value or a timevarying variable. Since the path for this implementation needs to be timevarying all the variables will be given with related timepoints. For all the variables except the path however, the values will be constant for all timepoints.
+
+Lastly, the constraints are also implemented using the symbolic syntax, by simply assigning max-min values for the variables that are subject to constraints. The initial value of the states is also set using the same syntax. 
+
+
+\subsubsection{Nonlinear Prediction Model}
 
 Initially, effort was made to implement the nonlinear model presented by Beard \& McLain \cite{uavBEARD} as the prediction model in the optimization problem. This would have given more precise results as the nonlinear model is a closer representation of the real UAV, and since the nonlinear model also includes wind the path could be optimized with the knowledge about the wind conditions as well. The level of calculation needed for the nonlinear model is significantly higher; however, since this implementation is intended to run offline before the flight occurs, computation time is not a critical concern.
 
