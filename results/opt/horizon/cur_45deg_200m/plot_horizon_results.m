@@ -1,30 +1,33 @@
 close all;
 clear all;
 
+iterations = (10:10:140);
 
 %% PLOT POSITION %%
 
 figure(1);
 grid on;
 hold on;
-title('POSITION');
-for i = 10:10:140
+for i = iterations
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
     plot(STATES(:,3), STATES(:,2));
 end
 xlim([-300 500]);
-ylim([200 1000]);
-
+ylim([0 1000]);
+ylabel('North [m]');
+xlabel('East [m]');
+%cleangfiure;
+%matlab2tikz('fig/uav_position.tex');
+saveas(gcf, 'fig/uav_position', 'epsc');
 
 %% PLOT CAMERA CENTRE POINT%%
 
 figure(2);
 grid on;
 hold on;
-title('CAMERA CENTRE POINT');
-for i = 110%20:10:120
+for i = iterations
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -41,7 +44,12 @@ end
 
 plot(PATH(:,2), PATH(:,1),'k');
 xlim([-300 500]);
-ylim([200 1000]);
+ylim([0 1000]);
+ylabel('North [m]');
+xlabel('East [m]');
+%cleanfigure;
+%matlab2tikz('fig/camera_position.tex');
+saveas(gcf, 'fig/camera_position', 'epsc');
 
 
 %% PLOT HEIGHT %%
@@ -49,8 +57,7 @@ ylim([200 1000]);
 figure(3);
 grid on;
 hold on;
-title('HEIGHT');
-for i = 110%20:10:120
+for i = iterations
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -58,6 +65,10 @@ for i = 110%20:10:120
 end
 xlim([0 40]);
 ylim([100 160]);
+ylabel('Height [m]');
+xlabel('Time [s]');
+%matlab2tikz('fig/height.tex');
+saveas(gcf, 'fig/height', 'epsc');
 
 
 %% PLOT HEIGHT %%
@@ -65,9 +76,8 @@ ylim([100 160]);
 figure(4);
 grid on;
 hold on;
-title('ATTITUDE');
 k = 1;
-for i = 110%20:10:120
+for i = iterations
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -77,11 +87,25 @@ for i = 110%20:10:120
     k = k+1;
 end
 subplot(3,1,1);
+grid on;
+hold on;
 plot(STATES(:,1), phi);
+ylabel('\phi [rad]');
+
 subplot(3,1,2);
+grid on;
+hold on;
 plot(STATES(:,1), theta);
+ylabel('\theta [rad]');
+
 subplot(3,1,3);
+grid on;
+hold on;
 plot(STATES(:,1), psi);
+ylabel('\psi [rad]');
+xlabel('Time [s]');
+%matlab2tikz('fig/attitude.tex');
+saveas(gcf, 'fig/attitude','epsc');
 
 
 %% PLOT CONTROLS %%
@@ -91,7 +115,7 @@ grid on;
 hold on;
 title('CONTROL');
 k = 1;
-for i = 110%20:10:120
+for i = iterations
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -116,9 +140,8 @@ plot(STATES(:,1), throttle);
 figure(6);
 grid on;
 hold on;
-title('DURATION');
 k = 1;
-for i = 110%20:10:120
+for i = 10:10:140
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
@@ -126,4 +149,6 @@ for i = 110%20:10:120
     dur(k,2) = DURATION;
     k = k+1;
 end
-plot(dur(:,1), dur(:,2),'*')
+plot(dur(:,1), dur(:,2))
+%matlab2tikz('fig/duration.tex');
+saveas(gcf, 'fig/duration', 'epsc');
