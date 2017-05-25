@@ -73,7 +73,7 @@ xlabel('Time [s]');
 saveas(gcf, 'fig/height', 'epsc');
 
 
-%% PLOT HEIGHT %%
+%% PLOT ATTITUDE %%
 
 figure(4);
 grid on;
