@@ -9,6 +9,7 @@ figure(1);
 grid on;
 hold on;
 plot(STATES(:,3), STATES(:,2));
+plot(PATH(:,2), PATH(:,1),'k');
 xlim([-300 500]);
 ylim([0 800]);
 ylabel('North [m]');
