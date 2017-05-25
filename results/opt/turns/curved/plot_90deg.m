@@ -2,6 +2,7 @@ close all;
 clear all;
 
 radii = [50, 100, 150, 200];
+%radii = 50;
 
 
 %% PLOT POSITION %%
@@ -36,7 +37,7 @@ for i = radii
     
     for j = (1:length(STATES(:,1)))
         [x_temp, y_temp] = camera_pos([STATES(j,8), STATES(j,9), STATES(j,10)],...
-                                  [STATES(j,2), STATES(j,3), STATES(j,4)], 0.0);
+                                  [STATES(j,2), STATES(j,3), STATES(j,4)], 0.33);
         c_n_1(:,j) = x_temp;
         c_n_2(:,j) = y_temp;
     end
@@ -45,7 +46,7 @@ for i = radii
     grid on;
     hold on;
     plot(c_n_1(2,:),c_n_1(1,:));
-    %plot(c_n_2(2,:),c_n_2(1,:));
+    plot(c_n_2(2,:),c_n_2(1,:));
     plot(PATH(:,2), PATH(:,1),'k');
     xlim([-300 500]);
     ylim([200 1000]);

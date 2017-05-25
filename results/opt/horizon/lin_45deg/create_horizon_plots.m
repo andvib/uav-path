@@ -2,7 +2,7 @@ close all;
 clear all;
 
 iterations = (10:10:140);
-
+%iterations = 130;
 %% PLOT POSITION %%
 
 figure(1);
