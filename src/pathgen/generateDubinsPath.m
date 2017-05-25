@@ -4,6 +4,7 @@ function path = generateDubinsPath(waypoints, step, R)
     path = [];
 
     for i = (2: N)
+        i
         [~, c_s, lambda_s, c_e, lambda_e, z1, ~, z2, ~, ~] = ...
                     dubinsPath(waypoints(i-1,1:3)',waypoints(i-1,4),...
                                waypoints(i,1:3)',waypoints(i,4),R);
@@ -21,7 +22,7 @@ function path = generateDubinsPath(waypoints, step, R)
         v1 = P1-P0;
         v2 = P2-P0;
         v3 = [0 -1;1 0]*v1;
-        a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi),1000);
+        a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi),10000);
         v = v1*cos(a)+v3*sin(a);
 
         
@@ -46,7 +47,7 @@ function path = generateDubinsPath(waypoints, step, R)
         v1 = P1-P0;
         v2 = P2-P0;
         v3 = [0 -1;1 0]*v1;
-        a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi),1000);
+        a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi),10000);
         v = v1*cos(a)+v3*sin(a);
 
         if lambda_e == 1
