@@ -1,6 +1,6 @@
 \section{Horizon Length}
 
-In order to determine what horizon length is needed to optimize the path, several paths were optimized with horizon lengths varying from $10$ to $140$ spaced by $10$. The different horizon lengths were used to optimize a path consisting of a $45\degree$ turn, and both linear and curved paths were used. The results of these optimizations can be seen in Figures \ref{fig:lin_45deg_uav_position} to \ref{fig:cur_45deg_150m_camera_position}.
+In order to determine what horizon length is needed to optimize the path, several paths were optimized with horizon lengths varying from $10$ to $140$ spaced by $10$. The different horizon lengths were used to optimize a path consisting of a $45\degree$ turn, and both linear and curved paths were used. The results of these optimizations can be seen in Figures \ref{fig:horizon_uav_position} and \ref{fig:horizon_camera_position}.
 
 The results for the three paths are very similar; the longer horizon length, the better tracking of the path. The MPC starts turning earlier than the ground track to compensate for the shift in the camera position, and the aircraft straightens out from the turn later for the same reason.
 
@@ -8,51 +8,87 @@ For the shorter horizon lengths the MPC runs into problems because it hasn't pla
 
 Upon closer inspections it can be seen that when the horizon length reaches $90$, there are no more big unwanted motions in the system. As the horizon length reaches $110$ the optimized paths are almost identical, but lincreasing the horizon length still increases the accuracy of the path tracking. The optimization is time consuming, and the duration it takes to optimize the paths increases exponentially. For this reason a horizon length of $110$ will be used for the rest of the simulations, since this gives a accurate path tracking for a relatively short computation time.
 
+%\begin{figure}
+%	\begin{minipage}{1\textwidth}
+%	\makebox[\textwidth][c]{
+%	\subfloat[Subfigure 1][lin 45deg]{\includegraphics[width=0.7\textwidth, keepaspectratio=true]{../../results/opt/horizon/lin_45deg/fig/uav_position.eps}}
+%	\subfloat[Subfigure 2][cur 45deg 200m]{\includegraphics[width=0.7\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_200m/fig/uav_position.eps}}}
+%	\end{minipage}
+%	\qquad
+%	\begin{minipage}{1\textwidth}
+%	\centering
+%	\subfloat[Subfigure 3][cur 45deg 150m]{\includegraphics[width=0.7\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_150m/fig/uav_position.eps}}
+%	\end{minipage}
+%	\caption{Position of the UAV with different horizon lengths when tracking a $45\degree$ turn.}
+%	\label{fig:collection}
+%\end{figure}
+
 %% Position figures
-\begin{figure}
-	\centering
-    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/lin_45deg/fig/uav_position.eps}}
-	\caption{Position of the UAV with different horizon lengths when tracking a $45\degree$ turn.}
-	\label{fig:lin_45deg_uav_position}
-\end{figure}
 
 \begin{figure}
-	\centering
-    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_200m/fig/uav_position.eps}}
-	\caption{Position of the UAV with different horizon lengths when tracking a $45\degree$ turn with $200$ m radius.}
-	\label{fig:cur_45deg_200m_uav_position}
+	\makebox[\textwidth][c]{
+	\subfloat[Subfigure 1][Linear $45\degree$ turn.]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/lin_45deg/fig/uav_position.eps}}}
+	\qquad
+	\makebox[\textwidth][c]{
+	\subfloat[Subfigure 2][Curved $45\degree$ turn with $200$m radius.]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_200m/fig/uav_position.eps}}}
+	\caption{The position of the UAV during the two turns with horizon lengths varying from 10 to 140.}
+	\label{fig:horizon_uav_position}
 \end{figure}
 
-\begin{figure}
+%\begin{figure}
+%	\centering
+%    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/lin_45deg/fig/uav_position.eps}}
+%	\caption{Position of the UAV with different horizon lengths when tracking a $45\degree$ turn.}
+%	\label{fig:lin_45deg_uav_position}
+%\end{figure}
+
+%\begin{figure}
+%	\centering
+%    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_200m/fig/uav_position.eps}}
+%	\caption{Position of the UAV with different horizon lengths when tracking a $45\degree$ turn with $200$ m radius.}
+%	\label{fig:cur_45deg_200m_uav_position}
+%\end{figure}
+
+%\begin{figure}
 	%\input{../../results/opt/horizon/cur_45deg_150m/fig/uav_position.tex}
-	\centering
-    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_150m/fig/uav_position.eps}}
-	\caption{Position of the UAV with different horizon lengths when tracking a $45\degree$ turn with $150$m radius.}
-	\label{fig:cur_45deg_150m_uav_position}
-\end{figure}
+%	\centering
+%    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_150m/fig/uav_position.eps}}
+%	\caption{Position of the UAV with different horizon lengths when tracking a $45\degree$ turn with $150$m radius.}
+%	\label{fig:cur_45deg_150m_uav_position}
+%\end{figure}
 
 
 %% Camera position
 \begin{figure}
-	\centering
-    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/lin_45deg/fig/camera_position.eps}}
-	\caption{Position of the camera centre point with different horizon lengths when tracking a $45\degree$ turn.}
-	\label{fig:lin_45deg_camera_position}
+	\makebox[\textwidth][c]{
+	\subfloat[Subfigure 1][Linear $45\degree$ turn.]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/lin_45deg/fig/camera_position.eps}}}
+	\qquad
+	\makebox[\textwidth][c]{
+	\subfloat[Subfigure 2][Curved $45\degree$ turn with $200$m radius.]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_200m/fig/camera_position.eps}}}
+	\caption{The camera position during the two turns with horizon lengths varying from 10 to 140.}
+	\label{fig:horizon_camera_position}
 \end{figure}
 
-\begin{figure}
-	\centering
-    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_200m/fig/camera_position.eps}}
-	\caption{Position of the camera centre point with different horizon lengths when tracking a $45\degree$ turn with $200$m radius.}
-	\label{fig:cur_45deg_200m_camera_position}
-\end{figure}
+%\begin{figure}
+%	\centering
+%    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/lin_45deg/fig/camera_position.eps}}
+%	\caption{Position of the camera centre point with different horizon lengths when tracking a $45\degree$ turn.}
+%	\label{fig:lin_45deg_camera_position}
+%\end{figure}
 
-\begin{figure}
-	\centering
-    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_150m/fig/camera_position.eps}}
-	\caption{Position of the camera centre point with different horizon lengths when tracking a $45\degree$ turn with $150$m radius.}
-	\label{fig:cur_45deg_150m_camera_position}
-\end{figure}
+%\begin{figure}
+%	\centering
+%    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_200m/fig/camera_position.eps}}
+%	\caption{Position of the camera centre point with different horizon lengths when tracking a $45\degree$ turn with $200$m radius.}
+%	\label{fig:cur_45deg_200m_camera_position}
+%\end{figure}
+
+%\begin{figure}
+%	\centering
+%    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/horizon/cur_45deg_150m/fig/camera_position.eps}}
+%	\caption{Position of the camera centre point with different horizon lengths when tracking a $45\degree$ turn with $150$m radius.}
+%	\label{fig:cur_45deg_150m_camera_position}
+%\end{figure}
 
 
 %% Height
