@@ -171,101 +171,101 @@ save('test.mat');
 
 %% SECOND RUN
 
-set_param('autopilot_altered', 'StopTime', int2str(sim_time));
-sim autopilot_altered;
- 
-figure(7);
-plot(states2.Position.p_E.Data, states2.Position.p_N.Data);
-hold on;
-grid on;
-
-waypoints = [[0,0,0,0]; [1800,10,0,0];[1800,3500,0,pi/2];[5000,6000,0,pi]];
-R = 600;
- 
-[N,~] = size(waypoints);
-
-for i = (2: N)
-    [L, c_s, lambda_s, c_e, lambda_e, z1, q1, z2, z3, q3] = ...
-           dubinsPath(waypoints(i-1,1:3)',waypoints(i-1,4),waypoints(i,1:3)',waypoints(i,4),R);
-    
-    [x1, y1] = createCircle(c_s(2),c_s(1),R);
-    [x2, y2] = createCircle(c_e(2),c_e(1),R);
-
-    %plot(x1,y1,'--k');
-    %plot(x2,y2,'--k');
-    %plot(waypoints(i,2),waypoints(i,1),'*b');
-    %plot(z1(2),z1(1),'ob');
-    %plot(z2(2),z2(1),'or');
-    %plot(z3(2),z3(1),'*b');
-    plot([z1(2),z2(2)],[z1(1),z2(1)],'--k');
-    
-    if lambda_s == 1
-        P0 = [c_s(2);c_s(1)];
-        P2 = [waypoints(i-1,2);waypoints(i-1,1)];
-        P1 = [z1(2);z1(1)];
-    else
-        P0 = [c_s(2);c_s(1)];
-        P1 = [waypoints(i-1,2);waypoints(i-1,1)];
-        P2 = [z1(2);z1(1)];
-    end
-
-    v1 = P1-P0;
-    v2 = P2-P0;
-    v3 = [0 -1;1 0]*v1; % (as you suggested)
-    a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi));
-    % Note the absence of the 'abs' function in 'atan2'
-    v = v1*cos(a)+v3*sin(a);
-    plot(v(1,:)+P0(1),v(2,:)+P0(2),'--k')
-    
-    if lambda_e == -1
-        P0 = [c_e(2);c_e(1)];
-        P2 = [waypoints(i,2);waypoints(i,1)];
-        P1 = [z2(2);z2(1)];
-    else
-        P0 = [c_e(2);c_e(1)];
-        P1 = [waypoints(i,2);waypoints(i,1)];
-        P2 = [z2(2);z2(1)];
-    end
-
-    v1 = P1-P0;
-    v2 = P2-P0;
-    v3 = [0 -1;1 0]*v1;
-    a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi));
-    % Note the absence of the 'abs' function in 'atan2'
-    v = v1*cos(a)+v3*sin(a);
-    plot(v(1,:)+P0(1),v(2,:)+P0(2),'--k')
-end
-plot(waypoints(1,2),waypoints(1,1),'*k');
-plot(waypoints(i,2),waypoints(i,1),'*k');
-
-for i = (1:states2.Position.p_N.Length)
-    [x_temp, y_temp] = camera_pos([states2.Attitude.phi.Data(i), states2.Attitude.theta.Data(i), states2.Attitude.psi.Data(i)],...
-                                  [states2.Position.p_N.Data(i), states2.Position.p_E.Data(i), states2.Position.p_D.Data(i)], 0.331612558);
-    c_n_1(:,i) = x_temp;
-    c_n_2(:,i) = y_temp;
-end
-
-plot(c_n_1(2,:),c_n_1(1,:));
-plot(c_n_2(2,:),c_n_2(1,:));
-
-plot(p_nd(:,2),p_nd(:,1));
-title('POSITION - ALTERED');
-
-figure(8);
-hold on;
-grid on;
-plot(heading_desired);
-plot(states2.Attitude.psi);
-legend('Desired', 'Actual');
-title('Heading - actual vs. desired');
-
-figure(9);
-hold on;
-grid on;
-title('Attitude');
-plot(states2.Attitude.phi);
-plot(states2.Attitude.theta);
-plot(states2.Attitude.psi);
-legend('\phi','\theta','\psi');
-
-save('second_run.mat');
+% set_param('autopilot_altered', 'StopTime', int2str(sim_time));
+% sim autopilot_altered;
+%  
+% figure(7);
+% plot(states2.Position.p_E.Data, states2.Position.p_N.Data);
+% hold on;
+% grid on;
+% 
+% waypoints = [[0,0,0,0]; [1800,10,0,0];[1800,3500,0,pi/2];[5000,6000,0,pi]];
+% R = 600;
+%  
+% [N,~] = size(waypoints);
+% 
+% for i = (2: N)
+%     [L, c_s, lambda_s, c_e, lambda_e, z1, q1, z2, z3, q3] = ...
+%            dubinsPath(waypoints(i-1,1:3)',waypoints(i-1,4),waypoints(i,1:3)',waypoints(i,4),R);
+%     
+%     [x1, y1] = createCircle(c_s(2),c_s(1),R);
+%     [x2, y2] = createCircle(c_e(2),c_e(1),R);
+% 
+%     %plot(x1,y1,'--k');
+%     %plot(x2,y2,'--k');
+%     %plot(waypoints(i,2),waypoints(i,1),'*b');
+%     %plot(z1(2),z1(1),'ob');
+%     %plot(z2(2),z2(1),'or');
+%     %plot(z3(2),z3(1),'*b');
+%     plot([z1(2),z2(2)],[z1(1),z2(1)],'--k');
+%     
+%     if lambda_s == 1
+%         P0 = [c_s(2);c_s(1)];
+%         P2 = [waypoints(i-1,2);waypoints(i-1,1)];
+%         P1 = [z1(2);z1(1)];
+%     else
+%         P0 = [c_s(2);c_s(1)];
+%         P1 = [waypoints(i-1,2);waypoints(i-1,1)];
+%         P2 = [z1(2);z1(1)];
+%     end
+% 
+%     v1 = P1-P0;
+%     v2 = P2-P0;
+%     v3 = [0 -1;1 0]*v1; % (as you suggested)
+%     a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi));
+%     % Note the absence of the 'abs' function in 'atan2'
+%     v = v1*cos(a)+v3*sin(a);
+%     plot(v(1,:)+P0(1),v(2,:)+P0(2),'--k')
+%     
+%     if lambda_e == -1
+%         P0 = [c_e(2);c_e(1)];
+%         P2 = [waypoints(i,2);waypoints(i,1)];
+%         P1 = [z2(2);z2(1)];
+%     else
+%         P0 = [c_e(2);c_e(1)];
+%         P1 = [waypoints(i,2);waypoints(i,1)];
+%         P2 = [z2(2);z2(1)];
+%     end
+% 
+%     v1 = P1-P0;
+%     v2 = P2-P0;
+%     v3 = [0 -1;1 0]*v1;
+%     a = linspace(0,mod(atan2(det([v1,v2]),dot(v1,v2)),2*pi));
+%     % Note the absence of the 'abs' function in 'atan2'
+%     v = v1*cos(a)+v3*sin(a);
+%     plot(v(1,:)+P0(1),v(2,:)+P0(2),'--k')
+% end
+% plot(waypoints(1,2),waypoints(1,1),'*k');
+% plot(waypoints(i,2),waypoints(i,1),'*k');
+% 
+% for i = (1:states2.Position.p_N.Length)
+%     [x_temp, y_temp] = camera_pos([states2.Attitude.phi.Data(i), states2.Attitude.theta.Data(i), states2.Attitude.psi.Data(i)],...
+%                                   [states2.Position.p_N.Data(i), states2.Position.p_E.Data(i), states2.Position.p_D.Data(i)], 0.331612558);
+%     c_n_1(:,i) = x_temp;
+%     c_n_2(:,i) = y_temp;
+% end
+% 
+% plot(c_n_1(2,:),c_n_1(1,:));
+% plot(c_n_2(2,:),c_n_2(1,:));
+% 
+% plot(p_nd(:,2),p_nd(:,1));
+% title('POSITION - ALTERED');
+% 
+% figure(8);
+% hold on;
+% grid on;
+% plot(heading_desired);
+% plot(states2.Attitude.psi);
+% legend('Desired', 'Actual');
+% title('Heading - actual vs. desired');
+% 
+% figure(9);
+% hold on;
+% grid on;
+% title('Attitude');
+% plot(states2.Attitude.phi);
+% plot(states2.Attitude.theta);
+% plot(states2.Attitude.psi);
+% legend('\phi','\theta','\psi');
+% 
+% save('second_run.mat');
