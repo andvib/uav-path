@@ -2,51 +2,6 @@
 
 The task of the MPC module is to supply the ACADO implementation with the information needed to perform the optimization, and also control the optimization algorithm so that the correct horizon is calculated, as well as storing the results in the correct order. The pseudocode for the MPC implementation is shown in algorithm \ref{alg:mpc} and \ref{alg:genHor}.
 
-\begin{algorithm}
-\caption{Offline Intervalwise MPC Algorithm}
-\label{alg:mpc}
-\begin{algorithmic}
-\Procedure{MPC}{}
-	\State $\textit{path} \gets \text{path from file}$
-	\State $\textit{timestep} \gets \text{duration of timestep [s]}$
-	\State $\textit{horizonlen} \gets \text{number of } \textit{timestep} \text{ in horizon}$
-	\State $\textit{intervallen} \gets \text{number of } \textit{timestep} \text{ in interval}$
-	\State $\textit{intervals} \gets \text{number of intervals needed to cover } \textit{path}$
-	\State $\textit{x}_0 \gets \text{initial values of states}$
-	\State $\textit{u}_0 \gets \text{initial values of control states}$
-	\State $\Delta\textit{u}_0 \gets \text{inital values of control rates}$
-	\State $\textit{results[]} \gets \text{empty list to store result from optimization}$
-	\For{each \textit{interval}}
-		\State $\mathbf{c}^n \gets \text{calculate camera centre position using equation } \ref{eq:camera_position_ned}$
-		\State $\textit{trajectory} \gets$ \Call{GenerateHorizon}{\textit{path, timestep, horizonlen,  } $\mathbf{c}^n$}
-		\State Solve optimization with initial states $x_0$, $u_0$, $\Delta u_0$ for current \textit{horizon}
-		\State $\textit{x}_0 \gets \text{ last } \textit{x} \text{ value in the } \textit{interval}$
-		\State $\textit{u}_0 \gets \text{ last } \textit{u} \text{ value in the } \textit{interval}$
-		\State $\Delta\textit{u}_0 \gets \text{ last } \Delta\textit{u} \text{ value in the } \textit{interval}$
-		\State $\textit{result[]} \gets$ the first \textit{intervallen} number of \textit{timesteps} from \textit{horizon}
-	\EndFor
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}
-\caption{Generate horizon}
-\label{alg:genHor}
-\begin{algorithmic}
-\Procedure{GenerateHorizon}{\textit{\textit{path, timestep, horizonlen, } $\mathbf{c}^n$}}
-	\State $\textit{distance} \gets \text{distance travelled during one timestep}$
-	\State \textit{pos} $\gets$ find the point in \textit{path} that is closes to current camera position $\mathbf{c}^n$
-	\State $\textit{trajectory[]} \gets \text{empty list to store the generated trajectory}$
-	\For{each \textit{timestep} in \textit{horizonlen}}
-		\State Find point \textit{$pos_{temp}$} on \textit{path} with the given \textit{distance} away from current \textit{pos}
-		\State $\textit{trajectory[]} \gets pos_{temp}$
-		\State $pos \gets pos_{temp}$
-	\EndFor
-	\Return \textit{trajectory}
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
-
 
 \subsection{Generating the Trajectory}
 
