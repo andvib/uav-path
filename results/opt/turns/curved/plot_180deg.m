@@ -1,19 +1,21 @@
 close all;
 clear all;
 
-radii = [50, 100, 150, 200, 250];
+radii = [50, 100, 150, 200, 250, 300];
 
 x_limits = [[-300 200];
             [-150 300];
             [-100 400];
             [-100 500];
-            [-100 600]];
+            [-100 600];
+            [-100 700]];
 
 y_limits = [[100 600];
             [150 600];
             [250 650];
             [300 900];
-            [400 1100]];
+            [400 1100];
+            [500 1300]];
         
 %% PLOT POSITION %%
 k = 1;
@@ -103,29 +105,31 @@ for i = radii
     a = sprintf('cur_180deg_%dm.m', i);
     run (a)
     
-    subplot(3,1,1);
+    %subplot(3,1,1);
     grid on;
     hold on;
     plot(STATES(:,1), STATES(:,8));
     ylabel('\phi [rad]');
+    xlabel('Time [s]');
     ylim([-1 1]);
 
-    subplot(3,1,2);
-    grid on;
-    hold on;
-    plot(STATES(:,1), STATES(:,9));
-    ylabel('\theta [rad]');
-    ylim([-1 1]);
+    %subplot(3,1,2);
+    %grid on;
+    %hold on;
+    %plot(STATES(:,1), STATES(:,9));
+    %ylabel('\theta [rad]');
+    %ylim([-1 1]);
 
-    subplot(3,1,3);
-    grid on;
-    hold on;
-    plot(STATES(:,1), STATES(:,10));
-    ylabel('\psi [rad]');
-    ylim([-1 1]);
+    %subplot(3,1,3);
+    %grid on;
+    %hold on;
+    %plot(STATES(:,1), STATES(:,10));
+    %ylabel('\psi [rad]');
+    %ylim([-1 1]);
 end
 %cleanfigure;
 %matlab2tikz('fig/attitude.tex');
+legend('50', '100', '150', '200', '250', '300');
 saveas(gcf, 'fig_180deg/attitude','epsc');
 
 

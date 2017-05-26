@@ -69,7 +69,7 @@ function path = generateDubinsPath(waypoints, step, R)
             x_dist = x - path(i,1);
             y_dist = y - path(i,2);
             dist = sqrt(x_dist^2 + y_dist^2);
-            if (dist > step-0.05) && (dist < step+0.05)
+            if (dist > step-0.08) && (dist < step+0.08)
                 x = path(i,1);
                 y = path(i,2);
                 path_temp = [path_temp ; [x y]];

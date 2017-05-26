@@ -15,7 +15,7 @@ for i = iterations
     plot(STATES(:,3), STATES(:,2));
 end
 xlim([-300 500]);
-ylim([0 1000]);
+ylim([0 800]);
 ylabel('North [m]');
 xlabel('East [m]');
 %cleangfiure;
@@ -44,7 +44,7 @@ end
 
 plot(PATH(:,2), PATH(:,1),'k');
 xlim([-300 500]);
-ylim([0 1000]);
+ylim([0 800]);
 ylabel('North [m]');
 xlabel('East [m]');
 %cleanfigure;
