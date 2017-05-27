@@ -1,7 +1,7 @@
 \section{UAV Model}
 \label{sec:model}
 
-In this thesis the linearized UAV model presented by Beard \& McLain \cite{uavBEARD} will be used as the prediction model for the path planner that is presented in chapter \ref{ch:optimization}. In this section the UAV states described by this model will be presented, as well as the linearization method.
+In this thesis the linearized UAV model presented by Beard \& McLain \cite{uavBEARD} will be used as the prediction model for the path planner that is presented in chapter \ref{ch:optimization}. In this section the UAV states used in this model will be presented, as well as the linearization method.
 
 \subsection{UAV States}
 % SNAME should probably be mentioned here
@@ -10,7 +10,7 @@ The position of the UAV will be given using the North East Down (NED) coordinate
 \begin{equation}
 	\mathbf{p}_{b/n}^n =
 	\begin{bmatrix}
-		N \\ E \\ D
+		p_N \\ p_E \\ p_D
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
@@ -62,7 +62,7 @@ The UAV model has four control inputs, namely the elevator, aileron, rudder, and
 
 \subsection{Linearizing the Model}
 
-In order to ease computational load the \textit{linear decoupled model} of the UAV presented by Beard \& McLain \cite{uavBEARD} will be used in this thesis. While a linear model is not able to fully describe the motions of an aircraft, it is valid around the \textit{trimmed state} of the aircraft. An aircraft in its trimmed state will be able to maintain a straight level flight without any change in the control input, and since the UAV in this thesis is not expected to perform any high-angle maneuvers the linear model will be valid. An aircraft in the trimmed state satisfies the following equation:
+In order to ease computational load the \textit{linear decoupled model} of a UAV, presented by Beard \& McLain \cite{uavBEARD}, will be used in this thesis. While a linear model is not able to fully describe the motions of an aircraft, it is valid around the \textit{trimmed state} of the aircraft. An aircraft in its trimmed state will be able to maintain a straight level flight without any change in the control input, and since the UAV in this thesis is not expected to perform any high-angle maneuvers that puts it far away from the trimmed state, the linear model will be valid. An aircraft in the trimmed state satisfies the following equation:
 
 \begin{equation}
 	\mathbf{\dot{x}} = f(\mathbf{x}^*, \mathbf{u}^*) = 0.
@@ -70,7 +70,7 @@ In order to ease computational load the \textit{linear decoupled model} of the U
 
 Linearization is performed by adding perturbations to the trimmed state solution, and the linearized states $\mathbf{\bar{x}}$ represent the perturbations away from the trimmed state \cite{modsimEGELAND}. The linearized state is defined as $\mathbf{\bar{x}} = \mathbf{x} - \mathbf{x}^*$, where $\mathbf{x}^*$ is the trimmed state.
 
-The states of an aircraft are higly \textit{coupled}, meaning that they affect each other. This greatly increases the complexity of finding an optimal solution of the model since a change in one variable has effect on more than one state. For this reason the model is also decoupled into lateral and longitudinal models, where the states in one of the models does not affect the states in the other model. The lateral and longitudinal states are given as:
+The states of an aircraft are highly \textit{coupled}, meaning that they affect each other. This greatly increases the complexity of finding an optimal solution of the model since a change in one variable has effect on more than one state. For this reason the model is also decoupled into lateral and longitudinal models, where the states in one of the models does not affect the states in the other model. This simplification is done by removing terms that has a very small effect on the state, as these effects are easily controlled by the control systems \cite{uavBEARD}. The lateral and longitudinal states are given as:
 
 \begin{equation}
 \begin{split}

@@ -1,6 +1,6 @@
 \section{Camera Footprint}
 
-The camera footprint is coupled with the three attitude angles given in $\bm{\Theta}_{nb}$. The position of the camera footprint will be calculated using forward kinematics and an illustration of how the roll $\phi$ and pitch $\theta$ affects the camera postion is shown in figure \ref{fig:footprint_centre}.
+The camera footprint is coupled with the three attitude angles given in $\bm{\Theta}_{nb}$. The position of the camera footprint will be calculated using forward kinematics, and an illustration of how the roll $\phi$ and pitch $\theta$ affects the camera position is shown in Figure \ref{fig:footprint_centre}.
 
 \begin{figure}
 	\import{/}{kinematics_footprint_figure.tex}
@@ -10,7 +10,7 @@ The camera footprint is coupled with the three attitude angles given in $\bm{\Th
 
 \subsection{Centre Position}
 
-The attitude of the UAV is given in the body frame $\{b\}$ and the height $z_n$ is given in the NED frame $\{n\}$, and the model assumes flat earth. The position of the footprint centre point $\mathbf{c}_b^b$ in the body frame $\{b\}$ can be expressed as the distance from the center of the body frame, the UAV, caused by the angles $\phi$ and $\theta$:
+The attitude of the UAV is given in the body frame $\{b\}$ and the height $z_n$ is given in the NED frame $\{n\}$, and the model presented here assumes flat earth. The position of the footprint centre point $\mathbf{c}_b^b$ in the body frame $\{b\}$ can be expressed as the distance from the center of the body frame, the UAV, caused by the angles $\phi$ and $\theta$:
 
 \begin{equation}
 	\label{eq:camera_position_body}
@@ -24,7 +24,7 @@ The attitude of the UAV is given in the body frame $\{b\}$ and the height $z_n$ 
 	\end{bmatrix}.
 \end{equation}
 
-The coordinates of the camera position in $\{n\}$ can be found by rotating the point $\mathbf{c}_b^b$ with respect to the aircraft heading $\psi$, and by translating the rotated point to the aircrafts position in the $\{n\}$ frame. The rotation matrix for rotating with respect to the heading is given as
+The coordinates of the camera position in $\{n\}$ can be found by rotating the point $\mathbf{c}_b^b$ with respect to the aircraft heading $\psi$, and by translating the rotated point to the aircrafts position in the $\{n\}$ frame. The rotation matrix for rotating with respect to the heading is given as:
 
 \begin{equation}
 	\mathbf{R}_{z,\psi} =
@@ -54,7 +54,7 @@ The final expression for the camera footprint centre position $\mathbf{c}^n$ in 
 
 \subsection{Edge Points}
 
-A hyperspectral pushbroom sensor captures images in a line, and the centre point of the camera footprint does not express the entire area that is captured by the sensor. The edge points of the camera footprint are calculated with respect to the sensor's field of view, as shown in figure \ref{fig:kinematics_edge_points}. These points $\mathbf{e}$ can be found by altering \ref{eq:camera_position_body}:
+Since a hyperspectral pushbroom sensor captures images in a line, the centre point of the camera footprint does not express the entire area that is captured by the sensor. The edge points of the camera footprint are calculated with respect to the sensor's field of view, as shown in figure \ref{fig:kinematics_edge_points}. These points, $\mathbf{e}$, can be found by altering (\ref{eq:camera_position_body}):
 
 \begin{equation}
 	\mathbf{e}_{1,b}^b =

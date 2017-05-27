@@ -1,10 +1,10 @@
 \section{Reference Frames}
 
-Three different reference frames will be used to describe the kinematics of the UAV: the \textit{body frame}, \textit{North East Down} (NED) frame and \textit{Earth Centered Earth Fixed} (ECEF) frame. The transformations give here can be found in Fossen \cite{FOSSEN}.
+Three different reference frames will be used to describe the kinematics of the UAV: the \textit{body frame}, \textit{North East Down} (NED) frame and \textit{Earth Centered Earth Fixed} (ECEF) frame. The transformations given here can be found in Fossen \cite{FOSSEN}.
 
-The body frame, denoted $\{b\}$, is attached to the UAV and is used to describe the attitude and velocity of the aircraft. The NED frame, denoted $\{n\}$, is used to locally describe the position of the UAV using cartesian coordinates. The position of the camera footprint will be given in the NED frame, based on the attitudes in the body frame.
+The body frame, denoted $\{b\}$, is attached to the UAV and is used to describe the attitude and velocity of the aircraft. The NED frame, denoted $\{n\}$, is used to locally describe the position of the UAV using Cartesian coordinates. The position of the camera footprint will be given in the NED frame, based on the attitudes in the body frame.
 
-While the body and NED frame are local frames that are useful to describe the UAVs attitude, speed and position, a different frame is needed to express the location of the UAV in a global perspective. For this the ECEF frame, denoted $\{e\}$, is used. In the ECEF frame position is often represented using cartesien coordinates, but in this case the position will be represented by longitude and latitude.
+While the body and NED frame are local frames that are useful to describe the UAVs attitude, speed and position, a different frame is needed to express the location of the UAV in a global perspective. For this the ECEF frame, denoted $\{e\}$, is used. In the ECEF frame position is often represented using Cartesian coordinates with the origin at the earth center, but in this case the position will be represented by longitude, latitude and height.
 
 
 \subsection{Transformations}
@@ -17,17 +17,17 @@ The body frame and the NED frame are related by rotation matrices, one for each 
 \begin{equation}
 	\mathbf{R}_b^n(\bm{\Theta}_{nb}) =
 	\begin{bmatrix}
-		c(\psi)c(\theta) & -s(\psi)c(\phi)+c(\psi)s(\theta)s(\phi) & s(\psi)s(\phi)+c(\psi)c(\phi)s(\theta) \\
-		s(\psi)c(\theta) & c(\psi)c(\phi)+s(\phi)s(\theta)s(\psi) & -c(\psi)s(\phi)+s(\theta)s(\psi)c(\phi) \\
-		-s(\theta) & c(\theta)s(\phi) & c(\theta)c(\phi)
+		c_\psi c_\theta & -s_\psi c_\phi+c_\psi s_\theta s_\phi & s_\psi s_\phi+c_\psi c_\phi s_\theta \\
+		s_\psi c_\theta & c_\psi c_\phi+s_\phi s_\theta s_\psi & -c_\psi s_\phi+s_\theta s_\psi c_\phi \\
+		-s_\theta & c_\theta s_\phi & c_\theta c_\phi
 	\end{bmatrix}
 \end{equation}
 
-where $c$ and $s$ are the cosine and sine trigonometric functions respectively. The transformation from the NED frame to the body frame can be found by taking the inverse of the transformation matrix $\mathbf{R}(\bm{\Theta}_{nb})$.
+where $c$ and $s$ are the cosine and sine trigonometric functions of the angle in subscript, respectively. The transformation from the NED frame to the body frame can be found by taking the inverse of the transformation matrix $\mathbf{R}_b^n(\bm{\Theta}_{nb})$.
 
 \subsubsection{Between NED and ECEF}
 
-The transformation between ECEF and NED when the position is given using longitude and latitude coordinates is also given by a rotation matrix $\mathbf{R}_n^e(\bm{\Theta}_{en})$, however, it is the velocity vectors in each frame that are related by the rotation matrix. The rotation matrix is composed by two rotations about the latitude $l$ and longitude $\mu$:
+The transformation between ECEF and NED frames when the position is given using longitude, latitude and height is also given by a rotation matrix $\mathbf{R}_n^e(\bm{\Theta}_{en})$. However, it is the velocity vectors in each frame that are related by the rotation matrix. The rotation matrix is composed by two rotations about the latitude $l$ and longitude $\mu$:
 
 \begin{equation}
 	\mathbf{R}_n^e(\bm{\Theta}_{en}) =
@@ -38,13 +38,13 @@ The transformation between ECEF and NED when the position is given using longitu
 	\end{bmatrix}.
 \end{equation}
 
-The transformation of the velocity vectors in the ECEF and NED frame can be written as:
+The transformation between the velocity vectors in the ECEF and NED frame can be written as:
 
 \begin{equation}
 	\mathbf{\dot{p}}_{b/e}^e = \mathbf{R}_n^e(\bm{\Theta}_{en})\mathbf{\dot{p}}_{b/e}^n.
 \end{equation}
 
-Since this transformation represent veloctites, a reference position must be known when transforming positions. Since NED is a local frame, the position in NED $\mathbf{p}^n$ will be given as a displacement from the reference ECEF position $\mathbf{p}_0^e$. The relation between position in NED and ECEF can therefore be written as \cite{ROTATION}:
+Since this transformation represent velocities, a reference position must be known when transforming positions. Since NED is a local frame, the position in NED $\mathbf{p}^n$ will be given as a displacement from the reference ECEF position $\mathbf{p}_0^e$. The relation between position in NED and ECEF can therefore be written as \cite{ROTATION}:
 
 \begin{equation}
 	\mathbf{p}^e - \mathbf{p}_0^e = \mathbf{R}_n^e(\bm{\Theta}_{en}) \mathbf{p}^n.
