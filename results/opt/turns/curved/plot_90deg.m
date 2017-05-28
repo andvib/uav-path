@@ -23,6 +23,7 @@ for i = radii
     respath = sprintf('fig_90deg/uav_position_%dm', i);
     %cleanfigure;
     %matlab2tikz('fig/uav_position.tex');
+    set(gca, 'fontsize', 14);
     saveas(gcf, respath, 'epsc');
     close all;
 end
@@ -55,6 +56,7 @@ for i = radii
     respath = sprintf('fig_90deg/camera_position_%dm', i);
     %cleanfigure;
     %matlab2tikz('fig/uav_position.tex');
+    set(gca, 'fontsize', 14);
     saveas(gcf, respath, 'epsc');
     close all;
 end
@@ -78,6 +80,7 @@ ylabel('Height [m]');
 xlabel('Time [s]');
 %cleanfigure;
 %matlab2tikz('fig/height.tex');
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_90deg/height', 'epsc');
 
 
@@ -125,6 +128,7 @@ legend('50','100','150','200','Location','NW');
 % xlabel('Time [s]');
 %cleanfigure;
 %matlab2tikz('fig/attitude.tex');
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_90deg/attitude','epsc');
 
 

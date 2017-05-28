@@ -35,6 +35,7 @@ for i = radii
     respath = sprintf('fig_180deg/uav_position_%dm', i);
     %cleanfigure;
     %matlab2tikz('fig/uav_position.tex');
+    set(gca, 'fontsize', 14);
     saveas(gcf, respath, 'epsc');
     close all;
     k = k+1;
@@ -68,6 +69,7 @@ for i = radii
     respath = sprintf('fig_180deg/camera_position_%dm', i);
     %cleanfigure;
     %matlab2tikz('fig/uav_position.tex');
+    set(gca, 'fontsize', 14);
     saveas(gcf, respath, 'epsc');
     close all;
     k = k + 1;
@@ -130,6 +132,7 @@ end
 %cleanfigure;
 %matlab2tikz('fig/attitude.tex');
 legend('50', '100', '150', '200', '250', '300');
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_180deg/attitude','epsc');
 
 

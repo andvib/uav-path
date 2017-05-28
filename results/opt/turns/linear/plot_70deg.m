@@ -21,6 +21,7 @@ for i = weights
     respath = sprintf('fig_70deg/uav_position_%d', i);
     %cleanfigure;
     %matlab2tikz('fig/uav_position.tex');
+    set(gca, 'fontsize', 14);
     saveas(gcf, respath, 'epsc');
     close all;
 end
@@ -50,6 +51,7 @@ for i = weights
     respath = sprintf('fig_70deg/camera_position_%d', i);
     %cleanfigure;
     %matlab2tikz('fig/uav_position.tex');
+    set(gca, 'fontsize', 14);
     saveas(gcf, respath, 'epsc');
     close all;
 end
@@ -77,6 +79,7 @@ ylim([0 800]);
 ylabel('North [m]');
 xlabel('East [m]');
 %matlab2tikz('fig/camera_position.tex');
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_70deg/camera_position', 'epsc');
 
 
@@ -91,6 +94,7 @@ ylim([100 160]);
 ylabel('Height [m]');
 xlabel('Time [s]');
 %matlab2tikz('fig/height.tex');
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_70deg/height', 'epsc');
 
 %% PLOT ATTITUDE %%
@@ -121,6 +125,7 @@ ylim([-1 1]);
 ylabel('\psi [rad]');
 xlabel('Time [s]');
 %matlab2tikz('fig/attitude.tex');
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_70deg/attitude','epsc');
 
 %% PLOT CONTROLS %%
@@ -137,4 +142,5 @@ subplot(4,1,3);
 plot(STATES(:,1), STATES(:,16));
 subplot(4,1,4);
 plot(STATES(:,1), STATES(:,17));
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_70deg/control','epsc');

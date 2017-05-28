@@ -18,7 +18,7 @@ for i = angles
     xlabel('East [m]');
     xlim([-100 400]);
     ylim([300 800]);
-    
+    set(gca, 'fontsize', 14);
     respath = sprintf('fig_cur/uav_position_%ddeg_150m', i);
     saveas(gcf, respath, 'epsc');
     close all;
@@ -49,7 +49,7 @@ for i = angles
     
     xlim([-100 400]);
     ylim([300 800]);
-    
+    set(gca, 'fontsize', 14);
     respath = sprintf('fig_cur/camera_position_%ddeg_150m', i);
     saveas(gcf, respath, 'epsc');
     close all;
@@ -85,6 +85,7 @@ for i = angles
     xlabel('Time [s]');
 end
 legend('45 degree', '70 degree');
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_cur/heading', 'epsc');
 
 %% PLOT CONTROLS %%
