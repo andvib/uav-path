@@ -3,7 +3,7 @@
 \begin{equation}
 \label{eq:opt}
 	\begin{array}{rrclcl}
-		\displaystyle \min_{\mathbf{x}, \mathbf{u}} & \multicolumn{3}{l}{\mathbf{J}_{i+k} = \frac{1}{2} \sum_{j=i}^{j+L} [(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j})^\intercal \mathbf{Q}(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j}) + (\Delta\mathbf{u}_j)^\intercal \mathbf{R}(\Delta\mathbf{u}_j)]}\\
+		\displaystyle \min_{\mathbf{x}, \Delta \mathbf{u}} & \multicolumn{3}{l}{\mathbf{J}_{i+k} = \frac{1}{2} \sum_{j=i}^{j+N} [(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j})^\intercal \mathbf{Q}(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j}) + (\Delta\mathbf{u}_j)^\intercal \mathbf{R}(\Delta\mathbf{u}_j)]}\\
 		\textrm{s.t}
 		& \mathbf{x}^{low} \leq & \mathbf{x}_j & \leq \mathbf{x}^{high} \\
 		& \mathbf{u}^{low} \leq & \mathbf{u}_j & \leq \mathbf{u}^{high} \\
@@ -12,9 +12,7 @@
 	\end{array}
 \end{equation}
 
-The equations for the full optimization problem is shown in equation \ref{eq:opt}. The objective function uses the same setup as shown in equation \ref{eq:mpc_cost}, but on matrix form. Each of the three components of the problem definition will be described in detail in the following sections.
-
-The objective function $\mathbf{J}$ will be minimized over the entire optimization horizon, which consists of $L$ timesteps. The current timestep is denoted $i$. Since this is an intervalwise MPC, as described in section \ref{sec:offline_intervalwise}, all states within in the interval, denoted $k$, will be stored. The number of intervals for the entire optimization problem is denoted $n$, which means that for the entire problem there will be a total of $nk$ timesteps to store. 
+The equations for the full optimization problem is shown in (\ref{eq:opt}). The objective function uses the same setup as shown in (\ref{eq:mpc_cost}), but in matrix form. Each of the three components of the problem definition will be described in detail in the following sections.
 
 
 \subsection{Prediction Model}
@@ -40,24 +38,29 @@ The linear decoupled UAV model presented in chapter \ref{ch:kinematics} will be 
 \end{equation}
 \end{subequations}
 
-The prediction model relates to the equality constraints of equation \ref{eq:optimization_formulation} in the form of differential equations. As explained in the previous chapter the control rates $\Delta\mathbf{u}$ shown in equation \ref{eq:control_rates}, which means that by the optimization solver $\Delta\mathbf{u}$ will be handled as the control input. The control surfaces $\mathbf{u}$ are calculated from the rates $\Delta\mathbf{u}$ through integration:
+The prediction model relates to the equality constraints of equation \ref{eq:optimization_formulation} in the form of differential equations. As explained in the previous chapter the control rates $\Delta \mathbf{u}$ will be used as control inputs in the optimization problem.
+
+\begin{equation}
+	\label{eq:control_rates}
+	\Delta\mathbf{u} = 
+	\begin{bmatrix}
+		\Delta\delta_e \hspace{5pt} \Delta\delta_a \hspace{5pt} \Delta\delta_r \hspace{5pt} \Delta\delta_t
+	\end{bmatrix} ^\intercal .
+\end{equation}
+
+The control surfaces $\mathbf{u}$ are calculated from the rates $\Delta\mathbf{u}$ through integration:
 
 \begin{equation}
 	\label{eq:control_relation}
 	\mathbf{\dot{u}} = \Delta\mathbf{u}.
 \end{equation}
 
-As shown in equation \ref{eq:uav_states}, the attitude angles of the UAV will be given by the Euler angles $\phi$, $\theta$ and $\psi$. Even though quaternions offer more efficient computations and do not suffer from gimbal lock \cite{uavBEARD}, this optimization will be run offline before the flight takes place so that computation capacity is not a big issue. In addition the UAV will not by performing any high-angle maneuvers so that a gimbal lock should never occur.
-
 
 \subsection{Objective Function}
 
-\begin{equation}
-	\label{eq:objective_function}
-	\mathbf{J}_{i+k} = \frac{1}{2} \sum_{j=i}^{j+L} [(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j})^\intercal \mathbf{Q}(\mathbf{y(\mathbf{x}}_j)-\mathbf{y}_{d,j}) + (\Delta\mathbf{u}_j)^\intercal \mathbf{R}(\Delta\mathbf{u}_j)]
-\end{equation}
+The objective function $\mathbf{J}$ will be minimized over the entire optimization horizon, which consists of $N$ timesteps. The current timestep for the entire optimization problem is denoted $i$, while the current timestep within the current optimization horizon is denoted $j$. Since this is an intervalwise MPC, as described in section \ref{sec:offline_intervalwise}, all states within in the interval will be stored, and the interval consists of $k$ timesteps. If the number of intervals needed to cover the entire path is $L$, the result will contain $kL$ timesteps.
 
-The first term of the objective function calculates the distance between the UAV states and the reference trajectory. The vector $\mathbf{y}_d$ is the \textit{measurement vector} which is the references for the states:
+The first term of the objective function calculates the distance between the UAV states and the reference trajectory. The vector $\mathbf{y}_d$ is the \textit{measurement vector}, which is the references for the states:
 	
 \begin{equation}
 	\mathbf{y}_d =
@@ -66,7 +69,7 @@ The first term of the objective function calculates the distance between the UAV
 	\end{bmatrix}^\intercal .
 \end{equation}
 
-The function $\mathbf{y}(\mathbf{x})$ holds the current values for the optimization problem. While the height $h$ and velocity $u$ can be used as-is, the camera centre point $\mathbf{c}^n$ needs to be calculated using equation \ref{eq:camera_position_ned}:
+The function $\mathbf{y}(\mathbf{x})$ holds the current values for the optimization problem. While the height $h$ and velocity $u$ can be used as-is, the camera centre point $\mathbf{c}^n$ needs to be calculated using (\ref{eq:camera_position_ned}):
 
 \begin{equation}
 	\mathbf{y}(\mathbf{x}) =
@@ -78,7 +81,7 @@ The function $\mathbf{y}(\mathbf{x})$ holds the current values for the optimizat
 	\end{bmatrix}.
 \end{equation}
 
-In order to reduce the control effort for the optimization problem the rate of change of the control inputs $\Delta\mathbf{u}$ will be minimized. Since all the control rates is to be compared to zero no function is needed. The vector $u$ contains of the four control rates:
+In order to reduce the control effort for the optimization problem, the rate of change of the control inputs $\Delta\mathbf{u}$ will be minimized. Since all the control rates is to be compared to zero, no function is needed. The vector $u$ contains of the four control rates:
 
 \begin{equation}
 	\label{eq:control_rates}
@@ -88,29 +91,11 @@ In order to reduce the control effort for the optimization problem the rate of c
 	\end{bmatrix} ^\intercal .
 \end{equation}
 
-The matrices $\mathbf{Q}$ and $\mathbf{R}$ are the weighting matrices. They are diagonal matrices where each row represent one state or control rate. The higher the value in the row, the more value is given to the difference between the corresponding state or control rate and reference.
+The matrices $\mathbf{Q}$ and $\mathbf{R}$ are the weighting matrices. They are diagonal matrices where each row represent one state or control rate. The higher the value in the row, the more value is given to the difference between the corresponding state or control rate and the reference trajectory while minimizing the objective function.
 
-\subsection{Control Law}
 
-\begin{subequations}
-\begin{equation}
-	\label{eq:state_constraints}
-	\mathbf{x}^{\text{low}} \leq \mathbf{x} \leq \mathbf{x}^{\text{high}}
-\end{equation}
-\begin{equation}
-	\label{eq:control_constraint}
-	\mathbf{u}^{\text{low}} \leq \mathbf{u} \leq \mathbf{u}^{\text{high}}
-\end{equation}
-\begin{equation}
-	\label{eq:control_rate_constraint}
-	\Delta\mathbf{u}^{\text{low}} \leq \Delta\mathbf{u} \leq \Delta\mathbf{u}^{\text{high}}
-\end{equation}
-\end{subequations}
+\subsection{Constraints}
 
-The control law for the optimization problem consists of inequality constraints put on the UAV states and on the control signals. When constraints are put on the optimization problem the number of feasible solutions is reduced, so if too many constraints are put on the problem it will make the problem more difficult than necessary.
+The states and control inputs to the optimization problem are bounded by constraints to ensure that the values stays within ranges that are physically possible. The constraints $\mathbf{u}^{min}$ and $\mathbf{u}^{max}$ directly relates to the maximum deflection angle for the control surfaces, while the throttle is described as a proportion between zero and one. The same goes for the control rate constraints $\Delta \mathbf{u}^{max}$ and $\Delta \mathbf{u}^{min}$, as these as well are directly related to physical restrictions. It is worth noting that in addition to constraints, the control rates are included in the objective function, which seeks to minimize these variables.
 
-In an attempt to reduce the complexity of the optimization problem, the constraints put on UAV states shown in equation \ref{eq:state_constraints} will not be included to begin with. This is because it is assumed that the "cheapest" way to fly the aircraft is the "correct" way. However, if this proves wrong during testing, constraints on some or all of the states may be included.
-
-The control states, shown in equation \ref{eq:control_constraint}, are restricted by the physical maximum value of deflection. Since these constraints directly relates to physical values they are needed in order to get a meaningful optimization of the aircraft.
-
-The constraints put on the control rates of the control surfaces and throttle shown in equation \ref{eq:control_rate_constraint} also relate to a physical value, and are therefore needed to get a meaningful simulation as well. It is worth noting that $\Delta\mathbf{u}$ is also present in the objective function shown in equation \ref{eq:objective_function}, with a reference signal of zero. This means that the problem already seeks to minimize the values of $\Delta\mathbf{u}$ so that the constraints may be unnecessary.
+When constraints are put on the optimization problem the complexity of the problem increases, which may make it more computational difficult to find a feasible solution. For this reason the constraints put on the UAV states $\mathbf{x}^{min}$ and $\mathbf{x}^{max}$ will not be set to begin with, as it is assumed that the "cheapest" way to fly the aircraft is the "correct" way. However, if testing shows that the MPC finds solutions that shouldn't be feasible, constraints will be included to remove these solutions.

@@ -1,21 +1,21 @@
 \section{Offline Intervalwise MPC}
 \label{sec:offline_intervalwise}
 
-The control problem in this thesis will be solved by using an offline intervalwise MPC to generate an optimal path that will reduce the image error when using a fixed camera to survey a ground track. The generated path is intended to be tracked by the autopilot on the actual UAV that will perform the survey, with the intention of optimally surveying the ground path.
+The control problem in this thesis will be solved by using an offline intervalwise MPC to generate an optimal path that will reduce the image error when using a fixed camera to survey a ground track. The generated path is intended to be tracked by the autopilot on the UAV that will perform the survey, with the intention of optimally surveying the ground path.
 
 \subsection{Offline MPC} 
 
 An \textit{offline MPC} means that the initial state of the MPC is not a measurement of the UAV states, but rather the result of a simulation of the UAV. This means that the result from the prediction model used in the MPC will act as the physical system, and the outputs of the model will be fed back as inputs to the MPC for every iteration. The equations of the offline MPC are the same as the ones for the online version.
 
-Rawlings \& Mayne \cite{mpcMAYNE} refers to this kind of problem as a \textit{deterministic problem} since there is no uncertainty in the system. A feedback loop in this kind of system is also not needed in principle, since it does not present any new information. They also state that an MPC action for a deterministic system is the same as the action from a \textit{receding horizon control law} (RHC), which is another kind of predictive control.
+Rawlings \& Mayne \cite{mpcMAYNE} refers to this kind of problem as a \textit{deterministic problem} since there is no uncertainty in the system. A feedback loop in this kind of system is not needed in principle, since it does not present any new information. They also state that the resulting control action from an MPC for a deterministic system is the same as the control action from a \textit{receding horizon control law} (RHC), which is another kind of predictive control.
 
 \subsection{Intervalwise MPC}
 
-Altough the feedback is not needed to give new information, it eases the computational load of the control problem as optimizing the path over a long time horizon leads to a very complicated problem. For this reason a \textit{intervalwise MPC} will be used. The term intervalwise has been introduced by Kwon \& Han \cite{rhcKWON} to describe a type of receding horizon controller that implements the same strategy.
+Since this is a deterministic system, it is possible to perform the entire path optimization over one long optimization horizon. However, the computational load of using one long optimization horizon is heavier than the load of using several, shorter optimization horizons. For this reason an \textit{intervalwise MPC} will be used. The term intervalwise has been introduced by Kwon \& Han \cite{rhcKWON} to describe a type of receding horizon controller that implements the same strategy.
 
-Commonly a MPC is used to optimize the model over a given \textit{horizon}, where the initial states are given. After the optimization has finished the first timestep of the optimization is returned and applied to the system, before a measurement of the system is performed. The new measurements are given as initial states for the next horizon, and so on.
+Commonly an MPC is used to optimize the model over a given \textit{horizon}, where the initial states are given. After the optimization has finished, the first timestep of the optimization is returned and applied to the system, before a measurement of the system is performed. The new measurements are given as initial states for the next horizon, and so on.
 
-The principle is the same for an intervalwise MPC. However, instead of only returning the first timestep an \textit{interval} of timesteps are returned, and the last timestep of the interval is used as intial states for the next optimization horizon. This way the number of MPC iterations is reduced, and the increased complexity by having long optimization horizons is avoided. Figure \ref{fig:opt_fig} shows how timesteps, intervals and horizons relate to each other. Since the MPC developed here is an offline MPC, the timesteps of each interval is stored as the result.
+The principle is the same for an intervalwise MPC. However, instead of only returning the first timestep, an \textit{interval} of timesteps are returned, and the last timestep of the interval is used as intial states for the next optimization horizon. This way the number of MPC iterations is reduced, and the increased complexity by having long optimization horizons is avoided. Figure \ref{fig:opt_fig} shows how timesteps, intervals and horizons relate to each other. Since the MPC developed here is an offline MPC, the timesteps of each interval is stored as the result.
 
 \begin{figure}
 	\import{/}{opt_fig.tex}

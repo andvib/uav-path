@@ -50,6 +50,8 @@ The attitude $\bm{\Theta}_{nb}$ of the UAV will be given as Euler-angles, with t
 	\end{bmatrix}.
 \end{equation}
 
+Euler angles are used over quaternions in this paper because the optimization is to be run offline so that computation time is not a critical measure. Even though Euler angles do suffer from gimbal lock while quaternions don't \cite{uavBEARD}, the UAV will not be performing any high-angle maneuvers so that a gimbal lock should never occur.
+
 The UAV model has four control inputs, namely the elevator, aileron, rudder, and throttle:
 
 \begin{equation}

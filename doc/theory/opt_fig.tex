@@ -1,80 +1,69 @@
 \begin{center}
 \begin{tikzpicture}
-	[scale=8,
+	[scale=0.9,
 	axis/.style={->,black,thick}]
 
 	% Draw main axes
-	\draw[axis] (0,0) -- (1,0);
-	\draw[axis] (0,0) -- (0,1);
+	\draw[axis] (0,0) -- (10,0);
+	\draw[axis] (0,0) -- (0,10);
 	
-	\clip (0,0) rectangle (1, 1);
+	\clip (0,0) rectangle (10, 10);
 	
-	\draw[] (0,0.15) -- (1,0.8);
+	\draw[] (0,1.5) -- (10,8);
 	
 	% Draw grid
-	\foreach \x in {0,0.05,...,1.05}
-		\foreach \y in {0,0.05,...,1.05}
+	\foreach \x in {0,0.5,...,10.5}
+		\foreach \y in {0,0.5,...,10.5}
 		{
-			\draw[very thin, gray, opacity=0.01] (\x, 0) -- (\x, 1);
-			\draw[very thin, gray, opacity=0.01] (0, \y) -- (1, \y);
+			\draw[very thin, gray, opacity=0.01] (\x, 0) -- (\x, 10);
+			\draw[very thin, gray, opacity=0.01] (0, \y) -- (10, \y);
 		}
 	
-	\foreach \x/\y in {0.13/0.2345, 0.15/0.2475, 0.17/0.2605, 0.19/0.2735, 0.21/0.2865, 0.23/0.2995,
-					   0.25/0.3125, 0.27/0.3255, 0.29/0.3385, 0.31/0.3515, 0.33/0.3645, 0.35/0.3775,
-					   0.37/0.3905, 0.39/0.4035, 0.41/0.4165, 0.43/0.4295, 0.47/0.4555, 0.49/0.4685,
-					   0.51/0.4815, 0.53/0.4945, 0.55/0.5075, 0.57/0.5205, 0.59/0.5335, 0.61/0.5465,
-					   0.63/0.5595, 0.67/0.5855, 0.69/0.5985, 0.71/0.6115, 0.73/0.6245, 0.75/0.6375,
-					   0.77/0.6505, 0.79/0.6635, 0.81/0.6765, 0.83/0.6895, 0.87/0.7155, 0.89/0.7285,
-					   0.91/0.7415, 0.93/0.7545, 0.95/0.7675, 0.97/0.7805, 0.99/0.7935, 1.01/0.8065}
+	\foreach \x/\y in {1.3/2.345, 1.5/2.475, 1.7/2.605, 1.9/2.735, 2.1/2.865, 2.3/2.995,
+					   2.5/3.125, 2.7/3.255, 2.9/3.385, 3.1/3.515, 3.3/3.645, 3.5/3.775,
+					   3.7/3.905, 3.9/4.035, 4.1/4.165, 4.3/4.295, 4.7/4.555, 4.9/4.685,
+					   5.1/4.815, 5.3/4.945, 5.5/5.075, 5.7/5.205, 5.9/5.335, 6.1/5.465,
+					   6.3/5.595, 6.7/5.855, 6.9/5.985, 7.1/6.115, 7.3/6.245, 7.5/6.375,
+					   7.7/6.505, 7.9/6.635, 8.1/6.765, 8.3/6.895, 8.7/7.155, 8.9/7.285,
+					   9.1/7.415, 9.3/7.545, 9.5/7.675, 9.7/7.805, 9.9/7.935, 10.1/8.065}
 	{
-		\draw[thin] (\x,\y) -- (\x+0.065*0.2, \y-0.1*0.2);
-		\draw[thin] (\x,\y) -- (\x-0.065*0.2, \y+0.1*0.2);
+		\draw[thin] (\x,\y) -- (\x+0.065*1.6, \y-0.1*1.6);
+		\draw[thin] (\x,\y) -- (\x-0.065*1.6, \y+0.1*1.6);
 	}
 	
-	\foreach \x/\y in {0.13/0.2345, 0.33/0.3645, 0.53/0.4945, 0.73/0.6245, 0.93/0.7545}
+	\foreach \x/\y in {1.3/2.345, 3.3/3.645, 5.3/4.945, 7.3/6.245, 9.3/7.545}
 	{
-		\draw[thick] (\x,\y) -- (\x+0.065*0.4, \y-0.1*0.4);
-		\draw[thick] (\x,\y) -- (\x-0.065*0.4, \y+0.1*0.4);
+		\draw[thick] (\x,\y) -- (\x+0.065*2.5, \y-0.1*2.5);
+		\draw[thick] (\x,\y) -- (\x-0.065*2.5, \y+0.1*2.5);
 	}
 	
-	\foreach \x/\y in {0.45/0.4425, 0.65/0.5725, 0.85/0.7025}
+	\foreach \x/\y in {4.5/4.425, 6.5/5.725, 8.5/7.025}
 	{
-		\draw[dashed, thick] (\x,\y) -- (\x+0.065*0.4, \y-0.1*0.4);
-		\draw[dashed, thick] (\x,\y) -- (\x-0.065*0.4, \y+0.1*0.4);
+		\draw[dashed, thick] (\x,\y) -- (\x+0.065*2.5, \y-0.1*2.5);
+		\draw[dashed, thick] (\x,\y) -- (\x-0.065*2.5, \y+0.1*2.5);
 	}
 	
 	\draw[thick, decoration={brace, raise=10pt}, decorate]
-		(0.13, 0.2345) -- (0.33, 0.3645) node[midway, above=13pt, sloped] {\footnotesize Interval 1};
+		(1.3, 2.345) -- (3.3, 3.645) node[midway, above=13pt, sloped] {\footnotesize Interval 1};
 		
 	\draw[thick, decoration={brace, raise=10pt}, decorate]
-		(0.33, 0.3645) -- (0.53, 0.4945) node[midway, above=13pt, sloped] {\footnotesize Interval 2};
+		(3.3, 3.645) -- (5.3, 4.945) node[midway, above=13pt, sloped] {\footnotesize Interval 2};
 	
 	\draw[thick, decoration={brace, raise=10pt}, decorate]
-		(0.53, 0.4945) -- (0.73, 0.6245) node[midway, above=13pt, sloped] {\footnotesize Interval 3};
+		(5.3, 4.945) -- (7.3, 6.245) node[midway, above=13pt, sloped] {\footnotesize Interval 3};
 
 	\draw[thick, decoration={brace, raise=10pt}, decorate]
-		(0.73, 0.6245) -- (0.93, 0.7545) node[midway, above=13pt, sloped] {\footnotesize Interval 4};
+		(7.3, 6.245) -- (9.3, 7.545) node[midway, above=13pt, sloped] {\footnotesize Interval 4};
 	
 	\draw[thick, decoration={brace, mirror, raise=10pt}, decorate]
-		(0.13, 0.2345) -- (0.45, 0.4425) node[midway, below=13pt, sloped] {\footnotesize Horizon};
-	
-	
-	%\begin{scope}[on background layer]
-	%	\fill[gray, opacity=.9] (0.13+0.065*0.4, 0.2345-0.1*0.4) -- (0.33+0.065*0.4, 0.3645-0.1*0.4) -- (0.33-0.065*0.4, 0.3645+0.1*0.4) -- (0.13-0.065*0.4, 0.2345+0.1*0.4);
-	%\end{scope}
-	
-	%\begin{scope}[on background layer]
-	%	\fill[gray, opacity=.7] (0.33+0.065*0.4, 0.3645-0.1*0.4) -- (0.53+0.065*0.4, 0.4945-0.1*0.4) -- (0.53-0.065*0.4, 0.4945+0.1*0.4) -- (0.33-0.065*0.4, 0.3645+0.1*0.4);
-	%\end{scope}
-	
-	%\begin{scope}[on background layer]
-	%	\fill[gray, opacity=.5] (0.53+0.065*0.4, 0.4945-0.1*0.4) -- (0.73+0.065*0.4, 0.6245-0.1*0.4) -- (0.73-0.065*0.4, 0.6245+0.1*0.4) -- (0.53-0.065*0.4, 0.4945+0.1*0.4);
-	%\end{scope}
-	
-	%\begin{scope}[on background layer]
-	%	\fill[black, opacity=.2] (0.73+0.065*0.4, 0.6245-0.1*0.4) -- (0.93+0.065*0.4, 0.7545-0.1*0.4) -- (0.93-0.065*0.4, 0.7545+0.1*0.4) -- (0.73-0.065*0.4, 0.6245+0.1*0.4);
-	%\end{scope}
-	
+		(1.3, 2.345) -- (4.5, 4.425) node[midway, below=13pt, sloped] {\footnotesize Horizon};
+		
+	\draw[thick, decoration={brace, mirror, raise=7pt, amplitude=1}, decorate]
+		(5.7, 5.205) -- (5.9, 5.335) node[midway, below=8pt, sloped, rotate=270, anchor=west] {\footnotesize Timestep};
+
+		
+		
+		
 	
 \end{tikzpicture}
 \end{center}
