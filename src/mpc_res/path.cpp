@@ -119,22 +119,25 @@ VariablesGrid generateHorizon(double** path_data, double timestep,
     points(7) = 0.0;  // d_throttle
     path.setVector(0, points);
 
+    double factor = 1.0;
+
     /* Generate path */
     int point_found = 0;
     for( int step = 0 ; step < horizon_length ; step++ ){
         for( int i = path_length-1 ; i >= 0 ; --i ){            
             double x_dist = path_data[i][0] - x;
             double y_dist = path_data[i][1] - y;
-            double radius = sqrt(x_dist*x_dist + y_dist*y_dist);
-            
-            if( (radius > distance-0.5) && (radius < distance+0.5)){
+            double radius = sqrt(x_dist*x_dist + y_dist*y_dist);            
+
+            if( (radius > distance-0.1) && (radius < distance+0.1)){
 
                 x = path_data[i][0];
                 y = path_data[i][1];
-                
+ 
                 points(0) = path_data[i][0];
                 points(1) = path_data[i][1];
-                //cout << "(" << path_data[i][0] << ", " << path_data[i][1] << ")\n";
+
+                cout << "(" << path_data[i][0] << ", " << path_data[i][1] << ")\n";
                 path.setVector(step+1, points);
                 point_found = 1;
                 break;
@@ -170,7 +173,6 @@ int findClosestPoint(double x, double y, double h,
         }
 
     }
-
+    cout << "Minimum distance: " << min_distance << "\n";
     return closest_index;
-
 }

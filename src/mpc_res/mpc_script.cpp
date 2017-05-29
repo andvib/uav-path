@@ -2,7 +2,10 @@
 
 #include "mpc_script.hpp"
 #include "aerosonde_param.hpp"
+#include <iostream>
+#include <cstdlib>
 
+using namespace std;
 
 
 ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
@@ -394,9 +397,9 @@ ACADO::DMatrix optimize_path(ACADO::VariablesGrid path,
     algorithm.getDifferentialStates(states);
     algorithm.getControls(controls);
 
-    DMatrix ret_values(path.getNumRows(), 20);
-    
-    for(int i = 0 ; i < path.getNumRows() ; i++){
+    DMatrix ret_values(path.getNumPoints(), 20);
+
+    for(int i = 0 ; i < path.getNumPoints()-1 ; i++){
         for(int j = 0 ; j < 16 ; j++){
             ret_values(i, j) = states(i+1, j);
         }

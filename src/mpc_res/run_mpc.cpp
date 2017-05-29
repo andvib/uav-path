@@ -18,7 +18,8 @@ USING_NAMESPACE_ACADO
 int main(int argc, char **argv){
 
     /* Read path from file */
-    int path_length = 15315;
+    int path_length = atoi(argv[3]);
+    cout << "File length: " << path_length << "\n";
     char* file_in = argv[1];
     cout << file_in << "\n";
     ifstream file(file_in);
@@ -28,15 +29,18 @@ int main(int argc, char **argv){
 
 
     /* Initialize MPC variables */
-    int horizon_length = atoi(argv[3]);     // Number of timesteps in the horizon
-    int section_length = 5;      // Number of timesteps in the section
-    double timestep    = 0.2;    // Duration of timestep [s]
-    int no_sections    = 40;     // Number of sections to cover path
-
+    int horizon_length = 110;//atoi(argv[3]);     // Number of timesteps in the horizon
+    int section_length = 10;      // Number of timesteps in the section
+    double timestep    = 0.1;    // Duration of timestep [s]
+    int no_sections    = atoi(argv[4]);     // Number of sections to cover path
+    cout << "No intervals: " << no_sections << "\n";
 
     string temp = (string) argv[2];
-    string file_out = "results/" + temp + "_" + to_string(horizon_length) + ".m";
-    cout << file_out << "\n";
+    string file_out = "results_turns/" + temp + ".m";
+    cout << "File out: " << file_out << "\n";
+
+    //double height = atoi(argv[5]);
+    //cout << "Height: " << height << "\n";
 
     //_________________________________________________________________
     /* Start Configuration */
@@ -146,24 +150,21 @@ int main(int argc, char **argv){
         VariablesGrid path = generateHorizon(path_data, timestep,
                                              horizon_length, path_length,
                                              closest_x, closest_y);
-
         DMatrix states = optimize_path(path, X0, U0, DU0);
 
         // Prepare initial conditions for next step
         for(int l = 0 ; l < 12 ; l++){
-            X0(l) = states(section_length-1, l);
+            X0(l) = states(section_length-2, l);
         }
+        U0(0)  = states(section_length-2, 12);
+        U0(1)  = states(section_length-2, 13);
+        U0(2)  = states(section_length-2, 14);
+        U0(3)  = states(section_length-2, 15);
 
-        U0(0)  = states(section_length-1, 12);
-        U0(1)  = states(section_length-1, 13);
-        U0(2)  = states(section_length-1, 14);
-        U0(3)  = states(section_length-1, 15);
-
-        DU0(0) = states(section_length-1, 16);
-        DU0(1) = states(section_length-1, 17);
-        DU0(2) = states(section_length-1, 18);
-        DU0(3) = states(section_length-1, 19);
-
+        DU0(0) = states(section_length-2, 16);
+        DU0(1) = states(section_length-2, 17);
+        DU0(2) = states(section_length-2, 18);
+        DU0(3) = states(section_length-2, 19);
 
         // Save results
         for(int j = 0 ; j < section_length ; j++){
@@ -189,6 +190,11 @@ int main(int argc, char **argv){
         clearAllStaticCounters();
 
         cout << "Section no.: " << i << "/" << no_sections << "\n";
+        clock_t end = clock();
+        elapsed_secs = double(end-begin) / CLOCKS_PER_SEC;
+    
+        cout << "Time elapsed: " << elapsed_secs << "\n\n";
+        saveResults(result, (i+1)*section_length, path_data, path_length, elapsed_secs, file_out);
     }
     cout << "\n";
 

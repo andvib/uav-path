@@ -1,15 +1,16 @@
 close all;
 clear all;
 
-run results/horizon_10.m;
-
+%run results_paths/path_lin_45deg_2turns.m;
+%run results_paths/path_cur_45deg_2turns_150m.m;
+run results_turns/lin_90deg.m;
 
 %% Calculate camera position
 
 for i = (1:length(STATES(:,1)))
     [x_temp, y_temp] = camera_pos([STATES(i,8), STATES(i,9), STATES(i,10)],...
                                   [STATES(i,2), STATES(i,3), STATES(i,4)],...
-                                  0.331612558);
+                                  0.0);%0.331612558);
     c_n_1(:,i) = x_temp;
     c_n_2(:,i) = y_temp;
 end
@@ -21,12 +22,12 @@ end
 figure(1);
 grid on;
 hold on;
-plot(PATH(:,2), PATH(:,1))
+plot(PATH(:,2), PATH(:,1),'k')
 plot(STATES(:,3), STATES(:,2));
-plot(c_n_1(2,:), c_n_1(1,:), 'k');
-plot(c_n_2(2,:), c_n_2(1,:), 'k');
+plot(c_n_1(2,:), c_n_1(1,:));
+%plot(c_n_2(2,:), c_n_2(1,:), 'k');
 title("POSITION");
-xlim([-100 900]);
+xlim([-100 700]);
 ylim([0 800]);
 
 figure(2);
