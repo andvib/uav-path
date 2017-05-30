@@ -6,7 +6,7 @@ weights = [1, 3, 5];
 %% PLOT POSITION %%
 
 for i = weights
-    a = sprintf('lin_70deg%d.m', i);
+    a = sprintf('lin_70deg1.m');
     run (a);
     
     figure(1);
@@ -14,6 +14,13 @@ for i = weights
     hold on;
     plot(STATES(:,3),STATES(:,2));
     plot(PATH(:,2), PATH(:,1),'k');
+    for j = (1:length(STATES(:,1)))
+        [x_temp, y_temp] = camera_pos([STATES(j,8), STATES(j,9), STATES(j,10)],...
+                            [STATES(j,2), STATES(j,3), STATES(j,4)], 0.0);%0.331612);
+        c_n_1(:,j) = x_temp;
+        c_n_2(:,j) = y_temp;
+    end
+    plot(c_n_1(2,:),c_n_1(1,:));
     xlim([-300 500]);
     ylim([200 1000]);
     ylabel('North [m]');
@@ -22,7 +29,7 @@ for i = weights
     %cleanfigure;
     %matlab2tikz('fig/uav_position.tex');
     set(gca, 'fontsize', 14);
-    saveas(gcf, respath, 'epsc');
+    saveas(gcf, respath, 'png');
     close all;
 end
 
