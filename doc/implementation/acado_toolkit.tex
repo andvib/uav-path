@@ -2,29 +2,9 @@
 
 The ACADO Toolkit \cite{acadoHOUSKA} is an open-source toolkit that supports several different methods for solving optimization problems. The toolkit provides methods to solve four different classes of optimization problem: Optimal control problems, multi-objective optimization and optimal control problems, parameter and state estimation problems, and model predictive control.
 
-Even though the toolkit will be used to create an MPC in this case, the optimal control problems (OCP) class will be used to solve the optimization problem. The reason for this is that between each iteration of the MPC algorithm a new trajectory must be generated, and the MPC problem class does not have the functionality needed to do this. How the trajectory is calculated and how it is passed to the toolkit will be explained later in this chapter.
+Even though the toolkit will be used to create an MPC in this paper, the optimal control problems (OCP) class will be used to solve the optimization problem. The reason for this is that between each iteration of the MPC algorithm a new trajectory must be generated, and the MPC problem class does not have the functionality needed to do this.
 
 %To solve the optimization problems the toolkit uses many different algorithms. It also has its own Runge-Kutta and BDF integrators to simulate both ODE's (Ordinary Differential Equation) and DAE's (Differential Algebraic Equation). A MATLAB interface is also supplied by the toolkit, but this will not be used for this thesis.
-
-
-\subsection{Discretization (Workin' Title)}
-
-The model and optimization problem will be written on continuous time form, which means that it has to be discretized in order to be solved. The method used to discretisize the problem plays a big role in how the problem is solved, and in this thesis the built-in ACADO function for the \textit{direct multiple-shooting} method will be used. Direct discretization methods can be explained as "first discretize, then optimize", which allows for easier treatment of inequality constraints \cite{discDIEHL}. One of the major benefits by using the direct multiple-shooting method is that the method is initialized with the result from the previous iteration \cite{stallMATHISEN}.
-
-In short the direct multiple-shooting method starts by computing a discretized control trajectory for a finite time interval. Independently, the Ordinary Differential Equations (ODE) of the optimization problem is solved one time for every timestep of the discretized control trajectory. Simultaneously as these solutions are computed an integral of a cost function is computed, which is the reason why the direct multiple-shooting method is also called a \textit{simultaneous} method. 
-
-\begin{equation}
-\label{eq:multiple_shooting}
-	\begin{array}{rrlcl}
-	\displaystyle \min_{\mathbf{s},\mathbf{q}} & \multicolumn{3}{l}{\sum_{i=0}^{N-1} F_i(\mathbf{s}_i, \mathbf{q}_i)+ E(\mathbf{s}_N)} \\
-	\textrm{s.t}
-	& \mathbf{x}_0 - \mathbf{s}_0 & = 0 & \\
-	& \mathbf{x}_i(t_{i+1};\mathbf{s}_i,\mathbf{q}_i)-\mathbf{s}_{i+1} & = 0,& \hspace{5pt} i = 0,...,N-1 \\
-	& h(\mathbf{s}_i, \mathbf{q}_i) & \leq 0,& \hspace{5pt} i = 0,...,N
-	\end{array}
-\end{equation}
-
-The direct multiple-shooting method can be described by the nonlinear program (NLP) shown in equation \ref{eq:multiple_shooting} \cite{stallMATHISEN}. In the equation the objective function $F$ is the result of integrating the cost function, and $\mathbf{s}$ and $\mathbf{q}$ are the optimization variables for the states and controls respectively. $\mathbf{s}$ and $\mathbf{q}$ are introduced in order to ensure that the solution for the time interval is tied to the initial values. $E$ is the end term of the objective funtion.
 
 
 \subsection{Runge-Kutta Method}
@@ -43,6 +23,8 @@ The ACADO toolkit provides algorithms for \textit{explicit} Runge-Kutta methods 
 \end{subequations}
 
 where $t_n$ is the current time, $\mathbf{y}_n$ is the output of the system at the current time, $h$ is the step size and $\sigma$ is the number of approximations of the derivative that is calculated. $a$, $b$ and $c$ are parameters for the specific Runge-Kutta method used, and $c$ must satisfy $0 < c < 1$.
+
+Systems may consist of dynamics of different time constants, and the difference between the constants may have a big impact on how fast an explicit method can perform the computations. While they don't have a formal definition, systems that explicit methods compute poorly are referred to as \textit{stiff systems} \cite{stiffBUI}. The poor performance of explicit method comes from the stability of these methods, as the stability is dependent on the step size. This means that for systems with dynamics of varying time constants, a very small stepsize has to be chosen in order for the method to remain stable. For stiff systems \textit{implicit} methods have a better performance and faster computation time. 
 
 %\subsection{Solver}
 

@@ -38,7 +38,7 @@ The linear decoupled UAV model presented in chapter \ref{ch:kinematics} will be 
 \end{equation}
 \end{subequations}
 
-The prediction model relates to the equality constraints of equation \ref{eq:optimization_formulation} in the form of differential equations. As explained in the previous chapter the control rates $\Delta \mathbf{u}$ will be used as control inputs in the optimization problem.
+The prediction model relates to the equality constraints of equation \ref{eq:optimization_formulation} in the form of differential equations. As explained in the previous chapter the control rates $\Delta \mathbf{u}$ will be used as control inputs in the optimization problem:
 
 \begin{equation}
 	\label{eq:control_rates}
@@ -81,15 +81,7 @@ The function $\mathbf{y}(\mathbf{x})$ holds the current values for the optimizat
 	\end{bmatrix}.
 \end{equation}
 
-In order to reduce the control effort for the optimization problem, the rate of change of the control inputs $\Delta\mathbf{u}$ will be minimized. Since all the control rates is to be compared to zero, no function is needed. The vector $u$ contains of the four control rates:
-
-\begin{equation}
-	\label{eq:control_rates}
-	\Delta\mathbf{u} = 
-	\begin{bmatrix}
-		\Delta\delta_e \hspace{5pt} \Delta\delta_a \hspace{5pt} \Delta\delta_r \hspace{5pt} \Delta\delta_t
-	\end{bmatrix} ^\intercal .
-\end{equation}
+In order to reduce the control effort for the optimization problem, the rate of change of the control inputs $\Delta\mathbf{u}$ will be minimized. Since all the control rates is to be compared to zero, no function is needed.
 
 The matrices $\mathbf{Q}$ and $\mathbf{R}$ are the weighting matrices. They are diagonal matrices where each row represent one state or control rate. The higher the value in the row, the more value is given to the difference between the corresponding state or control rate and the reference trajectory while minimizing the objective function.
 

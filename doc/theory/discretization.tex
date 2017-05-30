@@ -1,0 +1,18 @@
+\section{Discretization}
+
+The model and optimization problem will be written on continuous time form, which means that it has to be discretized in order to be solved. The method used to discretize the problem plays a big role in how the problem is solved, and a common method to use for nonlinear programs (NLP) is the \textit{direct multiple-shooting} method. Direct discretization methods can be explained as "first discretize, then optimize", which allows for easier treatment of inequality constraints \cite{discDIEHL}. One of the major benefits by using the direct multiple-shooting method is that all shooting nodes are initialized with the result from the previous iteration \cite{stallMATHISEN}.
+
+In short, the direct multiple-shooting method starts by computing a discretized control trajectory for a finite time interval. Independently, the Ordinary Differential Equations (ODE) of the optimization problem is solved one time for every timestep of the discretized control trajectory. Simultaneously, an integral of a cost function is computed, which is the reason why the direct multiple-shooting method is also called a \textit{simultaneous} method. 
+
+\begin{equation}
+\label{eq:multiple_shooting}
+	\begin{array}{rrlcl}
+	\displaystyle \min_{\mathbf{s},\mathbf{q}} & \multicolumn{3}{l}{\sum_{i=0}^{N-1} F_i(\mathbf{s}_i, \mathbf{q}_i)+ E(\mathbf{s}_N)} \\
+	\textrm{s.t}
+	& \mathbf{x}_0 - \mathbf{s}_0 & = 0 & \\
+	& \mathbf{x}_i(t_{i+1};\mathbf{s}_i,\mathbf{q}_i)-\mathbf{s}_{i+1} & = 0,& \hspace{5pt} i = 0,...,N-1 \\
+	& h(\mathbf{s}_i, \mathbf{q}_i) & \leq 0,& \hspace{5pt} i = 0,...,N
+	\end{array}
+\end{equation}
+
+The direct multiple-shooting method can be described by the NLP shown in (\ref{eq:multiple_shooting}) \cite{stallMATHISEN}. In the equation the objective function $F$ is the result of integrating the cost function, and $\mathbf{s}$ and $\mathbf{q}$ are the optimization variables for the states and controls respectively. $\mathbf{s}$ and $\mathbf{q}$ are introduced in order to ensure that the solution for the time interval is tied to the initial values. $E$ is the end term of the objective function.
