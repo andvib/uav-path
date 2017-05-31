@@ -49,7 +49,7 @@ for i = weights
         c_n_1(:,j) = x_temp;
         c_n_2(:,j) = y_temp;
     end
-    plot(c_n_1(2,:),c_n_1(1,:));
+    plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0]);
     plot(PATH(:,2), PATH(:,1),'k');
     xlim([-300 500]);
     ylim([200 1000]);

@@ -46,7 +46,7 @@ for i = radii
     figure(1);
     grid on;
     hold on;
-    plot(c_n_1(2,:),c_n_1(1,:));
+    plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0]);
     %plot(c_n_2(2,:),c_n_2(1,:));
     plot(PATH(:,2), PATH(:,1),'k');
     xlim([-300 500]);

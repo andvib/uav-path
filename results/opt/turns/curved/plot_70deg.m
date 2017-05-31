@@ -30,7 +30,7 @@ for i = (1:length(STATES(:,1)))
     c_n_2(:,i) = y_temp;
 end
 
-plot(c_n_1(2,:),c_n_1(1,:));
+plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0]);
 %plot(c_n_2(2,:),c_n_2(1,:));
 %plot(STATES(:,3), STATES(:,2));
 
