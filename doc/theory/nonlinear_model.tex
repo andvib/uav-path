@@ -1,0 +1,70 @@
+\chapter{Nonlinear UAV Model}
+\label{ch:nonlinear_model}
+
+The complete state space equations for the nonlinear model presented by Beard \& McLain \cite{uavBEARD}, that is the basis for the linearized model used as the prediction model in the MPC, is given here.
+
+\begin{equation}
+	\begin{bmatrix}
+	\dot{p}_n \\ \dot{p}_e \\ \dot{p}_d
+	\end{bmatrix}
+	= 
+	\begin{bmatrix}
+		c_\theta c_\psi & s_\phi s_\theta c_\psi - c_\phi s_\psi & c_\phi s_\theta c_\psi + s_\phi s_\psi \\
+		c_\theta c_\psi & s_\phi s_\theta s_\psi + c_\phi c_\psi & c_\phi s_\theta s_\psi - s_\phi c_\psi \\
+		-s_\theta & s_\phi c_\theta & c_\phi c_\theta
+	\end{bmatrix}
+	\begin{bmatrix}
+		u \\ v \\ w
+	\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\label{eq:vel_dot}
+	\begin{bmatrix}
+		\dot{u} \\ \dot{v} \\ \dot{w}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		rv-qw \\ pw-ru \\ qu-pv
+	\end{bmatrix}
+	+ \frac{1}{\text{\sffamily m\/}}
+	\begin{bmatrix}
+		f_x \\ f_y \\ f_z
+	\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+	\begin{bmatrix}
+		\dot{\phi} \\ \dot{\theta} \\ \dot{\psi}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		1 & sin(\phi)tan(\theta) & cos(\phi)tan(\theta) \\
+		0 & cos(\phi) & -sin(\phi) \\
+		0 & \frac{sin(\phi)}{cos(\theta)} & \frac{cos(\phi)}{cos(\theta)}
+	\end{bmatrix}
+	\begin{bmatrix}
+		p \\ q \\ r
+	\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\label{eq:angle_dot}
+	\begin{bmatrix}
+		\dot{p} \\ \dot{q} \\ \dot{r}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		\Gamma_1pq - \Gamma_2qr \\
+		\Gamma_5pr - \Gamma_6(p^2-r^2)\\
+		\Gamma_7pq - \Gamma_1qr
+	\end{bmatrix}
+	+
+	\begin{bmatrix}
+		\Gamma_3l + \Gamma_4n \\
+		\frac{1}{J_y}m\\
+		\Gamma_4l + \Gamma_8n
+	\end{bmatrix}
+\end{equation}
+
+$f_x$, $f_y$ and $f_z$ in (\ref{eq:vel_dot}) represent the forces in each direction in the body frame, and \text{\sffamily m\/} represent the mass of the UAV. In (\ref{eq:angle_dot}) the $\Gamma$ values represent the inertia of the UAV, and $l$, $m$, and $n$ is the moments about the axes in the body frame.
