@@ -23,7 +23,7 @@ How the MPC takes advantage of subsequent opposite turns can be seen in Figure \
 
 \subsection{Lawnmover Path}
 
-The result of attempting to optimize a lawnmover-pattern path is shown in Figure \ref{fig:lawnmover}. The radius was set to be $250$m, as the optimization of $180\degree$ path show that the MPC performs well on this turn, and the line connecting to archs is set to $500$m.
+The result of attempting to optimize a lawnmover-pattern path is shown in Figure \ref{fig:lawnmover}. The radius was set to be $250$m, as the optimization of $180\degree$ path show that the MPC performs well on this turn, and the line connecting to arcs is set to $500$m.
 
 \begin{figure}
 	\makebox[\textwidth][c]{
@@ -40,3 +40,35 @@ The result of attempting to optimize a lawnmover-pattern path is shown in Figure
 When the MPC optimizes the first $180\degree$ turn, it performs in a similar manner to the results in section \ref{subsec:180}: it takes the inner turn to begin with, and then widens the turn at the end in order to avoid changing the roll angle quickly. While it should have taken the advantage of the straight line to position the UAV right above the path so it could return to trimmed flight, it instead chooses continue flying next to the path with a constant roll angle to compensate for the offset from the path. It uses the rudder to compensate for the roll angle so it can travel at a constant course angle. The roll angle it uses to track the path while flying next to the path can be seen in Figure \ref{fig:lawnmover_attitude}.
 
 As the UAV approaches the next $180\degree$ arch it is already on the inner side of the turn. However, instead of this being an advantage since it optimizes a $180\degree$ turn like this by taking the inner turn, it throws the UAV into an unstable right-turning spiral.
+
+
+\subsection{Long Paths}
+
+In order to test the performance of the MPC over a longer duration, a longer path consisting of several turns was optimized. The path was designed with linear corners that the MPC could handle, and then the curved path was made with similar waypoints and radius of $150$m.
+
+%\begin{figure}
+%    \makebox[\textwidth][c]{
+%    \includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/path.eps}}
+%    \caption{The linear and curved paths that will be optimized.}
+%    \label{fig:path_easy}
+%\end{figure}
+
+\begin{figure}
+	\makebox[\textwidth][c]{
+	\subfloat[UAV position]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/uav_pos_lin.eps}}
+	\qquad
+	\subfloat[Camera position]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/camera_pos_lin.eps}}}
+	\caption{Result of optimizing the piecewise linear path.}
+	\label{fig:path_lin_easy}
+\end{figure}
+
+\begin{figure}
+	\makebox[\textwidth][c]{
+	\subfloat[UAV position]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/uav_pos_cur.eps}}
+	\qquad
+	\subfloat[Camera position]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/camera_pos_cur.eps}}}
+	\caption{Result of optimizing the curved path with a radius of $150$m.}
+	\label{fig:path_cur_easy}
+\end{figure}
+
+The results of optimizing the longer path can be seen in Figures \ref{fig:path_lin_easy} and \ref{fig:path_cur_easy}. The results of the two optimizations are very similar. At the beginning of the path the MPC chooses to start the turn immediately, which causes the camera to slip out for both the linear and the curved path. The long right turn is in both cases optimized by taking one long, continuous turn, with the camera pointing just beside the ground path.
