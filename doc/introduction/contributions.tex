@@ -1,1 +1,10 @@
 \section{Contributions}
+
+This paper will investigate how a UAV can best be controlled in order to ensure that what is capture by a fixed hyperspectral camera is what is intended to be captured. The goal of the thesis is to develop software able to generate an optimal path that can be used to survey a pre-define ground path. The contributions from the thesis are:
+
+\begin{itemize}
+    \item A kinematic model to calculate the position of the camera footprint on the ground based on the attitude of the UAV
+    \item An offline intervalwise MPC that, given a pre-defined discretized ground path, calculates an optimal path the UAV may follow in order to ensure the entire ground path is captured by a fixed camera
+    \item A software implementation of the offline intervalwise MPC implemented using the ACADO Toolkit
+    \item A Software-in-the-Loop simulator to test the performance of the path using an pre-existing autopilot
+\end{itemize}
