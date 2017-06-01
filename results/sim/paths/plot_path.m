@@ -97,3 +97,55 @@ xlabel('East [m]');
 ylim([0 1200]);
 xlim([-300 900]);
 saveas(gcf, 'fig/camera_pos_cur', 'epsc');
+
+
+%% CALCULATE LIN ERROR %%
+
+for i = 1:length(pos_lin(:,1))
+    [x_temp, y_temp] = camera_pos([phi_lin(i), theta_lin(i), psi_lin(i)],...
+                        [pos_lin(i,1), pos_lin(i,2), alt_lin(i)], 0.0);
+    
+    min_error = 100000;
+    
+    for j = 1:length(path_lin(:,1))
+        dist = sqrt((path_lin(j,1) - x_temp(1))^2 + (path_lin(j,2) - x_temp(2))^2);
+        if dist < min_error
+            min_error = dist;
+        end
+    end
+    lin_error(i) = min_error;
+end
+
+figure(11)
+plot(time_lin, lin_error)
+
+mean_lin_error = mean(lin_error)
+max_lin_error = max(lin_error)
+min_lin_error = min(lin_error)
+std_lin_error = std(lin_error)
+
+
+%% CALCULATE CUR ERROR %%
+
+for i = 1:length(pos_cur(:,1))
+    [x_temp, y_temp] = camera_pos([phi_cur(i), theta_cur(i), psi_cur(i)],...
+                        [pos_cur(i,1), pos_cur(i,2), alt_cur(i)], 0.0);
+    
+    min_error = 100000;
+    
+    for j = 1:length(path_cur(:,1))
+        dist = sqrt((path_cur(j,1) - x_temp(1))^2 + (path_cur(j,2) - x_temp(2))^2);
+        if dist < min_error
+            min_error = dist;
+        end
+    end
+    cur_error(i) = min_error;
+end
+
+figure(12)
+plot(time_cur, cur_error)
+
+mean_cur_error = mean(cur_error)
+max_cur_error = max(cur_error)
+min_cur_error = min(cur_error)
+std_cur_error = std(cur_error)
