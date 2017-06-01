@@ -2,7 +2,7 @@ close all;
 clear all;
 
 %% PLOT POSITION %%
-for i = [1,2]
+for i = [1]
     a = sprintf('lin_70deg_0%d.m',i);
     run (a);
     
@@ -29,10 +29,29 @@ for i = [1,2]
     %cleanfigure;
     %matlab2tikz('fig/uav_position.tex');
     set(gca, 'fontsize', 14);
-    saveas(gcf, respath, 'png');
+    saveas(gcf, respath, 'epsc');
     close all;
 end
 
+
+for i = [1]
+    a = sprintf('lin_70deg_0%d.m',i);
+    run (a);
+    
+    figure(1);
+    grid on;
+    hold on;
+    plot(STATES(:,1),STATES(:,8));
+    ylabel('\phi [rad]');
+    xlabel('Time [s]');
+    respath = sprintf('fig_70deg/uav_phi_%d',i);
+    
+    %cleanfigure;
+    %matlab2tikz('fig/uav_position.tex');
+    set(gca, 'fontsize', 14);
+    saveas(gcf, respath, 'epsc');
+    close all;
+end
 
 %% PLOT HEIGHT %%
 
@@ -79,27 +98,27 @@ set(gca, 'fontsize', 14);
 
 
 %% PLOT CONTROLS %%
-
-figure(4);
-grid on;
-hold on;
-title('CONTROl');
-k = 1;
-for i = [1,12]
-    a = sprintf('lin_45deg_0%d.m',i);
-    run (a);
-    
-    elevator(k,:) = STATES(:,14)';
-    aileron(k,:) = STATES(:,15)';
-    rudder(k,:) = STATES(:,16)';
-    throttle(k,:) = STATES(:,17)';
-    k = k+1;
-end
-subplot(4,1,1);
-plot(STATES(:,1), elevator);
-subplot(4,1,2);
-plot(STATES(:,1), aileron);
-subplot(4,1,3);
-plot(STATES(:,1), rudder);
-subplot(4,1,4);
-plot(STATES(:,1), throttle);
+% 
+% figure(4);
+% grid on;
+% hold on;
+% title('CONTROl');
+% k = 1;
+% for i = [1,12]
+%     a = sprintf('lin_45deg_0%d.m',i);
+%     run (a);
+%     
+%     elevator(k,:) = STATES(:,14)';
+%     aileron(k,:) = STATES(:,15)';
+%     rudder(k,:) = STATES(:,16)';
+%     throttle(k,:) = STATES(:,17)';
+%     k = k+1;
+% end
+% subplot(4,1,1);
+% plot(STATES(:,1), elevator);
+% subplot(4,1,2);
+% plot(STATES(:,1), aileron);
+% subplot(4,1,3);
+% plot(STATES(:,1), rudder);
+% subplot(4,1,4);
+% plot(STATES(:,1), throttle);
