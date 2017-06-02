@@ -34,11 +34,13 @@ ylabel('North [m]');
 xlabel('East [m]');
 ylim([0 1200]);
 xlim([-300 900]);
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig/path', 'epsc');
 
 
 %% PLOT LINEAR %%
 
+% UAV Position
 figure(2);
 grid on;
 hold on;
@@ -48,8 +50,10 @@ ylabel('North [m]');
 xlabel('East [m]');
 ylim([0 1200]);
 xlim([-300 900]);
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig/uav_pos_lin', 'epsc');
 
+% Camera Position
 figure(3);
 grid on;
 hold on;
@@ -65,12 +69,29 @@ ylabel('North [m]');
 xlabel('East [m]');
 ylim([0 1200]);
 xlim([-300 900]);
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig/camera_pos_lin', 'epsc');
 
+% Attitude
+figure(4);
+grid on;
+hold on;
+plot(time_lin, phi_lin);
+plot(time_lin, theta_lin);
+plot(time_lin, psi_lin);
+xlim([0 110]);
+ylim([-1 2.1]);
+ylabel('Angle [rad]');
+xlabel('Time [s]');
+leg=legend('\phi', '\theta', '\psi', 'Location', 'NW');
+set(gca, 'fontsize', 14);
+set(leg, 'FontSize', 15);
+saveas(gcf, 'fig/attitude_lin', 'epsc');
 
 %% PLOT CURVED %%
 
-figure(4);
+% UAV Position
+figure(5);
 grid on;
 hold on;
 plot(path_cur(:,2), path_cur(:,1),'k');
@@ -79,9 +100,11 @@ ylabel('North [m]');
 xlabel('East [m]');
 ylim([0 1200]);
 xlim([-300 900]);
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig/uav_pos_cur', 'epsc');
 
-figure(5);
+% Camera Position
+figure(6);
 grid on;
 hold on;
 plot(path_cur(:,2), path_cur(:,1),'k');
@@ -96,8 +119,24 @@ ylabel('North [m]');
 xlabel('East [m]');
 ylim([0 1200]);
 xlim([-300 900]);
+set(gca, 'fontsize', 14);
 saveas(gcf, 'fig/camera_pos_cur', 'epsc');
 
+% Attitude
+figure(7);
+grid on;
+hold on;
+plot(time_cur, phi_cur);
+plot(time_cur, theta_cur);
+plot(time_cur, psi_cur);
+xlim([0 110]);
+ylim([-1 2.1]);
+ylabel('Angle [rad]');
+xlabel('Time [s]');
+leg=legend('\phi', '\theta', '\psi', 'Location', 'NW');
+set(gca, 'fontsize', 14);
+set(leg, 'FontSize', 15);
+saveas(gcf, 'fig/attitude_cur', 'epsc');
 
 %% CALCULATE LIN ERROR %%
 

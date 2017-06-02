@@ -23,7 +23,7 @@ How the MPC takes advantage of subsequent opposite turns can be seen in Figure \
 
 \subsection{Lawnmover Path}
 
-The result of attempting to optimize a lawnmover-pattern path is shown in Figure \ref{fig:lawnmover}. The radius was set to be $250$m, as the optimization of $180\degree$ path show that the MPC performs well on this turn, and the line connecting to arcs is set to $500$m.
+The result of attempting to optimize a lawnmover-pattern path is shown in Figure \ref{fig:lawnmover}. The radius was set to be $250$m, as the optimization of $180\degree$ turn show that the MPC performs well on this turn, and the line connecting two arcs is set to $500$m.
 
 \begin{figure}
 	\makebox[\textwidth][c]{
@@ -58,6 +58,9 @@ In order to test the performance of the MPC over a longer duration, a longer pat
 	\subfloat[UAV position]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/uav_pos_lin.eps}}
 	\qquad
 	\subfloat[Camera position]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/camera_pos_lin.eps}}}
+    \makebox[\textwidth][c]{
+	\subfloat[Attitude angles]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/attitude_lin.eps}
+    \label{fig:path_lin_easy_attitude}}}
 	\caption{Result of optimizing the piecewise linear path.}
 	\label{fig:path_lin_easy}
 \end{figure}
@@ -67,8 +70,28 @@ In order to test the performance of the MPC over a longer duration, a longer pat
 	\subfloat[UAV position]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/uav_pos_cur.eps}}
 	\qquad
 	\subfloat[Camera position]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/camera_pos_cur.eps}}}
+    \makebox[\textwidth][c]{
+	\subfloat[Attitude angles]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/attitude_cur.eps}
+    \label{fig:path_cur_easy_attitude}}}
 	\caption{Result of optimizing the curved path with a radius of $150$m.}
 	\label{fig:path_cur_easy}
 \end{figure}
 
 The results of optimizing the longer path can be seen in Figures \ref{fig:path_lin_easy} and \ref{fig:path_cur_easy}. The results of the two optimizations are very similar. At the beginning of the path the MPC chooses to start the turn immediately, which causes the camera to slip out for both the linear and the curved path. The long right turn is in both cases optimized by taking one long, continuous turn, with the camera pointing just beside the ground path.
+
+\begin{table}
+\centering
+\begin{tabular}{l r r r}
+    \hline
+    & Mean & Max  & STD \\
+    \hline
+    Linear path & 6.8390m & 16.8792m & 4.1585m \\
+    %\hline
+    Curved path & 5.4001m & 14.8386m & 3.7833m \\
+    \hline
+\end{tabular}
+\caption{Mean error, max error and the standard deviation between camera centre point and ground path when tracking the path.}
+\label{tab:easy_path}
+\end{table}
+
+A difference between the linear and the curved paths can be seen in the roll angle in Figures \ref{fig:path_lin_easy_attitude} and \ref{fig:path_cur_easy_attitude}. The peaks in roll are sharper for the linear path than for the curved path. In Table \ref{tab:easy_path} show that the error between the camera centre point and ground path  for the linear has both a higher max and a higher mean value than for the curved. The standard deviation is also smaller for the curved path, meaning that there are slightly smaller oscillations when tracking the curved path.

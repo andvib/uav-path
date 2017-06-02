@@ -15,6 +15,7 @@
 *.blg
 *eps-converted-to.pdf
 *.lof
+*.lot
 
 ## Matlab
 *.asv

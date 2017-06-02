@@ -39,7 +39,6 @@ xlim([-100 300]);
 ylim([450 850]);
 ylabel('North [m]');
 xlabel('East [m]');
-%matlab2tikz('fig/camera_position.tex');
 set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_70deg/camera_position', 'epsc');
 
@@ -54,7 +53,6 @@ xlim([0 40]);
 ylim([100 160]);
 ylabel('Height [m]');
 xlabel('Time [s]');
-%matlab2tikz('fig/height.tex');
 set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_70deg/height', 'epsc');
 
@@ -63,29 +61,13 @@ saveas(gcf, 'fig_70deg/height', 'epsc');
 figure(4);
 grid on;
 hold on;
-
-subplot(3,1,1);
-grid on;
-hold on;
 plot(STATES(:,1), STATES(:,8));
-ylabel('\phi [rad]');
-ylim([-1 1]);
-
-subplot(3,1,2);
-grid on;
-hold on;
 plot(STATES(:,1), STATES(:,9));
-ylabel('\theta [rad]');
-ylim([-1 1]);
-
-subplot(3,1,3);
-grid on;
-hold on;
 plot(STATES(:,1), STATES(:,10));
-ylim([-1 1]);
-ylabel('\psi [rad]');
+
+ylabel('Angle [rad]');
 xlabel('Time [s]');
-%matlab2tikz('fig/attitude.tex');
+legend('\phi', '\theta', '\psi','Location','NW');
 set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_70deg/attitude','epsc');
 
