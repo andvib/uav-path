@@ -103,3 +103,31 @@ plot(STATES(:,1), STATES(:,16));
 subplot(4,1,4);
 plot(STATES(:,1), STATES(:,17));
 %saveas(gcf, 'fig_45deg/control','epsc');
+
+
+%% CALCULATE AND PLOT COURSE ANGLE %%
+run results/path_cur_45deg_2turns_150m.m
+chi_45(1) = 0;
+for i = 2:length(STATES(:,1))
+   chi_45(i) = atan2(STATES(i,3)-STATES(i-1,3), STATES(i,2)-STATES(i-1,2));
+end
+
+run results/path_cur_70deg_2turns_150m.m
+chi_70(1) = 0;
+for i = 2:length(STATES(:,1))
+   chi_70(i) = atan2(STATES(i,3)-STATES(i-1,3), STATES(i,2)-STATES(i-1,2));
+end
+
+figure(6);
+grid on;
+hold on;
+plot(STATES(:,1), chi_45);
+plot(STATES(:,1), chi_70);
+legend('45 degree', '70 degree');
+ylabel('\chi [rad]');
+xlabel('Time [s]');
+set(gca, 'fontsize', 14);
+saveas(gcf, 'fig_cur/course', 'epsc');
+
+
+

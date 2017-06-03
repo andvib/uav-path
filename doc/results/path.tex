@@ -15,8 +15,11 @@ How the MPC takes advantage of subsequent opposite turns can be seen in Figure \
 	\subfloat[Camera position $70\degree$]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/opt/paths/fig_cur/camera_position_70deg_150m.eps}}}
 	\makebox[\textwidth][c]{
 	\subfloat[Heading angle]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/opt/paths/fig_cur/heading.eps}
-	\label{fig:paths_cur_heading}}}
-	\caption{UAV position, camera position and heading angle during two subsequent turns of $45\degree$ and $70\degree$.}
+	\label{fig:paths_cur_heading}}
+	\qquad
+	\subfloat[Course angle]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/opt/paths/fig_cur/course.eps}
+	\label{fig:paths_cur_course}}}
+	\caption{UAV position, camera position, and heading and course angle during two subsequent turns of $45\degree$ and $70\degree$.}
 	\label{fig:paths_cur_150m}
 \end{figure}
 
@@ -96,4 +99,11 @@ The results of optimizing the longer path can be seen in Figures \ref{fig:path_l
 \label{tab:easy_path}
 \end{table}
 
-A difference between the linear and the curved paths can be seen in the roll angle in Figures \ref{fig:path_lin_easy_attitude} and \ref{fig:path_cur_easy_attitude}. The peaks in roll are sharper for the linear path than for the curved path. In Table \ref{tab:easy_path} show that the error between the camera centre point and ground path  for the linear has both a higher max and a higher mean value than for the curved. The standard deviation is also smaller for the curved path, meaning that there are slightly smaller oscillations when tracking the curved path.
+A difference between the linear and the curved paths can be seen in the roll angle in Figures \ref{fig:path_lin_easy_attitude} and \ref{fig:path_cur_easy_attitude}. The peaks in roll are sharper for the linear path than for the curved path. In Table \ref{tab:easy_path} show that the error between the camera centre point and ground path  for the linear has both a higher max and a higher mean value than for the curved. The standard deviation is also smaller for the curved path, meaning that there are slightly smaller oscillations when tracking the curved path. In Figure \ref{fig:both_optimized_paths} the two optimized paths are shown together, and it can be seen that they are almost identical.
+
+\begin{figure}
+	\makebox[\textwidth][c]{
+	\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/both.eps}}
+	\caption{The optimized path of the piecewise linear and the curved path.}
+	\label{fig:both_optimized_paths}
+\end{figure}

@@ -138,6 +138,19 @@ set(gca, 'fontsize', 14);
 set(leg, 'FontSize', 15);
 saveas(gcf, 'fig/attitude_cur', 'epsc');
 
+
+%% PLOT BOTH OPTIMIZATIONS TOGETHER %%
+figure(8);
+grid on;
+hold on;
+plot(pos_cur(:,2), pos_cur(:,1));
+plot(pos_lin(:,2), pos_lin(:,1));
+legend('Curved Path', 'Piecewise Linear Path', 'Location', 'SE');
+ylim([0 1200]);
+xlim([-300 900]);
+saveas(gcf, 'fig/both', 'epsc');
+
+
 %% CALCULATE LIN ERROR %%
 
 for i = 1:length(pos_lin(:,1))

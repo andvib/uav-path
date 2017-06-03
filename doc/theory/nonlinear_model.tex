@@ -1,4 +1,6 @@
-\chapter{Nonlinear UAV Model}
+\chapter{UAV Model}
+
+\section{Nonlinear State Space Model}
 \label{ch:nonlinear_model}
 
 The complete state space equations for the nonlinear model presented by Beard \& McLain \cite{uavBEARD}, that is the basis for the linearized model used as the prediction model in the MPC, is given here.
@@ -68,3 +70,47 @@ The complete state space equations for the nonlinear model presented by Beard \&
 \end{equation}
 
 $f_x$, $f_y$ and $f_z$ in (\ref{eq:vel_dot}) represent the forces in each direction in the body frame, and \text{\sffamily m\/} represent the mass of the UAV. In (\ref{eq:angle_dot}) the $\Gamma$ values represent the inertia of the UAV, and $l$, $m$, and $n$ is the moments about the axes in the body frame.
+
+
+\section{Aerodynamic Force Coefficients}
+
+What aerodynamic force coefficients to use with the linearized model is not explicitly stated by Beard \& McLain \cite{uavBEARD}. For this thesis, the linear equations for the coefficients given by Beard \& McLain have been used together with the trimmed state values of the UAV states.
+
+\begin{subequations}
+\begin{equation}
+	C_L(\alpha^*) = C_{L_0} + C_{L_\alpha}\alpha
+\end{equation}
+\begin{equation}
+	C_D(\alpha^*) = C_{D_0} + C_{D_\alpha}\alpha
+\end{equation}
+\end{subequations}
+
+\begin{subequations}
+\begin{equation}
+	C_{X_0} = 0
+\end{equation}
+\begin{equation}
+	C_{X_\alpha}(\alpha^*) = -C_D(\alpha^*) cos(\alpha^*) + C_L(\alpha^*) sin(\alpha^*)
+\end{equation}
+\begin{equation}
+	C_{X_q}(\alpha^*) = -C_{D_q}cos(\alpha^*) + C_{L_q}sin(\alpha^*)
+\end{equation}
+\begin{equation}
+	C_{X_{\delta_e}}(\alpha^*) = -C_{D_{\delta_e}}cos(\alpha^*) + C_{L_{\delta_e}}sin(\alpha^*)
+\end{equation}
+\end{subequations}
+
+\begin{subequations}
+\begin{equation}
+	C_{Z_0} = 0
+\end{equation}
+\begin{equation}
+	C_{Z_\alpha}(\alpha^*) = -C_D(\alpha^*) sin(\alpha^*) - C_L(\alpha^*) cos(\alpha^*)
+\end{equation}
+\begin{equation}
+	C_{Z_q}(\alpha^*) = -C_{D_q}sin(\alpha^*) - C_{L_q}cos(\alpha^*)
+\end{equation}
+\begin{equation}
+	C_{Z_{\delta_e}}(\alpha^*) = -C_{D_{\delta_e}}sin(\alpha^*) - C_{L_{\delta_e}}cos(\alpha^*)
+\end{equation}
+\end{subequations}

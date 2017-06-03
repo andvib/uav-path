@@ -18,8 +18,6 @@ xlim([-300 500]);
 ylim([0 800]);
 ylabel('North [m]');
 xlabel('East [m]');
-%cleangfiure;
-%matlab2tikz('fig/uav_position.tex');
 saveas(gcf, 'fig/uav_position', 'epsc');
 
 %% PLOT CAMERA CENTRE POINT%%
@@ -47,8 +45,6 @@ xlim([-300 500]);
 ylim([0 800]);
 ylabel('North [m]');
 xlabel('East [m]');
-%cleanfigure;
-%matlab2tikz('fig/camera_position.tex');
 saveas(gcf, 'fig/camera_position', 'epsc');
 
 
@@ -67,7 +63,6 @@ xlim([0 40]);
 ylim([100 160]);
 ylabel('Height [m]');
 xlabel('Time [s]');
-%matlab2tikz('fig/height.tex');
 saveas(gcf, 'fig/height', 'epsc');
 
 
@@ -104,7 +99,6 @@ hold on;
 plot(STATES(:,1), psi);
 ylabel('\psi [rad]');
 xlabel('Time [s]');
-%matlab2tikz('fig/attitude.tex');
 saveas(gcf, 'fig/attitude','epsc');
 
 
@@ -146,9 +140,47 @@ for i = 10:10:140
     run (a)
     
     dur(k,1) = i;
-    dur(k,2) = DURATION;
+    dur(k,2) = DURATION/40;
     k = k+1;
 end
 plot(dur(:,1), dur(:,2))
-%matlab2tikz('fig/duration.tex');
 saveas(gcf, 'fig/duration', 'epsc');
+
+
+
+%% CALCULATE ERRORS %%
+k = 1;
+for i = iterations
+    a = sprintf('results_horizon/horizon_%d.m', i);
+    run (a)
+    
+    for n = (1:length(STATES(:,1)))
+        [x_temp, y_temp] = camera_pos([STATES(n,8), STATES(n,9), STATES(n,10)],...
+                              [STATES(n,2), STATES(n,3), STATES(n,4)], 0.0);
+        
+    
+    
+        min_error = 100000;
+    
+        for j = 1:length(PATH(:,1))
+            dist = sqrt((PATH(j,1) - x_temp(1))^2 + (PATH(j,2) - x_temp(2))^2);
+            if dist < min_error
+                min_error = dist;
+            end
+        end
+    
+        path_error(k,n) = min_error;
+    end
+    k=k+1;
+end
+
+for i = 1:14
+    average(i) = mean(path_error(i,:));
+end
+
+figure(7);
+hold on;
+grid on;
+plot(iterations, average);
+
+
