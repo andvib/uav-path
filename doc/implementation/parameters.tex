@@ -29,6 +29,28 @@ In this chapter the different parameters used will be given.
 \label{tab:trim_states}
 \end{table}
 
+\begin{table}
+\centering
+\begin{tabular}{| l c c |}
+    \hline
+    Variable & Min & Max \\
+    \hline
+    $\theta$ & $-\pi/2$ & $\pi/2$\\
+    $\phi$ & $-\pi/2$ & $\pi/2$\\
+    $\delta_e$ & $-\pi/6$ & $\pi/6$\\
+    $\delta_a$ & $-\pi/6$ & $\pi/6$\\
+    $\delta_r$ & $-\pi/6$ & $\pi/6$\\
+    $\delta_t$ & $-\pi/6$ & $\pi/6$\\
+    $\Delta \delta_e$ & $-0.2$ & $0.2$\\
+    $\Delta \delta_a$ & $-0.2$ & $0.2$\\
+    $\Delta \delta_r$ & $-0.2$ & $0.2$\\
+    $\Delta \delta_t$ & $-0.2$ & $0.2$\\
+    \hline
+\end{tabular}
+\caption{Constraints used in the optimization problem.}
+\label{tab:constraints}
+\end{table}
+
 \newpage
 \section{Optimization Parameters}
 
@@ -48,6 +70,6 @@ In this chapter the different parameters used will be given.
     & & Q($\Delta \delta_t$) & $10^{0}$\\
     \hline
 \end{tabular}
-\caption{Parameters used for the optimization problem.}
+\caption{Tuning parameters used for the optimization problem.}
 \label{tab:opt_param}
 \end{table}
