@@ -20,6 +20,7 @@
 \usepackage[lofdepth=1, lotdepth]{subfig}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{multirow}
 
 %\renewcommand{\baselinestretch}{1.5}
 
@@ -32,15 +33,16 @@
 \begin{document}
 
 
-%\import{./}{front_page.tex}
 
 \pagenumbering{roman}
 \setcounter{page}{1}
 
-%\import{introduction/}{abstract.tex}
-%\addcontentsline{toc}{chapter}{Abstract}
-%\import{introduction/}{preface.tex}
-%\addcontentsline{toc}{chapter}{Preface}
+\import{introduction/}{abstract.tex}
+\addcontentsline{toc}{chapter}{Abstract}
+\import{introduction/}{norwegian_abstract.tex}
+\addcontentsline{toc}{chapter}{Abstract in Norwegian}
+\import{introduction/}{preface.tex}
+\addcontentsline{toc}{chapter}{Preface}
 
 \tableofcontents
 \addcontentsline{toc}{chapter}{Table of Contents}
@@ -73,7 +75,7 @@
 
 \begin{appendices}
 \import{theory/}{nonlinear_model.tex}
-\import{implementation/}{acado_code.tex}
+\import{implementation/}{parameters.tex}
 \import{implementation/}{mpc_code.tex}
 \end{appendices}
 

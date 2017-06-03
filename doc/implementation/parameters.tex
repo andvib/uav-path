@@ -1,0 +1,53 @@
+\chapter{Parameters}
+
+In this chapter the different parameters used will be given.
+
+
+\section{Trimmed States}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c r | c r|}
+    \hline
+    \multicolumn{2}{|c|}{States} & \multicolumn{2}{|c|}{Control} \\
+    \hline
+    $p_N$ & 0.0      & $\delta_e$ & -0.0594 \\
+    $p_E$ & 0.0      & $\delta_a$ & 0.0 \\
+    $h$ & 150        & $\delta_r$ & 0.0 \\
+    $u$ & 25.0       & $\delta_t$ & 0.15 \\
+    $v$ & 0.0        & $\Delta \delta_e$ & 0.0 \\
+    $w$ & 0.0        & $\Delta \delta_a$ & 0.0 \\
+    $\phi$ & 0.0     & $\Delta \delta_r$ & 0.0 \\
+    $\theta$ & 0.066 & $\Delta \delta_t$ & 0.0 \\
+    $\psi$ & 0.0     & & \\
+    $p$ & 0.0        & & \\
+    $q$ & 0.0        & & \\
+    $r$ & 0.0        & & \\
+    \hline
+\end{tabular}
+\caption{The values for the trimmed states used in this paper.}
+\label{tab:trim_states}
+\end{table}
+
+\newpage
+\section{Optimization Parameters}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{| l r | l c |}
+    \hline
+    \multicolumn{2}{|c|}{MPC} & \multicolumn{2}{c|}{Cost Function} \\
+    \hline
+    Horizon length & 110 & Q($p_N$) & $10^{-1}$\\
+    Timestep       & 0.2s & Q($p_E$) & $10^{-1}$\\
+    Interval length & 5 & Q($u$) & $10$\\
+    \multirow{2}{2.5cm}{Acceptance range trajectory} & \multirow{2}{*}{$\pm 0.08m$} & Q($h$) & $10$\\
+    & & Q($\Delta \delta_e$) & $10$\\
+    & & Q($\Delta \delta_a$) & $10^{-1}$\\
+    & & Q($\Delta \delta_r$) & $10^{5}$\\
+    & & Q($\Delta \delta_t$) & $10^{0}$\\
+    \hline
+\end{tabular}
+\caption{Parameters used for the optimization problem.}
+\label{tab:opt_param}
+\end{table}
