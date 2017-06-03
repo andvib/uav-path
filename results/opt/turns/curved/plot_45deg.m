@@ -90,12 +90,9 @@ figure(5);
 grid on;
 hold on;
 
-subplot(4,1,1);
 plot(STATES(:,1), STATES(:,14));
-subplot(4,1,2);
 plot(STATES(:,1), STATES(:,15));
-subplot(4,1,3);
 plot(STATES(:,1), STATES(:,16));
-subplot(4,1,4);
 plot(STATES(:,1), STATES(:,17));
+legend('\delta_e','\delta_a','\delta_r','\delta_t');
 saveas(gcf, 'fig_45deg/control','epsc');

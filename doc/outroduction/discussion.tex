@@ -43,6 +43,19 @@ Another problem discovered during testing was how the MPC deals with long stretc
 One possible solution to this would be to include the position of the UAV in the cost function. These terms would have to weighted lower than the position of the camera since the camera position is the main focus, but it would cause flying next to the path a more expensive solution compared to flying just above the path. It could also have been avoided by included the rudder deflection as a term in the cost function.
 
 
-\section{Comment on Control Signals}
+\section{Control Signals}
 
-\section{Different UAV Models Used}
+\begin{figure}[]
+	\centering
+    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/turns/curved/fig_45deg/control.eps}}
+	\caption{The control signals when optimizing a $45\degree$ curved turn.}
+	\label{fig:control_signals}
+\end{figure}
+
+In this report no plots of the control signals have been given. The main reason for this is that the output of the MPC is the optimized path, and the control signals are not intended to be used for tracking the path. Another reason can be seen in Figure \ref{fig:control_signals}: they do not always make sense. There are two reasons for this.
+
+Firs of all, the noise is most likely related to the oscillations previously mentioned in this chapter. For every iteration of the MPC there is a significant spike in all of the four control signals, some more than others. Since there is a spike in the reference for every iteration, it is no wonder there is a spike in the control signals with that spike.
+
+The second reason is that the control signals for the aileron and rudder are surprisingly small, and the aileron control signal often do not match the roll angle of the aircraft. The reason for this is most likely tied to the linearized model. The model is already an approximation of the real model, and poor selection of parameters may make the matters worse.
+
+Since the UAV states seem reasonable, it was decided not to give much weight to the control signals in this thesis. However, the results show that there might be precision to gain from using angle rates or control signals to optimize output, and for this usage more precise control signals are needed.
