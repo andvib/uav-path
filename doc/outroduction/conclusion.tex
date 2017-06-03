@@ -1,5 +1,13 @@
 \chapter{Conclusion}
 
+The goal of this thesis was to develop a control method that would create a flight path that would enable a UAV with a hyperspectral camera fixed to its body to optimally survey a ground path. This was solved by creating a intervalwise hyperspectral MPC that seeks to minimize the distance between the camera point on the ground and the ground path that is to be observed. The MPC was implemented using C++ and the ACADO Toolkit.
+
+The results show that the optimization method can be used to achieve good tracking of the ground path. Simulations show that for even a simple path, the mean error when tracking a path can be cut in half when tracking the optimal path compared to tracking the ground path. In addition tracking the optimized path results in less movement of the camera footprint, giving less movement in the captured images. The MPC is able to optimize both curved and piecewise linear paths, with piecewise linear paths giving the most precise end result.
+
+Even thoguh the piecewise linear paths resulted in the most precise tracking, the MPC had a hard time optimizing piecewise linear paths. The sharpest linear corner it could optimize well was a $45\degree$ turn. For curved turns it managed to optimize both $90\degree$ turn and $180\degree$ turns, given a radius larger than $200$m. On the other hand, straight paths after turns proved to be a difficulty for the MPC, as it does not correct the UAV position to be straight above the path during these stretches.
+
+Testing showed that the optimization problem was a difficult and time consuming problem to solve. The application created here was not very robust, and it was especially vulnerable to how precise the ground path was given. Testing show that there is most likely an improvement to gain by reducing the stepsize of the MPC from $0.2$s to $0.2$s however, since the application was so time consuming, it was not thoroughly tested in this thesis.
+
 
 \section{Future Work}
 
