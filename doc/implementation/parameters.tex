@@ -60,14 +60,14 @@ In this chapter the different parameters used will be given.
     \hline
     \multicolumn{2}{|c|}{MPC} & \multicolumn{2}{c|}{Cost Function} \\
     \hline
-    Horizon length & 110 & Q($p_N$) & $10^{-1}$\\
-    Timestep       & 0.2s & Q($p_E$) & $10^{-1}$\\
+    Horizon length & 110 & Q($p_N$) & $10^{-2}$\\
+    Timestep       & 0.2s & Q($p_E$) & $10^{-2}$\\
     Interval length & 5 & Q($u$) & $10$\\
     \multirow{2}{2.5cm}{Acceptance range trajectory} & \multirow{2}{*}{$\pm 0.08m$} & Q($h$) & $10$\\
     & & Q($\Delta \delta_e$) & $10$\\
-    & & Q($\Delta \delta_a$) & $10^{-1}$\\
-    & & Q($\Delta \delta_r$) & $10^{5}$\\
-    & & Q($\Delta \delta_t$) & $10^{0}$\\
+    & & Q($\Delta \delta_a$) & $10^{-2}$\\
+    & & Q($\Delta \delta_r$) & $10^{6}$\\
+    & & Q($\Delta \delta_t$) & $1$\\
     \hline
 \end{tabular}
 \caption{Tuning parameters used for the optimization problem.}
