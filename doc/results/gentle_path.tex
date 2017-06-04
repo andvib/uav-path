@@ -1,11 +1,11 @@
 \section{Tracking the Optimized Path}
 
-The path that will be tracked is the path that was optimized in section \ref{subsec:long_paths}, both the linear and the curved path. In addition to simulating the optimized paths the ground path that is to be observed will be tracked for comparison.
+The path that will be tracked is the path that was optimized in section \ref{subsec:long_paths}. The optimized paths for both the curved and the piecewise linear path will be tracked. In addition the ground path that is to be observed will be tracked for comparison.
 
 
 \subsection{Linear Path}
 
-The result of tracking the linear ground path and the optimized path can be seen in Figure \ref{fig:lin_sim_res}. It is clear that when tracking the ground path the biggest problem is that the path that is being tracked consists of linear corners, giving the aircraft abrupt changes in the roll angle. When tracking the optimized path on the other hand, the are no abrupt changes in the roll angle. The smooth reference path gives a smooth flight path, and the camera centre point stays focused on the ground path without any major deviations.
+The result of tracking the linear ground path and the optimized path can be seen in Figure \ref{fig:lin_sim_res}. It is clear that when tracking the ground path the biggest problem is that the path that is being tracked consists of linear corners, causing abrupt changes in the roll angle of the aircraft. When tracking the optimized path on the other hand, the are no abrupt changes in the roll angle. The smooth reference path gives a smooth flight path, and the camera centre point stays focused on the ground path without any major deviations.
 
 When comparing the attitude of the two simulations, it is clear that the optimized path gives a much more stable flight. Not only do the roll angle vary less, the pitch angle is also close to zero throughout the flight. When tracking the ground path the pitch has some variations, that will further add to movement in the camera position. 
 
@@ -32,7 +32,7 @@ When comparing the attitude of the two simulations, it is clear that the optimiz
 
 \subsection{Curved Path}
 
-The results for tracking the optimized curved path is very similar to the results for the optimized linear tracking. The biggest difference is that when tracking the curved ground path, the oscillations are smaller than for the linear path. The oscillations are also slightly bigger for the optimized linear path, but this is practically insignificant.
+The results for tracking the optimized curved path is very similar to the results for the optimized linear tracking. The biggest difference is that when tracking the curved ground path, the oscillations are smaller than for the linear ground path. The oscillations for the curved optimized path are also slightly smaller than for the optimized linear path, but this difference is so small that it has no practical significance.
 
 \begin{figure}
 	\makebox[\textwidth][c]{
@@ -73,4 +73,4 @@ The results for tracking the optimized curved path is very similar to the result
 \label{tab:sim_easy}
 \end{table}
 
-The statistics for the simulations of the paths can be seen in Table \ref{tab:sim_easy}, and they show that the performance when tracking the linear path is better than when tracking the curved path. The mean deviance is $0.5$m shorter for the linear path than for the curved path, and the maximum deviance when tracking the linear path is a little more than $3$m better. This is opposite of the results when optimizing the paths, where the curved path had a better tracking. It is also worth noting that mean error when optimizing the paths was bigger than the mean error when simulating the paths, and tracking the optimized paths give a considerably better result than tracking the ground path.
+The statistics for the simulations of the paths can be seen in Table \ref{tab:sim_easy}, and they show that the performance when tracking the optimized linear path is better than when tracking the optimized curved path. The mean deviance is $0.5$m smaller for the linear path than for the curved path, and the maximum deviance when tracking the linear path is a little more than $3$m better than for the curved path. This is opposite of the results when optimizing the paths, where the curved path had a better tracking. It is also worth noting that mean error when optimizing the paths was bigger than the mean error when simulating the paths, and tracking the optimized paths give a considerably better result than tracking the ground path.
