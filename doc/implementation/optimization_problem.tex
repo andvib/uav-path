@@ -1,4 +1,5 @@
-\section{Implementing the Optimization Problem}
+\section[Optimization Problem]{Implementing the Optimization Problem}
+%\sectionmark{Optimization Problem}
 
 Since ACADO offers a symbolic way of implementing the optimization problem the equations from chapter \ref{ch:optimization} can be implemented as they stand. The 12 UAV states $\mathbf{x}$ are implemented as differential states, as well as the four control surfaces $\mathbf{u}$. The control rate $\mathbf{\dot{u}}$ is defined as the control states of the problem, and are linked to the control states through (\ref{eq:control_relation}). The model of the UAV is implemented using the differential equations for each state.
 
