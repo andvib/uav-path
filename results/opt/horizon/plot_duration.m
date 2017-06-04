@@ -33,6 +33,7 @@ plot(dur_cur(:,1), dur_cur(:,2));
 ylabel('Duration [s]');
 xlabel('Length horizon');
 legend('Linear', 'Curved', 'Location', 'NW');
+set(gca, 'fontsize', 14);
 saveas(gcf, 'duration_both', 'epsc');
 
 
@@ -97,4 +98,5 @@ ylim([0 200]);
 xlabel('Horizon Length');
 ylabel('Mean Error [m]');
 legend('Linear', 'Curved');
+set(gca, 'fontsize', 14);
 saveas(gcf, 'error_both', 'epsc');

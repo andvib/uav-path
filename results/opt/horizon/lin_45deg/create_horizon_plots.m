@@ -30,18 +30,21 @@ for i = iterations
     a = sprintf('results_horizon/horizon_lin_%d.m', i);
     run (a)
     
-    for i = (1:length(STATES(:,1)))
-        [x_temp, y_temp] = camera_pos([STATES(i,8), STATES(i,9), STATES(i,10)],...
-                                  [STATES(i,2), STATES(i,3), STATES(i,4)], 0.0);%0.331612);
-        c_n_1(:,i) = x_temp;
-        c_n_2(:,i) = y_temp;
+    for j = (1:length(STATES(:,1)))
+        [x_temp, y_temp] = camera_pos([STATES(j,8), STATES(j,9), STATES(j,10)],...
+                                  [STATES(j,2), STATES(j,3), STATES(j,4)], 0.0);%0.331612);
+        c_n_1(:,j) = x_temp;
+        c_n_2(:,j) = y_temp;
     end
 
-    plot(c_n_1(2,:),c_n_1(1,:));
+    if (i ~= 130)
+        i
+        plot(c_n_1(2,:),c_n_1(1,:));
+    end
     %plot(c_n_2(2,:),c_n_2(1,:));
     %plot(STATES(:,3), STATES(:,2));
 end
-
+%legend('10','20','30','40','50','60','70','80','90','100','110','120','130','140');
 plot(PATH(:,2), PATH(:,1),'k');
 xlim([-300 500]);
 ylim([0 800]);

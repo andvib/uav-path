@@ -37,7 +37,7 @@ for i = iterations
     end
 
     plot(c_n_1(2,:),c_n_1(1,:));
-    plot(c_n_2(2,:),c_n_2(1,:));
+    %plot(c_n_2(2,:),c_n_2(1,:));
 end
 
 plot(PATH(:,2), PATH(:,1),'k');
