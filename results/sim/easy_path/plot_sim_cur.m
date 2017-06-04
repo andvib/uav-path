@@ -167,6 +167,55 @@ ylim([0 1200]);
 set(gca, 'fontsize', 14);
 saveas(gcf, 'fig_cur/tracking', 'epsc');
 
+%% PLOT PATH CAM RUN %%
+figure(8);
+hold on;
+grid on;
+w = plot(PATH(:,2), PATH(:,1),'k--');
+plot(path_y, path_x);
+for i = (1:length(path_phi))
+    [x_temp, y_temp] = camera_pos([path_phi(i), path_theta(i), path_psi(i)],...
+                                  [path_x(i), path_y(i), path_hgt(i)], deg2rad(19));
+    c_n_1(:,i) = x_temp;
+    c_n_2(:,i) = y_temp;
+end
+    
+plot(c_n_1(2,:),c_n_1(1,:),'k');
+b = plot(c_n_2(2,:),c_n_2(1,:),'k');
+h = fill([c_n_1(2,:) fliplr(c_n_2(2,:))],[c_n_1(1,:) fliplr(c_n_2(1,:))],'k');
+set(h, 'facealpha', 0.1);
+xlim([-300 900]);
+ylim([0 1200]);
+xlabel('East [m]');
+ylabel('North [m]');
+legend([w b], 'Path to be observed', 'Camera Footprint', 'Location', 'SE');
+%set(gca, 'fontsize', 14);
+saveas(gcf, 'fig_cur/path_run_fov', 'epsc');
+
+%% PLOT POS CAM RUN %%
+figure(9);
+hold on;
+grid on;
+w = plot(PATH(:,2), PATH(:,1),'k--');
+plot(pos_y, pos_x);
+for i = (1:length(pos_phi))
+    [x_temp, y_temp] = camera_pos([pos_phi(i), pos_theta(i), pos_psi(i)],...
+                                  [pos_x(i), pos_y(i), pos_hgt(i)], deg2rad(19));
+    c_n_1(:,i) = x_temp;
+    c_n_2(:,i) = y_temp;
+end
+    
+plot(c_n_1(2,:),c_n_1(1,:),'k');
+b = plot(c_n_2(2,:),c_n_2(1,:),'k');
+h = fill([c_n_1(2,:) fliplr(c_n_2(2,:))],[c_n_1(1,:) fliplr(c_n_2(1,:))],'k');
+set(h, 'facealpha', 0.1);
+xlim([-300 900]);
+ylim([0 1200]);
+xlabel('East [m]');
+ylabel('North [m]');
+%set(gca, 'fontsize', 14);
+legend([w b], 'Path to be observed', 'Camera Footprint', 'Location', 'SE');
+saveas(gcf, 'fig_cur/pos_run_fov', 'epsc');
 
 %% CALCULATE path ERROR %%
 path_started = 0;

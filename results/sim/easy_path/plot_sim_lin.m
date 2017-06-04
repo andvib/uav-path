@@ -161,6 +161,8 @@ grid on;
 plot(STATES(:,3), STATES(:,2));
 plot(pos_y, pos_x);
 legend('Path to be tracked','Flown path', 'Location', 'SE');
+ylabel('North [m]');
+xlabel('East [m]');
 xlim([-300 900]);
 ylim([0 1200]);
 %set(gca, 'fontsize', 14);
