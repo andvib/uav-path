@@ -15,7 +15,7 @@ Since this is a deterministic system, it is possible to perform the entire path 
 
 Commonly an MPC is used to optimize the model over a given \textit{horizon}, where the initial states are given. After the optimization has finished, the first timestep of the optimization is returned and applied to the system, before a measurement of the system is performed. The new measurements are given as initial states for the next horizon, and so on.
 
-The principle is the same for an intervalwise MPC. However, instead of only returning the first timestep, an \textit{interval} of timesteps are returned, and the last timestep of the interval is used as intial states for the next optimization horizon. This way the number of MPC iterations is reduced, and the increased complexity by having long optimization horizons is avoided. Figure \ref{fig:opt_fig} shows how timesteps, intervals and horizons relate to each other. Since the MPC developed here is an offline MPC, the timesteps of each interval is stored as the result.
+The principle is the same for an intervalwise MPC. However, instead of only returning the first timestep, an \textit{interval} of timesteps are returned, and the last timestep of the interval is used as initial states for the next optimization horizon. This way the number of MPC iterations is reduced, and the increased complexity by having long optimization horizons is avoided. Figure \ref{fig:opt_fig} shows how timesteps, intervals and horizons relate to each other. Since the MPC developed here is an offline MPC, the timesteps of each interval is stored as the result.
 
 \begin{figure}
 	\import{/}{opt_fig.tex}
