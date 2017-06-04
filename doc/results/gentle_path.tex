@@ -74,3 +74,17 @@ The results for tracking the optimized curved path is very similar to the result
 \end{table}
 
 The statistics for the simulations of the paths can be seen in Table \ref{tab:sim_easy}, and they show that the performance when tracking the optimized linear path is better than when tracking the optimized curved path. The mean deviance is $0.5$m smaller for the linear path than for the curved path, and the maximum deviance when tracking the linear path is a little more than $3$m better than for the curved path. This is opposite of the results when optimizing the paths, where the curved path had a better tracking. It is also worth noting that mean error when optimizing the paths was bigger than the mean error when simulating the paths, and tracking the optimized paths give a considerably better result than tracking the ground path.
+
+
+\subsection{Camera Field of View}
+
+In Figure \ref{fig:fov} the field of view has been added to the camera footpring, in order to show what would be captured by an actual camera. The field of view is set to $19\degree$, which is approximately the same as the camera used in \cite{hymsySUOMALAINEN}. The figure shows that either if the ground path is tracked or the optimized path is tracked, the ground path that is to observed will be within the camera footprint. In other words, the path simulated here is a bit to simple to really show the benefits of using the optimized paths. However, it is still clearly visible that the optimized path results in a much more stable image.
+
+\begin{figure}
+	\makebox[\textwidth][c]{
+	\subfloat[Ground Path]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/sim/easy_path/fig_cur/path_run_fov.eps}}}
+	\makebox[\textwidth][c]{
+	\subfloat[Optimized Path]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/sim/easy_path/fig_cur/pos_run_fov.eps}}}
+	\caption{The field of view of the camera.}
+	\label{fig:fov}
+\end{figure}
