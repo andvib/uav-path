@@ -51,7 +51,6 @@ xlim([0 40]);
 ylim([100 160]);
 ylabel('Height [m]');
 xlabel('Time [s]');
-%matlab2tikz('fig/height.tex');
 saveas(gcf, 'fig_45deg/height', 'epsc');
 
 %% PLOT ATTITUDE %%
@@ -99,3 +98,40 @@ plot(STATES(:,1), STATES(:,16));
 subplot(4,1,4);
 plot(STATES(:,1), STATES(:,17));
 saveas(gcf, 'fig_45deg/control','epsc');
+
+
+%% PLOT COMPARISON OF ATTITUDE %%
+
+figure(6);
+grid on;
+hold on;
+plot(STATES(:,1), STATES(:,8));
+
+run lin_45deg_05.m;
+plot(STATES(:,1), STATES(:,8));
+ylabel('Angle [rad]');
+xlabel('Time [s]');
+legend('\pm 0.08m', '\pm 1m');
+set(gca, 'fontsize', 14);
+saveas(gcf, 'fig_45deg/roll_comparison', 'epsc');
+
+
+figure(7);
+grid on;
+hold on;
+plot(PATH(:,2), PATH(:,1),'k');
+%plot(STATES(:,3), STATES(:,2));
+for i = (1:length(STATES(:,1)))
+    [x_temp, y_temp] = camera_pos([STATES(i,8), STATES(i,9), STATES(i,10)],...
+                            [STATES(i,2), STATES(i,3), STATES(i,4)], 0.0);%0.331612);
+    c_n_1(:,i) = x_temp;
+    c_n_2(:,i) = y_temp;
+end
+plot(c_n_1(2,:),c_n_1(1,:));
+
+ylabel('North [m]');
+xlabel('East [m]');
+xlim([-200 400]);
+ylim([100 700]);
+set(gca, 'fontsize', 14);
+saveas(gcf, 'fig_45deg/bad_cam', 'epsc');

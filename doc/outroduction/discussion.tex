@@ -13,23 +13,25 @@ As shown in the results, the MPC is able to optimize a $70\degree$ linear corner
 A more surprising result when comparing piecewise linear and curved paths is that the linear paths gave a more precise results during simulation. As was seen when comparing the optimization result for curved and linear paths, the linear paths required sharper changes in the roll angle. This information is not embedded in the optimized path, and thus it was not expected that tracking the optimized path would give a better result in the linear case.
 
 
-\section{Oscillations (Working Title)}
+\section{Generating a Precise Trajectory}
 
-The results in section \ref{sec:reducing_stepsize} show that when the stepsize is reduced, the oscillations in the states increase. This phenomenon is also present when using a stepsize of $0.2$s, but because of the longer time between every re-initiation the effect is not as visible as for $0.1$s.
+For some of the results in this thesis it is suspected that a particular set of unfortunate waypoints can cause instability. The reason for this suspicion is the the way the trajectory is generate for every iteration of the MPC, described in section \ref{subseq:generating_trajectory}. This method assumes that the UAV will maintain a constant speed, in order to calculate the distance the UAV will travel during one timestep. This assumption will introduce some inaccuracies, but the results show that during stable optimizations the speed did not vary much. However, this method of generating the trajectory introduces another inaccuracy, related to the parametrization of the path.
 
-A major contributor to generating these oscillations is the trajectory generator described in section \ref{subseq:generating_trajectory}, that assumes the UAV will maintain a fixed speed in order to calculate the distance the UAV will travel during one timestep. This assumption will introduce some inaccuracies, but the results show that during the optimization the speed did not vary much. However, this method of generating the trajectory introduces another inaccuracy, in that the path given as an input is discretized.
-
-Since the reference path is discretized, it is not possible to always find a point up ahead that is exactly the distance the UAV will travel during one timestep away. For this reason, points with a distance away that is within a given range is accepted as the next waypoint. If this range is too big the inaccuracy will be too big, which will cause a spike in the reference model in the cost function. Because of this spike in reference the optimization algorithm will seek to follow the spike, which causes the oscillations in the states.
+Since the reference path is parametrized, it is not possible to always find a point up ahead that is exactly the distance the UAV will travel during one timestep away. For this reason, points with a distance away that is within a given range is accepted as the next waypoint. If this range is too big the inaccuracy will be too big, which will cause a spike in the reference model in the cost function. Because of this spike in reference the optimization algorithm will seek to follow the spike, which causes the oscillations in the states.
 
 \begin{figure}[]
 	\centering
-    \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/opt/error/fig/attitude.eps}}
-	\caption{The roll angle of the aircraft during a linear $45\degree$ turn with different acceptance rates for waypoints.}
+    \makebox[\textwidth][c]{
+	\subfloat[Roll angle]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/opt/turns/linear/fig_45deg/roll_comparison.eps}
+	\label{fig:bad_roll}}
+	\qquad
+	\subfloat[Camera Position for $\pm 1$m]{\includegraphics[width=0.5\textwidth, keepaspectratio=true]{../../results/opt/turns/linear/fig_45deg/bad_cam.eps}
+	\label{fig:bad_cam}}}
+	\caption{The effect of difference acceptance rates for waypoints.}
 	\label{fig:oscillating_attitude}
 \end{figure}
 
-In Figure \ref{fig:oscillating_attitude} the effect the acceptance range of waypoints has on the roll through a $45\degree$ linear turn is shown. When the acceptance range is $\pm 0.5$m, the magnitude of the oscillations is bigger than for an acceptance range of $\pm 0.1$m. A part from a spike in the wrong direction for the $\pm 0.5$m signal, the two roll angles follow approximately the same trajectory.
-
+In Figure \ref{fig:oscillating_attitude} the effect the acceptance range of waypoints has on the roll through a $45\degree$ linear turn is shown. First of all, the tracking of the ground path was worse, as can be seen in Figure \ref{fig:bad_cam}. And as can be seen in Figure \ref{fig:bad_roll}, the roll angle contais more oscillations when the acceptance rate is $\pm 1$m, compared to $\pm 0.08$m. While this is as expected, it proves that the precision is important when generating the trajectory.
 
 \section{Cost Function}
 
