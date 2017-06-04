@@ -9,6 +9,10 @@ Even thoguh the piecewise linear paths resulted in the most precise tracking, th
 Testing showed that the optimization problem was a difficult and time consuming problem to solve. The application created here was not very robust, and it was especially vulnerable to how precise the ground path was given. Testing show that there is most likely an improvement to gain by reducing the stepsize of the MPC from $0.2$s to $0.2$s however, since the application was so time consuming, it was not thoroughly tested in this thesis.
 
 
+%There was a big difference in how well the MPC handles piecewise linear and curved paths. The MPC manages to optimize curved $90\degree$ turns with a radius as low as $50$m. It is also able to optimize $180\degree$ turns, as long as the radius is $200$m or longer. When optimizing piecewise linear paths however, the MPC struggled a lot more. It managed to optimize linear $45\degree$ corners, but not $70\degree$ corners. This is most likely due to the fact that they are corners, and don't give the same smooth change in reference as curved paths do.
+
+%When simulating the optimized paths in the simulator, the optimized paths for the piecewise linear paths turned out to be better than the curved paths. Both kinds shows great improvement from tracking the ground path itself.
+
 \section{Future Work}
 
 Testing shows that one of the major shortcomings of the MPC developed in this thesis is how the trajectory is generated for each iteration of the MPC. The method currently used is not precise enough, which leads to spikes in the reference used to solve the optimization problem. If the trajectory generation is improved it would hopefully remove many of the oscillations seen in these results, and make it possible to optimize even sharper corners. A more sophisticated trajectory generator could also allow the MPC to support loitering above a point.
