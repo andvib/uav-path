@@ -1,8 +1,11 @@
 \section{Path}
 
+In this section paths consisting of more than one turn will be optimized.
+
+
 \subsection{Two Opposite Turns}
 
-How the MPC takes advantage of subsequent opposite turns can be seen in Figure \ref{fig:paths_cur_150m}. When there is an opposite turn trailing the first turn, the optimized path cuts across the line connecting the two turns, while still keeping the camera on the observation path. This is also seen in Figure \ref{fig:paths_cur_heading} that shows the heading angle throughout the turn. The heading angle never reaches $45\degree$ or $70\degree$, because of cutting across the line.
+How the MPC takes advantage of subsequent opposite turns can be seen in Figure \ref{fig:paths_cur_150m}. When there is an opposite turn trailing the first turn, the optimized path cuts across the line connecting the two turns, while still keeping the camera on the observation path. This is also seen in Figure \ref{fig:paths_cur_course} that shows the course angle throughout the turn. The course angle never reaches $45\degree$ or $70\degree$, which is the angle of the lines, because the MPC decides to cut across the lines and correct the camera position using roll angle. The course angle and heading angle are close to identical, which indicates that the MPC do not correct the course angle by using rudder to induce sideslip.
 
 \begin{figure}
 	\makebox[\textwidth][c]{
@@ -41,22 +44,15 @@ The result of attempting to optimize a lawnmover-pattern path is shown in Figure
 	\label{fig:lawnmover}
 \end{figure}
 
-When the MPC optimizes the first $180\degree$ turn, it performs in a similar manner to the results in section \ref{subsec:180}: it takes the inner turn to begin with, and then widens the turn at the end in order to avoid changing the roll angle quickly. While it should have taken the advantage of the straight line to position the UAV right above the path so it could return to trimmed flight, it instead chooses continue flying next to the path with a constant roll angle to compensate for the offset from the path. It uses the rudder to compensate for the roll angle so it can travel at a constant course angle. The roll angle it uses to track the path while flying next to the path can be seen in Figure \ref{fig:lawnmover_attitude}.
+When the MPC optimizes the first $180\degree$ turn, it performs in a similar manner to the results in section \ref{subsec:180}: it takes the inner turn to begin with, and then widens the turn at the end in order to avoid changing the roll angle quickly. While it should have taken the advantage of the straight line to position the UAV right above the path so it could return to trimmed flight, it instead chooses to continue flying next to the path with a constant roll angle to compensate for the offset from the path. It uses the rudder to compensate for the roll angle so it can travel at a constant course angle. The roll angle it uses to track the path while flying next to the path can be seen in Figure \ref{fig:lawnmover_attitude}.
 
-As the UAV approaches the next $180\degree$ arch it is already on the inner side of the turn. However, instead of this being an advantage since it optimizes a $180\degree$ turn like this by taking the inner turn, it throws the UAV into an unstable right-turning spiral.
+As the UAV approaches the next $180\degree$ arch it is already on the inner side of the turn. Instead of this being an advantage, since it previously has optimized a $180\degree$ turn like this by taking the inner turn, it throws the UAV into an unstable right-turning spiral. This is similar to previous failures, as the spiral is in the opposite direction of the turn.
 
 
 \subsection{Long Paths}
 \label{subsec:long_paths}
 
 In order to test the performance of the MPC over a longer duration, a longer path consisting of several turns was optimized. The path was designed with linear corners that the MPC could handle, and then the curved path was made with similar waypoints and radius of $150$m.
-
-%\begin{figure}
-%    \makebox[\textwidth][c]{
-%    \includegraphics[width=0.8\textwidth, keepaspectratio=true]{../../results/sim/paths/fig/path.eps}}
-%    \caption{The linear and curved paths that will be optimized.}
-%    \label{fig:path_easy}
-%\end{figure}
 
 \begin{figure}
 	\makebox[\textwidth][c]{
@@ -82,7 +78,7 @@ In order to test the performance of the MPC over a longer duration, a longer pat
 	\label{fig:path_cur_easy}
 \end{figure}
 
-The results of optimizing the longer path can be seen in Figures \ref{fig:path_lin_easy} and \ref{fig:path_cur_easy}. The results of the two optimizations are very similar. At the beginning of the path the MPC chooses to start the turn immediately, which causes the camera to slip out for both the linear and the curved path. The long right turn is in both cases optimized by taking one long, continuous turn, with the camera pointing just beside the ground path.
+The results of optimizing the longer path can be seen in Figures \ref{fig:path_lin_easy} and \ref{fig:path_cur_easy}, and the results of the two optimizations are very similar. At the beginning of the path the MPC chooses to start the turn immediately, which causes the camera to move quickly to the right for both the linear and the curved path. The long right turn is in both cases optimized by taking one long, continuous turn, with the camera pointing just beside the ground path.
 
 \begin{table}
 \centering
@@ -99,7 +95,7 @@ The results of optimizing the longer path can be seen in Figures \ref{fig:path_l
 \label{tab:easy_path}
 \end{table}
 
-A difference between the linear and the curved paths can be seen in the roll angle in Figures \ref{fig:path_lin_easy_attitude} and \ref{fig:path_cur_easy_attitude}. The peaks in roll are sharper for the linear path than for the curved path. In Table \ref{tab:easy_path} show that the error between the camera centre point and ground path  for the linear has both a higher max and a higher mean value than for the curved. The standard deviation is also smaller for the curved path, meaning that there are slightly smaller oscillations when tracking the curved path. In Figure \ref{fig:both_optimized_paths} the two optimized paths are shown together, and it can be seen that they are almost identical.
+A difference between the linear and the curved paths can be seen in the roll angle in Figures \ref{fig:path_lin_easy_attitude} and \ref{fig:path_cur_easy_attitude}. The peaks in roll are sharper for the linear path than for the curved path, which allows it to better track the sharp corners. Table \ref{tab:easy_path} show that the error between the camera centre point and ground path  for the linear has both a higher max and a higher mean value than for the curved. The standard deviation is also smaller for the curved path, meaning that there are slightly smaller oscillations when tracking the curved path. In Figure \ref{fig:both_optimized_paths} the two optimized paths are shown together, and it can be seen that they are almost identical.
 
 \begin{figure}
 	\makebox[\textwidth][c]{
