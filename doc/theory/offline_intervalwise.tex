@@ -1,7 +1,7 @@
 \section{Offline Intervalwise MPC}
 \label{sec:offline_intervalwise}
 
-The control problem in this thesis will be solved by using an offline intervalwise MPC to generate an optimal path that will reduce the image error when using a fixed camera to survey a ground track. The generated path is intended to be tracked by the autopilot on the UAV that will perform the survey, with the intention of optimally surveying the ground path.
+The control problem in this thesis will be solved by using an offline intervalwise MPC to generate an optimal path that will reduce the image error when using a fixed camera to survey a ground track. The generated path is intended to be tracked by the autopilot on the UAV that will perform the survey.
 
 \subsection{Offline MPC} 
 
@@ -19,6 +19,6 @@ The principle is the same for an intervalwise MPC. However, instead of only retu
 
 \begin{figure}
 	\import{/}{opt_fig.tex}
-	\caption{How intervals and horizons relate in an Intervalwise MPC.}
+	\caption{How a path can be divided into timesteps, intervals and horizons in an intervalwise MPC.}
 	\label{fig:opt_fig}
 \end{figure}
