@@ -11,16 +11,17 @@ for i = heights
     a = sprintf('results/cur_45deg_200m_h%dm.m',i);
     run (a);
    
-    plot(STATES(:,3), STATES(:,2));
+    plot(STATES(:,3), STATES(:,2),'LineWidth',2.0);
 end
-plot(PATH(:,2),PATH(:,1),'k');
+plot(PATH(:,2),PATH(:,1),'k','LineWidth',2.0);
 xlabel('East [m]');
 ylabel('North [m]');
 
 xlim([-100 200]);
 ylim([300 600]);
-legend('100m', '200m', '300m', 'Location','NW');
+leg=legend('100m', '200m', '300m', 'Location','NW');
 set(gca, 'fontsize', 14);
+set(leg, 'fontsize', 16);
 saveas(gcf, 'fig_cur/uav_pos', 'epsc');
 
 
@@ -39,17 +40,18 @@ for i = heights
         c_n_2(:,j) = y_temp;
     end
     
-    plot(c_n_1(2,:), c_n_1(1,:));
+    plot(c_n_1(2,:), c_n_1(1,:),'LineWidth',2.0);
 end
-plot(PATH(:,2),PATH(:,1),'k');
+plot(PATH(:,2),PATH(:,1),'k','LineWidth',2.0);
 xlabel('East [m]');
 ylabel('North [m]');
 
 xlim([-100 200]);
 ylim([300 600]);
 
-legend('100m', '200m', '300m', 'Location','NW');
+leg=legend('100m', '200m', '300m', 'Location','NW');
 set(gca, 'fontsize', 14);
+set(leg, 'fontsize', 16);
 saveas(gcf, 'fig_cur/camera_pos', 'epsc');
 
 

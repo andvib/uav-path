@@ -3,7 +3,7 @@
 
 For the results shown in this chapter a stepsize of $0.2$s has been used for the MPC. This stepsize returns smooth stable paths for most of the curved paths, but do not work well with the sharper corners in the linear paths. Testing showed that by decreasing the timestep to $0.1$s, the MPC manages to return a stable flight path for linear corners with a $70\degree$ angle. The MPC was still not able to return a stable flight path for $90\degree$ linear turns.
 
-Figure \ref{fig:70deg_lin_error} shows the result of optimizing a linear $70\degree$ turn with a stepsize of $0.1$s. Even though the MPC returns a stable flight path, it can be seen that the camera contains many small oscillations. These oscillations can also be seen in the roll angle in Figure \ref{fig:70deg_lin_roll_error}. The horizon length of $110$ timesteps was used for this optimization, but when the stepsize is reduced to $0.1$s this is a significant shorter amount of time. Because of this better results might be achieved by increasing the horizon length, when using a stepsize of $0.1$s.
+Figure \ref{fig:70deg_lin_error} shows the result of optimizing a linear $70\degree$ turn with a stepsize of $0.1$s. Even though the MPC returns a stable flight path, it can be seen that the camera contains many small oscillations. These oscillations can also be seen in the roll angle in Figure \ref{fig:70deg_lin_roll_error}. The horizon length of $110$ timesteps was used for this optimization, but when the stepsize is reduced to $0.1$s this horizon is a significant shorter amount of time compared to a stepsize of $0.2$s. Because of this, better results might be achieved by increasing the horizon length when using a stepsize of $0.1$s.
 
 \begin{figure}
 	\makebox[\textwidth][c]{

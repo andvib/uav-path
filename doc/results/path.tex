@@ -5,7 +5,7 @@ In this section paths consisting of more than one turn will be optimized.
 
 \subsection{Two Opposite Turns}
 
-How the MPC takes advantage of subsequent opposite turns can be seen in Figure \ref{fig:paths_cur_150m}. When there is an opposite turn trailing the first turn, the optimized path cuts across the line connecting the two turns, while still keeping the camera on the observation path. This is also seen in Figure \ref{fig:paths_cur_course} that shows the course angle throughout the turn. The course angle never reaches $45\degree$ or $70\degree$, which is the angle of the lines, because the MPC decides to cut across the lines and correct the camera position using roll angle. The course angle and heading angle are close to identical, which indicates that the MPC do not correct the course angle by using rudder to induce sideslip.
+How the MPC takes advantage of subsequent opposite turns can be seen in Figure \ref{fig:paths_cur_150m}. When there is an opposite turn trailing the first turn, the optimized path cuts across the line connecting the two turns, while still keeping the camera on the observation path. This is also seen in Figure \ref{fig:paths_cur_course} that shows the course angle throughout the turn. The course angle never reaches $45\degree$ or $70\degree$, which is the angle of the lines, because the MPC decides to cut across the lines and correct the camera position using roll angle. The course angle and heading angle are close to identical, which indicates that the MPC does not correct the course angle by using rudder to induce sideslip.
 
 \begin{figure}
 	\makebox[\textwidth][c]{

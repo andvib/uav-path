@@ -28,8 +28,8 @@ for i = iterations
     k = k + 1;
 end
 
-plot(dur_lin(:,1), dur_lin(:,2));
-plot(dur_cur(:,1), dur_cur(:,2));
+plot(dur_lin(:,1), dur_lin(:,2),'LineWidth', 2.0);
+plot(dur_cur(:,1), dur_cur(:,2),'LineWidth', 2.0);
 ylabel('Duration [s]');
 xlabel('Length horizon');
 legend('Linear', 'Curved', 'Location', 'NW');
@@ -92,8 +92,8 @@ end
 figure(7);
 hold on;
 grid on;
-plot(iterations, lin_average);
-plot(iterations, cur_average);
+plot(iterations, lin_average,'LineWidth', 2.0);
+plot(iterations, cur_average,'LineWidth', 2.0);
 ylim([0 200]);
 xlabel('Horizon Length');
 ylabel('Mean Error [m]');

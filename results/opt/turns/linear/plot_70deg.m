@@ -12,8 +12,8 @@ for i = weights
     figure(1);
     grid on;
     hold on;
-    plot(STATES(:,3),STATES(:,2));
-    plot(PATH(:,2), PATH(:,1),'k');
+    plot(STATES(:,3),STATES(:,2),'LineWidth',2.0);
+    plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
     xlim([-300 500]);
     ylim([200 1000]);
     ylabel('North [m]');
@@ -40,8 +40,8 @@ for i = weights
         c_n_1(:,j) = x_temp;
         c_n_2(:,j) = y_temp;
     end
-    plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0]);
-    plot(PATH(:,2), PATH(:,1),'k');
+    plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0],'LineWidth',2.0);
+    plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
     xlim([-300 500]);
     ylim([200 1000]);
     ylabel('North [m]');
@@ -62,7 +62,7 @@ for i = weights
     figure(3);
     grid on;
     hold on;
-    plot(STATES(:,1),STATES(:,4));
+    plot(STATES(:,1),STATES(:,4),'LineWidth',2.0);
     %xlim([-300 500]);
     %ylim([200 1000]);
     ylabel('Altitude [m]');
@@ -82,16 +82,17 @@ for i = weights
     figure(1);
     grid on;
     hold on;
-    plot(STATES(:,1),STATES(:,8));
-    plot(STATES(:,1),STATES(:,9));
-    plot(STATES(:,1),STATES(:,10));
+    plot(STATES(:,1),STATES(:,8),'LineWidth',2.0);
+    plot(STATES(:,1),STATES(:,9),'LineWidth',2.0);
+    plot(STATES(:,1),STATES(:,10),'LineWidth',2.0);
     %xlim([-300 500]);
     %ylim([200 1000]);
     ylabel('Angle [rad]');
     xlabel('Time [s]');
     respath = sprintf('fig_70deg/attitude_%d', i);
-    legend('\phi', '\theta', '\psi', 'Location', 'NW');
+    leg=legend('\phi', '\theta', '\psi', 'Location', 'NW');
     set(gca, 'fontsize', 14);
+    set(leg, 'fontsize', 16);
     saveas(gcf, respath, 'epsc');
     close all;
 end

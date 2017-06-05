@@ -90,9 +90,10 @@ figure(5);
 grid on;
 hold on;
 
-plot(STATES(:,1), STATES(:,14));
-plot(STATES(:,1), STATES(:,15));
-plot(STATES(:,1), STATES(:,16));
-plot(STATES(:,1), STATES(:,17));
-legend('\delta_e','\delta_a','\delta_r','\delta_t');
+plot(STATES(:,1), STATES(:,14),'LineWidth',2.0);
+plot(STATES(:,1), STATES(:,15),'LineWidth',2.0);
+plot(STATES(:,1), STATES(:,16),'LineWidth',2.0);
+plot(STATES(:,1), STATES(:,17),'LineWidth',2.0);
+leg=legend('\delta_e','\delta_a','\delta_r','\delta_t');
+set(leg, 'fontsize', 16);
 saveas(gcf, 'fig_45deg/control','epsc');

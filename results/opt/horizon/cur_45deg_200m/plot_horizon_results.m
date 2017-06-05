@@ -12,7 +12,7 @@ for i = iterations
     a = sprintf('results_horizon/horizon_%d.m', i);
     run (a)
     
-    plot(STATES(:,3), STATES(:,2));
+    plot(STATES(:,3), STATES(:,2),'LineWidth', 1.0);
 end
 xlim([-300 500]);
 ylim([0 800]);
@@ -36,7 +36,7 @@ for i = iterations
         c_n_2(:,i) = y_temp;
     end
 
-    plot(c_n_1(2,:),c_n_1(1,:));
+    plot(c_n_1(2,:),c_n_1(1,:),'LineWidth', 1.0);
     %plot(c_n_2(2,:),c_n_2(1,:));
 end
 
@@ -143,7 +143,7 @@ for i = 10:10:140
     dur(k,2) = DURATION/40;
     k = k+1;
 end
-plot(dur(:,1), dur(:,2))
+plot(dur(:,1), dur(:,2), 'LineWidth', 1.0)
 saveas(gcf, 'fig/duration', 'epsc');
 
 
@@ -181,6 +181,6 @@ end
 figure(7);
 hold on;
 grid on;
-plot(iterations, average);
+plot(iterations, average, 'LineWidth', 1.0);
 
 

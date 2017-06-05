@@ -8,8 +8,8 @@ run 'lin_90deg.m'
 figure(1);
 grid on;
 hold on;
-plot(STATES(:,3), STATES(:,2));
-plot(PATH(:,2), PATH(:,1),'k');
+plot(STATES(:,3), STATES(:,2),'LineWidth',2.0);
+plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
 xlim([-300 500]);
 ylim([0 800]);
 ylabel('North [m]');
@@ -30,7 +30,7 @@ for i = (1:length(STATES(:,1)))
     c_n_2(:,i) = y_temp;
 end
 
-plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0]);
+plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0],'LineWidth',2.0);
 %plot(c_n_2(2,:),c_n_2(1,:));
 %plot(STATES(:,3), STATES(:,2));
 
@@ -49,7 +49,7 @@ saveas(gcf, 'fig_90deg/camera_position', 'epsc');
 figure(3);
 grid on;
 hold on; 
-plot(STATES(:,1), STATES(:,4));
+plot(STATES(:,1), STATES(:,4),'LineWidth',2.0);
 xlim([0 40]);
 ylim([100 160]);
 ylabel('Height [m]');
@@ -67,21 +67,21 @@ hold on;
 subplot(3,1,1);
 grid on;
 hold on;
-plot(STATES(:,1), STATES(:,8));
+plot(STATES(:,1), STATES(:,8),'LineWidth',2.0);
 ylabel('\phi [rad]');
 ylim([-1 1]);
 
 subplot(3,1,2);
 grid on;
 hold on;
-plot(STATES(:,1), STATES(:,9));
+plot(STATES(:,1), STATES(:,9),'LineWidth',2.0);
 ylabel('\theta [rad]');
 ylim([-1 1]);
 
 subplot(3,1,3);
 grid on;
 hold on;
-plot(STATES(:,1), STATES(:,10));
+plot(STATES(:,1), STATES(:,10),'LineWidth',2.0);
 ylim([-1 1]);
 ylabel('\psi [rad]');
 xlabel('Time [s]');

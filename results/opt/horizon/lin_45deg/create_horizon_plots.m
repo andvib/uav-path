@@ -12,7 +12,7 @@ for i = iterations
     a = sprintf('results_horizon/horizon_lin_%d.m', i);
     run (a)
     
-    plot(STATES(:,3), STATES(:,2));
+    plot(STATES(:,3), STATES(:,2),'LineWidth', 1.0);
 end
 xlim([-300 500]);
 ylim([0 800]);
@@ -39,7 +39,7 @@ for i = iterations
 
     if (i ~= 130)
         i
-        plot(c_n_1(2,:),c_n_1(1,:));
+        plot(c_n_1(2,:),c_n_1(1,:),'LineWidth', 1.0);
     end
     %plot(c_n_2(2,:),c_n_2(1,:));
     %plot(STATES(:,3), STATES(:,2));

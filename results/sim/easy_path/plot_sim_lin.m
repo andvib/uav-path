@@ -54,8 +54,8 @@ path_time = EstimatedState.timestamp(518:1325) - EstimatedState.timestamp(518);
 figure(1);
 hold on;
 grid on;
-plot(PATH(:,2), PATH(:,1),'k');
-plot(path_y, path_x);
+plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
+plot(path_y, path_x,'LineWidth',2.0);
 xlim([-300 900]);
 ylim([0 1200]);
 xlabel('East [m]');
@@ -67,7 +67,7 @@ saveas(gcf, 'fig_lin/path_run_UAV', 'epsc');
 figure(2);
 hold on;
 grid on;
-plot(PATH(:,2), PATH(:,1),'k');
+plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
 for i = (1:length(path_phi))
     [x_temp, y_temp] = camera_pos([path_phi(i), path_theta(i), path_psi(i)],...
                                   [path_x(i), path_y(i), path_hgt(i)], deg2rad(0));
@@ -75,8 +75,8 @@ for i = (1:length(path_phi))
     c_n_2(:,i) = y_temp;
 end
     
-plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0]);
-plot(c_n_2(2,:),c_n_2(1,:),'color',[1 .4 0]);
+plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0],'LineWidth',2.0);
+plot(c_n_2(2,:),c_n_2(1,:),'color',[1 .4 0],'LineWidth',2.0);
 xlim([-300 900]);
 ylim([0 1200]);
 xlabel('East [m]');
@@ -88,8 +88,8 @@ saveas(gcf, 'fig_lin/path_run_cam', 'epsc');
 figure(3);
 hold on;
 grid on;
-plot(path_time, path_phi(518:1325));
-plot(path_time, path_theta(518:1325));
+plot(path_time, path_phi(518:1325),'LineWidth',2.0);
+plot(path_time, path_theta(518:1325),'LineWidth',2.0);
 xlim([0 80]);
 %ylim([0 1200]);
 xlabel('Time [s]');
@@ -102,8 +102,8 @@ saveas(gcf, 'fig_lin/path_run_attitude', 'epsc');
 figure(4);
 hold on;
 grid on;
-plot(PATH(:,2), PATH(:,1),'k');
-plot(pos_y, pos_x);
+plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
+plot(pos_y, pos_x,'LineWidth',2.0);
 
 %plot(pos_y(1325), pos_x(1325),'*');
 
@@ -119,7 +119,7 @@ saveas(gcf, 'fig_lin/pos_run_UAV', 'epsc');
 figure(5);
 hold on;
 grid on;
-plot(PATH(:,2), PATH(:,1),'k');
+plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
 for i = (1:length(pos_phi))
     [x_temp, y_temp] = camera_pos([pos_phi(i), pos_theta(i), pos_psi(i)],...
                                   [pos_x(i), pos_y(i), pos_hgt(i)], deg2rad(0));
@@ -127,8 +127,8 @@ for i = (1:length(pos_phi))
     c_n_2(:,i) = y_temp;
 end
     
-plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0]);
-plot(c_n_2(2,:),c_n_2(1,:),'color',[1 .4 0]);
+plot(c_n_1(2,:),c_n_1(1,:),'color',[1 .4 0],'LineWidth',2.0);
+plot(c_n_2(2,:),c_n_2(1,:),'color',[1 .4 0],'LineWidth',2.0);
 
 %plot(pos_y(1325), pos_x(1325),'*');
 
@@ -144,8 +144,8 @@ saveas(gcf, 'fig_lin/pos_run_cam', 'epsc');
 figure(6);
 hold on;
 grid on;
-plot(pos_time, pos_phi(513:1325));
-plot(pos_time, pos_theta(513:1325));
+plot(pos_time, pos_phi(513:1325),'LineWidth',2.0);
+plot(pos_time, pos_theta(513:1325),'LineWidth',2.0);
 xlim([0 80]);
 ylim([-0.3 0.301]);
 xlabel('Time [s]');
@@ -158,8 +158,8 @@ saveas(gcf, 'fig_lin/pos_run_attitude', 'epsc');
 figure(7);
 hold on;
 grid on;
-plot(STATES(:,3), STATES(:,2));
-plot(pos_y, pos_x);
+plot(STATES(:,3), STATES(:,2),'LineWidth',2.0);
+plot(pos_y, pos_x,'LineWidth',2.0);
 legend('Path to be tracked','Flown path', 'Location', 'SE');
 ylabel('North [m]');
 xlabel('East [m]');

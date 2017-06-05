@@ -11,7 +11,7 @@ In order to simulate an aircraft tracking the optimized path, a software in the 
 
 \subsection{DUNE}
 
-DUNE Unified Navigation Environment is a part of the LSTS toolchain (Laboratório de Sistemas e Tecnologia Subaquática) which aims to provide a control architecture that will ease the control of unmanned air, ground surface and underwater vehicles \cite{DUNE}. DUNE is the software intended to run on board the unmanned vehicles, and provides an interface towards sensor drivers, and navigation and control functionality. In this thesis DUNE will be used to turn the flight path into waypoints that can be sent to the autopilot.
+DUNE Unified Navigation Environment is part of the LSTS toolchain (Laboratório de Sistemas e Tecnologia Subaquática) which aims to provide a control architecture that will ease the control of unmanned air, ground surface and underwater vehicles \cite{DUNE}. DUNE is the software intended to run on board the unmanned vehicles, and provides an interface towards sensor drivers, and navigation and control functionality. In this thesis DUNE will be used to turn the flight path into waypoints that can be sent to the autopilot.
 
 The functionality needed to track the path is made as a \textit{task} using the application programming interface (API) provided by DUNE. The task receives information about the UAV states from the vehicle, and uses this information to provide meaningful input to the autopilot depending on the stage of the operation. When generating waypoints from the path the task uses the principle of \textit{Line-of-Sight} (LOS) guidance to find waypoints a given distance away from the vehicle.
 
@@ -23,4 +23,4 @@ ArduPilot is an open-source autopilot, which supports several types of vehicles 
 
 \subsection{Neptus}
 
-Neptus is also a part of the LSTS toolchain, and is used to execute the simulations, and generate logs after they are finished \cite{NEPTUS}. It provides a map interface to observe the simulations in real-time, and also displays information about the aircraft. It communicates with DUNE using IMC messages based on a control message set defined by the LSTS toolchain.
+Neptus is also a part of the LSTS toolchain, and is used to execute the simulations, and generate logs after they are finished \cite{NEPTUS}. It provides a map interface to observe the simulations in real-time, and also displays information about the aircraft. It communicates with DUNE with messages based on a control message set defined by the LSTS toolchain.

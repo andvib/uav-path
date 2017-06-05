@@ -9,8 +9,8 @@ for i = [1]
     figure(1);
     grid on;
     hold on;
-    plot(STATES(:,3),STATES(:,2));
-    plot(PATH(:,2), PATH(:,1),'k');
+    plot(STATES(:,3),STATES(:,2),'LineWidth',2.0);
+    plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
     
     for j = (1:length(STATES(:,1)))
         [x_temp, y_temp] = camera_pos([STATES(j,8), STATES(j,9), STATES(j,10)],...
@@ -19,7 +19,7 @@ for i = [1]
         c_n_2(:,j) = y_temp;
     end
     
-    plot(c_n_1(2,:),c_n_1(1,:));
+    plot(c_n_1(2,:),c_n_1(1,:),'LineWidth',2.0);
     xlim([-300 500]);
     ylim([200 1000]);
     ylabel('North [m]');
@@ -41,7 +41,7 @@ for i = [1]
     figure(1);
     grid on;
     hold on;
-    plot(STATES(:,1),STATES(:,8));
+    plot(STATES(:,1),STATES(:,8),'LineWidth',2.0);
     ylabel('\phi [rad]');
     xlabel('Time [s]');
     respath = sprintf('fig_70deg/uav_phi_%d',i);
@@ -62,7 +62,7 @@ for i = [1,2]
     a = sprintf('lin_70deg_0%d.m',i);
     run (a);
     
-    plot(STATES(:,1), STATES(:,4));
+    plot(STATES(:,1), STATES(:,4),'LineWidth',2.0);
 end
 xlim([0 40]);
 ylim([100 160]);

@@ -12,8 +12,8 @@ for i = angles
     figure(1);
     grid on;
     hold on;
-    plot(STATES(:,3),STATES(:,2));
-    plot(PATH(:,2), PATH(:,1),'k');
+    plot(STATES(:,3),STATES(:,2),'LineWidth',2.0);
+    plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
     ylabel('North [m]');
     xlabel('East [m]');
     xlim([-100 400]);
@@ -41,8 +41,8 @@ for i = angles
         c_n_2(:,j) = y_temp;
     end
     
-    plot(c_n_1(2,:), c_n_1(1,:),'color',[1 .4 0]);
-    plot(PATH(:,2), PATH(:,1),'k');
+    plot(c_n_1(2,:), c_n_1(1,:),'color',[1 .4 0],'LineWidth',2.0);
+    plot(PATH(:,2), PATH(:,1),'k','LineWidth',2.0);
     
     ylabel('North [m]');
     xlabel('East [m]');
@@ -60,7 +60,7 @@ end
 figure(3);
 grid on;
 hold on; 
-plot(STATES(:,1), STATES(:,4));
+plot(STATES(:,1), STATES(:,4),'LineWidth',2.0);
 xlim([0 40]);
 ylim([100 160]);
 ylabel('Height [m]');
@@ -80,12 +80,13 @@ for i = angles
     %subplot(3,1,1);
     grid on;
     hold on;
-    plot(STATES(:,1), STATES(:,10));
+    plot(STATES(:,1), STATES(:,10),'LineWidth',2.0);
     ylabel('\psi [rad]');
     xlabel('Time [s]');
 end
-legend('45 degree', '70 degree');
+leg=legend('45 degree', '70 degree');
 set(gca, 'fontsize', 14);
+set(leg, 'fontsize', 16);
 saveas(gcf, 'fig_cur/heading', 'epsc');
 
 %% PLOT CONTROLS %%
@@ -121,12 +122,13 @@ end
 figure(6);
 grid on;
 hold on;
-plot(STATES(:,1), chi_45);
-plot(STATES(:,1), chi_70);
-legend('45 degree', '70 degree');
+plot(STATES(:,1), chi_45,'LineWidth',2.0);
+plot(STATES(:,1), chi_70,'LineWidth',2.0);
+leg=legend('45 degree', '70 degree');
 ylabel('\chi [rad]');
 xlabel('Time [s]');
 set(gca, 'fontsize', 14);
+set(leg, 'fontsize', 16);
 saveas(gcf, 'fig_cur/course', 'epsc');
 
 
